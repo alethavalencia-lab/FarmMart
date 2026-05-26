@@ -108,7 +108,7 @@ export default function LandingPage() {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="relative h-[95vh] min-h-[750px] w-full flex items-center overflow-hidden">
+      <section className="relative h-screen min-h-[850px] w-full flex items-center overflow-hidden">
         {/* Premium Rounded Background Container */}
         <div className="absolute inset-0 z-0 p-4 sm:p-6 lg:p-8">
           <div className="relative w-full h-full rounded-[2.5rem] sm:rounded-[3.5rem] lg:rounded-[4rem] overflow-hidden shadow-2xl">
@@ -124,8 +124,8 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Content Container - Increased padding top to move content lower and avoid overlap */}
-        <div className="container mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center pt-32 sm:pt-40 lg:pt-48">
+        {/* Content Container */}
+        <div className="container mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center pt-24 pb-20 sm:pb-32">
           <div className="space-y-8 animate-in fade-in slide-in-from-left duration-1000">
             <div className="space-y-4">
               <Badge className="bg-secondary text-white border-none px-4 py-1.5 rounded-full font-bold tracking-wide">
@@ -142,12 +142,12 @@ export default function LandingPage() {
             
             <div className="flex flex-wrap gap-5">
               <Link href="/marketplace">
-                <Button size="lg" className="rounded-full bg-primary hover:bg-primary/90 text-white px-10 h-16 shadow-2xl shadow-primary/40 text-lg font-bold">
+                <Button size="lg" className="rounded-full bg-primary hover:bg-primary/90 text-white px-10 h-16 shadow-2xl shadow-primary/40 text-lg font-bold transition-all active:scale-95">
                   Belanja Sekarang
                 </Button>
               </Link>
               <Link href="/live">
-                <Button size="lg" variant="outline" className="rounded-full border-2 border-white text-white hover:bg-white/10 px-10 h-16 text-lg font-bold backdrop-blur-sm group">
+                <Button size="lg" variant="outline" className="rounded-full border-2 border-white text-white hover:bg-white/10 px-10 h-16 text-lg font-bold backdrop-blur-sm group transition-all active:scale-95">
                   <PlayCircle className="mr-3 h-6 w-6 group-hover:scale-110 transition-transform" />
                   Jelajahi Live Panen
                 </Button>
@@ -173,7 +173,7 @@ export default function LandingPage() {
           </div>
 
           <div className="hidden lg:block relative h-[600px]">
-            <div className="absolute top-20 right-0 glassmorphism p-6 rounded-[2.5rem] shadow-2xl w-72 animate-bounce-slow border-white/30">
+            <div className="absolute top-10 right-0 glassmorphism p-6 rounded-[2.5rem] shadow-2xl w-72 animate-bounce-slow border-white/30 z-20">
               <div className="flex items-center gap-4 mb-4">
                 <div className="bg-secondary p-3 rounded-2xl">
                   <TrendingUp className="text-white h-6 w-6" />
@@ -191,7 +191,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="absolute bottom-20 left-0 glassmorphism p-6 rounded-[2.5rem] shadow-2xl w-64 animate-float border-white/30">
+            <div className="absolute bottom-10 left-0 glassmorphism p-6 rounded-[2.5rem] shadow-2xl w-64 animate-float border-white/30 z-20">
               <div className="flex items-center gap-3 mb-3">
                 <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse"></div>
                 <span className="text-[10px] font-black uppercase text-red-500 tracking-widest">Live Now</span>
@@ -209,8 +209,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Quick Access Cards */}
-      <section className="relative z-20 -mt-20 container mx-auto px-6">
+      {/* Quick Access Cards - Reduced negative margin and improved spacing */}
+      <section className="relative z-30 -mt-12 container mx-auto px-6 pb-12">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {quickNav.map((item, i) => (
             <Card key={i} className="group glassmorphism border-none shadow-xl rounded-[2rem] overflow-hidden cursor-pointer hover:scale-105 transition-all duration-300">
