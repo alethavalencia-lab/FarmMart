@@ -12,29 +12,21 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { 
   Sprout, 
-  CloudRain, 
   TrendingUp, 
   Package, 
   Plus, 
   Sparkles, 
-  Calendar, 
   MapPin, 
   ShoppingBag, 
-  CheckCircle2, 
-  Clock, 
-  MoreVertical,
-  Camera,
-  Layers,
-  BarChart3,
-  Users,
-  MessageCircle,
-  PlayCircle,
-  ChevronRight,
-  ArrowRight,
+  PlayCircle, 
   X,
   Upload,
   Trash2,
-  Edit2
+  Edit2,
+  Maximize2,
+  Droplets,
+  Thermometer,
+  Calendar
 } from "lucide-react";
 import { predictHarvestWindow, PredictHarvestWindowOutput } from "@/ai/flows/predict-harvest-window";
 import { useToast } from "@/hooks/use-toast";
@@ -52,25 +44,25 @@ export function FarmerDashboard() {
   // Dialog visibility states
   const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
   const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
+  const [isLandDialogOpen, setIsLandDialogOpen] = useState(false);
 
   // Editing states
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
   const [editingProject, setEditingProject] = useState<any | null>(null);
+  const [editingLand, setEditingLand] = useState<any | null>(null);
 
   // Image states for forms
   const [productImage, setProductImage] = useState<string | null>(null);
   const [projectImage, setProjectImage] = useState<string | null>(null);
+  const [landImage, setLandImage] = useState<string | null>(null);
   const productImageInputRef = useRef<HTMLInputElement>(null);
   const projectImageInputRef = useRef<HTMLInputElement>(null);
+  const landImageInputRef = useRef<HTMLInputElement>(null);
 
   // Data states
   const [products, setProducts] = useState<any[]>([]);
   const [projects, setProjects] = useState<any[]>([]);
-
-  const [lands, setLands] = useState([
-    { id: 1, name: "Kebun Lembang A", location: "Lembang", size: "1.2 Ha", crop: "Tomat" },
-    { id: 2, name: "Lahan Dieng B", location: "Wonosobo", size: "0.8 Ha", crop: "Kentang" },
-  ]);
+  const [lands, setLands] = useState<any[]>([]);
 
   const [orders, setOrders] = useState([
     { id: "#ORD-9912", items: "5kg Tomat Cherry", total: "Rp 125.000", status: "Proses", buyer: "Resto Sedap (Andi)", time: "2 jam yang lalu", payment: "Lunas" },
@@ -86,6 +78,7 @@ export function FarmerDashboard() {
 
   // Persistence
   useEffect(() => {
+    // Products
     const savedProducts = localStorage.getItem("farmer_products_v2");
     if (savedProducts) {
       setProducts(JSON.parse(savedProducts));
@@ -99,6 +92,7 @@ export function FarmerDashboard() {
       localStorage.setItem("farmer_products_v2", JSON.stringify(defaultProducts));
     }
 
+    // Projects
     const savedProjects = localStorage.getItem("farmer_projects_v2");
     if (savedProjects) {
       setProjects(JSON.parse(savedProjects));
@@ -110,6 +104,19 @@ export function FarmerDashboard() {
       setProjects(defaultProjects);
       localStorage.setItem("farmer_projects_v2", JSON.stringify(defaultProjects));
     }
+
+    // Lands
+    const savedLands = localStorage.getItem("farmer_lands_v3");
+    if (savedLands) {
+      setLands(JSON.parse(savedLands));
+    } else {
+      const defaultLands = [
+        { id: 1, name: "Kebun Lembang A", location: "Bandung Barat", size: "1.2", crop: "Tomat Cherry", status: "Masa Tanam", irrigation: "Drip", soil: "Subur", harvest: "2024-06-12" },
+        { id: 2, name: "Lahan Dieng B", location: "Wonosobo", size: "0.8", crop: "Kentang Granola", status: "Siap Panen", irrigation: "Rainfed", soil: "Vulkanik", harvest: "2024-05-20" },
+      ];
+      setLands(defaultLands);
+      localStorage.setItem("farmer_lands_v3", JSON.stringify(defaultLands));
+    }
   }, []);
 
   const saveProductsToStorage = (updated: any[]) => {
@@ -120,6 +127,11 @@ export function FarmerDashboard() {
   const saveProjectsToStorage = (updated: any[]) => {
     setProjects(updated);
     localStorage.setItem("farmer_projects_v2", JSON.stringify(updated));
+  };
+
+  const saveLandsToStorage = (updated: any[]) => {
+    setLands(updated);
+    localStorage.setItem("farmer_lands_v3", JSON.stringify(updated));
   };
 
   const handlePredict = async () => {
@@ -141,13 +153,14 @@ export function FarmerDashboard() {
     }
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, type: 'product' | 'project') => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, type: 'product' | 'project' | 'land') => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         if (type === 'product') setProductImage(reader.result as string);
-        else setProjectImage(reader.result as string);
+        else if (type === 'project') setProjectImage(reader.result as string);
+        else setLandImage(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -223,6 +236,47 @@ export function FarmerDashboard() {
     setProjectImage(null);
   };
 
+  const submitLandForm = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+
+    if (editingLand) {
+      const updated = lands.map(l => l.id === editingLand.id ? {
+        ...l,
+        name: formData.get("name") as string,
+        location: formData.get("location") as string,
+        size: formData.get("size") as string,
+        crop: formData.get("crop") as string,
+        status: formData.get("status") as string,
+        irrigation: formData.get("irrigation") as string,
+        soil: formData.get("soil") as string,
+        harvest: formData.get("harvest") as string,
+        image: landImage || l.image
+      } : l);
+      saveLandsToStorage(updated);
+      toast({ title: "Data Lahan Diperbarui", description: `${editingLand.name} telah diperbarui.` });
+    } else {
+      const newLand = {
+        id: Date.now(),
+        name: formData.get("name") as string,
+        location: formData.get("location") as string,
+        size: formData.get("size") as string,
+        crop: formData.get("crop") as string,
+        status: formData.get("status") as string,
+        irrigation: formData.get("irrigation") as string,
+        soil: formData.get("soil") as string,
+        harvest: formData.get("harvest") as string,
+        image: landImage
+      };
+      saveLandsToStorage([...lands, newLand]);
+      toast({ title: "Data Lahan Ditambahkan", description: `${newLand.name} berhasil didaftarkan.` });
+    }
+
+    setIsLandDialogOpen(false);
+    setEditingLand(null);
+    setLandImage(null);
+  };
+
   const handleEditProduct = (product: any) => {
     setEditingProduct(product);
     setProductImage(product.image || null);
@@ -235,6 +289,12 @@ export function FarmerDashboard() {
     setIsProjectDialogOpen(true);
   };
 
+  const handleEditLand = (land: any) => {
+    setEditingLand(land);
+    setLandImage(land.image || null);
+    setIsLandDialogOpen(true);
+  };
+
   const deleteProduct = (id: number) => {
     const updated = products.filter(p => p.id !== id);
     saveProductsToStorage(updated);
@@ -245,6 +305,12 @@ export function FarmerDashboard() {
     const updated = projects.filter(p => p.id !== id);
     saveProjectsToStorage(updated);
     toast({ title: "Proyek Dihapus", description: "Proyek investasi telah dibatalkan." });
+  };
+
+  const deleteLand = (id: number) => {
+    const updated = lands.filter(l => l.id !== id);
+    saveLandsToStorage(updated);
+    toast({ title: "Data Lahan Dihapus", description: "Data lahan telah dihapus dari sistem." });
   };
 
   return (
@@ -273,91 +339,13 @@ export function FarmerDashboard() {
         </div>
       </div>
 
-      {/* Product Modal */}
-      <Dialog open={isProductDialogOpen} onOpenChange={setIsProductDialogOpen}>
-        <DialogContent className="rounded-[2.5rem] sm:max-w-[600px] border-none glassmorphism max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold">{editingProduct ? 'Edit Produk' : 'Upload Produk Baru'}</DialogTitle>
-            <DialogDescription>Isi detail produk hasil panen Anda untuk dipasarkan di Farm Mart.</DialogDescription>
-          </DialogHeader>
-          <form onSubmit={submitProductForm} className="space-y-6 py-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Nama Produk</Label>
-                <Input name="name" defaultValue={editingProduct?.name} required placeholder="Misal: Tomat Cherry Premium" className="rounded-xl h-12" />
-              </div>
-              <div className="space-y-2">
-                <Label>Kategori</Label>
-                <Select name="category" defaultValue={editingProduct?.category || "Sayur"}>
-                  <SelectTrigger className="rounded-xl h-12">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Sayur">Sayuran</SelectItem>
-                    <SelectItem value="Buah">Buah-buahan</SelectItem>
-                    <SelectItem value="Rempah">Rempah</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Harga (Rp/Kg)</Label>
-                <Input name="price" type="number" defaultValue={editingProduct?.price} required placeholder="25000" className="rounded-xl h-12" />
-              </div>
-              <div className="space-y-2">
-                <Label>Stok (Kg)</Label>
-                <Input name="stock" type="number" defaultValue={editingProduct?.stock} required placeholder="50" className="rounded-xl h-12" />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label>Deskripsi</Label>
-              <Textarea name="description" defaultValue={editingProduct?.description} placeholder="Ceritakan kesegaran produk Anda..." className="rounded-xl min-h-[100px]" />
-            </div>
-            <div className="space-y-2">
-              <Label>Foto Produk</Label>
-              <div 
-                onClick={() => productImageInputRef.current?.click()}
-                className={cn(
-                  "relative border-2 border-dashed border-primary/20 rounded-2xl p-8 text-center bg-primary/5 cursor-pointer hover:bg-primary/10 transition-colors overflow-hidden h-40 flex flex-col items-center justify-center",
-                  productImage && "border-none p-0"
-                )}
-              >
-                {productImage ? (
-                  <div className="relative w-full h-full group">
-                    <Image src={productImage} alt="Preview" fill className="object-cover" />
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <Button type="button" variant="destructive" size="sm" className="rounded-full" onClick={(e) => { e.stopPropagation(); setProductImage(null); }}>
-                        <X className="h-4 w-4 mr-1" /> Hapus
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <Upload className="h-8 w-8 text-primary/40 mb-2" />
-                    <p className="text-xs font-bold">Klik untuk upload foto</p>
-                  </>
-                )}
-                <input type="file" ref={productImageInputRef} className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, 'product')} />
-              </div>
-            </div>
-            <DialogFooter className="gap-2">
-              <Button type="button" variant="ghost" onClick={() => setIsProductDialogOpen(false)}>Batal</Button>
-              <Button type="submit" className="flex-1 h-14 rounded-xl bg-secondary hover:bg-secondary/90 text-white font-black text-lg">
-                {editingProduct ? 'Simpan Perubahan' : 'Terbitkan Produk'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-
       {/* Stats Ribbon */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { label: "Total Penjualan", value: "Rp 154.2M", icon: TrendingUp, color: "text-secondary", bg: "bg-secondary/10" },
           { label: "Produk Aktif", value: `${products.length} Jenis`, icon: Package, color: "text-primary", bg: "bg-primary/10" },
-          { label: "Investor Aktif", value: "8 Mitra", icon: Users, color: "text-accent", bg: "bg-accent/10" },
-          { label: "Lahan Kelola", value: "4.5 Ha", icon: MapPin, color: "text-blue-600", bg: "bg-blue-50" },
+          { label: "Investor Aktif", value: "8 Mitra", icon: Package, color: "text-accent", bg: "bg-accent/10" }, // Note: Using Package as Users icon fix
+          { label: "Lahan Kelola", value: `${lands.length} Lokasi`, icon: MapPin, color: "text-blue-600", bg: "bg-blue-50" },
         ].map((stat, i) => (
           <Card key={i} className="rounded-3xl border-none shadow-xl glassmorphism">
             <CardContent className="p-6 flex items-center gap-5">
@@ -374,7 +362,7 @@ export function FarmerDashboard() {
       </div>
 
       <Tabs defaultValue="overview" className="space-y-8">
-        <TabsList className="bg-primary/5 p-1.5 rounded-full h-14 border border-primary/10">
+        <TabsList className="bg-primary/5 p-1.5 rounded-full h-14 border border-primary/10 flex-wrap sm:flex-nowrap overflow-x-auto">
           <TabsTrigger value="overview" className="rounded-full px-6 text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white">Ikhtisar</TabsTrigger>
           <TabsTrigger value="products" className="rounded-full px-6 text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white">Produk Saya</TabsTrigger>
           <TabsTrigger value="orders" className="rounded-full px-6 text-sm font-bold data-[state=active]:bg-primary data-[state=active]:text-white">Pesanan Masuk</TabsTrigger>
@@ -559,6 +547,90 @@ export function FarmerDashboard() {
           </Card>
         </TabsContent>
 
+        <TabsContent value="lands" className="animate-in fade-in duration-500">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {lands.map((land) => (
+              <Card key={land.id} className="rounded-[2.5rem] border-none shadow-xl overflow-hidden bg-white group hover:translate-y-[-4px] transition-all">
+                <div className="relative aspect-video bg-primary/5">
+                  <Image src={land.image || `https://picsum.photos/seed/land${land.id}/600/400`} alt={land.name} fill className="object-cover" />
+                  <Badge className="absolute top-4 left-4 bg-primary text-white border-none font-bold shadow-lg">
+                    {land.status}
+                  </Badge>
+                  <div className="absolute top-4 right-4 flex gap-1">
+                    <Button variant="ghost" size="icon" onClick={() => handleEditLand(land)} className="h-8 w-8 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white text-primary">
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white text-destructive">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="rounded-[2rem] border-none glassmorphism">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Hapus Data Lahan?</AlertDialogTitle>
+                          <AlertDialogDescription>Data ini akan dihapus permanen dari sistem.</AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel className="rounded-xl">Batal</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => deleteLand(land.id)} className="rounded-xl bg-destructive hover:bg-destructive/90">Hapus</AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                </div>
+                <CardContent className="p-8 space-y-6">
+                  <div className="space-y-1">
+                    <h4 className="text-2xl font-black font-headline text-primary">{land.name}</h4>
+                    <p className="text-sm font-bold text-muted-foreground flex items-center gap-1.5"><MapPin className="h-3 w-3" /> {land.location}</p>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 border-y border-primary/5 py-4">
+                    <div className="space-y-1">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5"><Sprout className="h-3 w-3" /> Tanaman</p>
+                      <p className="text-sm font-bold">{land.crop}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5"><Maximize2 className="h-3 w-3" /> Luas</p>
+                      <p className="text-sm font-bold">{land.size} Ha</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex items-center gap-2">
+                      <Droplets className="h-4 w-4 text-blue-500" />
+                      <div className="text-[10px]">
+                        <p className="font-black text-muted-foreground uppercase tracking-widest leading-none mb-1">Irigasi</p>
+                        <p className="font-bold leading-none">{land.irrigation}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4 text-orange-500" />
+                      <div className="text-[10px]">
+                        <p className="font-black text-muted-foreground uppercase tracking-widest leading-none mb-1">Panen</p>
+                        <p className="font-bold leading-none">{land.harvest}</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+            <button 
+              onClick={() => {
+                setEditingLand(null);
+                setLandImage(null);
+                setIsLandDialogOpen(true);
+              }}
+              className="flex flex-col items-center justify-center gap-4 rounded-[2.5rem] border-2 border-dashed border-primary/20 hover:bg-primary/5 transition-all p-12 group h-full min-h-[350px]"
+            >
+              <div className="p-6 bg-primary/10 rounded-full group-hover:scale-110 transition-transform">
+                <Plus className="h-10 w-10 text-primary" />
+              </div>
+              <p className="text-xl font-black text-primary">Tambah Data Lahan</p>
+            </button>
+          </div>
+        </TabsContent>
+
         <TabsContent value="investments" className="animate-in fade-in duration-500">
            <div className="grid lg:grid-cols-2 gap-8">
              {projects.map((proj) => (
@@ -612,6 +684,84 @@ export function FarmerDashboard() {
            </div>
         </TabsContent>
       </Tabs>
+
+      {/* Product Modal */}
+      <Dialog open={isProductDialogOpen} onOpenChange={setIsProductDialogOpen}>
+        <DialogContent className="rounded-[2.5rem] sm:max-w-[600px] border-none glassmorphism max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold">{editingProduct ? 'Edit Produk' : 'Upload Produk Baru'}</DialogTitle>
+            <DialogDescription>Isi detail produk hasil panen Anda untuk dipasarkan di Farm Mart.</DialogDescription>
+          </DialogHeader>
+          <form onSubmit={submitProductForm} className="space-y-6 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Nama Produk</Label>
+                <Input name="name" defaultValue={editingProduct?.name} required placeholder="Misal: Tomat Cherry Premium" className="rounded-xl h-12" />
+              </div>
+              <div className="space-y-2">
+                <Label>Kategori</Label>
+                <Select name="category" defaultValue={editingProduct?.category || "Sayur"}>
+                  <SelectTrigger className="rounded-xl h-12">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Sayur">Sayuran</SelectItem>
+                    <SelectItem value="Buah">Buah-buahan</SelectItem>
+                    <SelectItem value="Rempah">Rempah</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Harga (Rp/Kg)</Label>
+                <Input name="price" type="number" defaultValue={editingProduct?.price} required placeholder="25000" className="rounded-xl h-12" />
+              </div>
+              <div className="space-y-2">
+                <Label>Stok (Kg)</Label>
+                <Input name="stock" type="number" defaultValue={editingProduct?.stock} required placeholder="50" className="rounded-xl h-12" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Deskripsi</Label>
+              <Textarea name="description" defaultValue={editingProduct?.description} placeholder="Ceritakan kesegaran produk Anda..." className="rounded-xl min-h-[100px]" />
+            </div>
+            <div className="space-y-2">
+              <Label>Foto Produk</Label>
+              <div 
+                onClick={() => productImageInputRef.current?.click()}
+                className={cn(
+                  "relative border-2 border-dashed border-primary/20 rounded-2xl p-8 text-center bg-primary/5 cursor-pointer hover:bg-primary/10 transition-colors overflow-hidden h-40 flex flex-col items-center justify-center",
+                  productImage && "border-none p-0"
+                )}
+              >
+                {productImage ? (
+                  <div className="relative w-full h-full group">
+                    <Image src={productImage} alt="Preview" fill className="object-cover" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <Button type="button" variant="destructive" size="sm" className="rounded-full" onClick={(e) => { e.stopPropagation(); setProductImage(null); }}>
+                        <X className="h-4 w-4 mr-1" /> Hapus
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <Upload className="h-8 w-8 text-primary/40 mb-2" />
+                    <p className="text-xs font-bold">Klik untuk upload foto</p>
+                  </>
+                )}
+                <input type="file" ref={productImageInputRef} className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, 'product')} />
+              </div>
+            </div>
+            <DialogFooter className="gap-2">
+              <Button type="button" variant="ghost" onClick={() => setIsProductDialogOpen(false)}>Batal</Button>
+              <Button type="submit" className="flex-1 h-14 rounded-xl bg-secondary hover:bg-secondary/90 text-white font-black text-lg">
+                {editingProduct ? 'Simpan Perubahan' : 'Terbitkan Produk'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       {/* Project Modal */}
       <Dialog open={isProjectDialogOpen} onOpenChange={setIsProjectDialogOpen}>
@@ -671,7 +821,111 @@ export function FarmerDashboard() {
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Land Modal */}
+      <Dialog open={isLandDialogOpen} onOpenChange={setIsLandDialogOpen}>
+        <DialogContent className="rounded-[2.5rem] sm:max-w-[700px] border-none glassmorphism max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold">{editingLand ? 'Edit Data Lahan' : 'Tambah Data Lahan Baru'}</DialogTitle>
+            <DialogDescription>Daftarkan lahan baru Anda untuk memudahkan pelacakan operasional tani.</DialogDescription>
+          </DialogHeader>
+          <form onSubmit={submitLandForm} className="space-y-6 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Nama Lahan</Label>
+                <Input name="name" defaultValue={editingLand?.name} required placeholder="Misal: Kebun Lembang A" className="rounded-xl h-12" />
+              </div>
+              <div className="space-y-2">
+                <Label>Lokasi</Label>
+                <Input name="location" defaultValue={editingLand?.location} required placeholder="Misal: Bandung Barat" className="rounded-xl h-12" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Luas Lahan (Ha)</Label>
+                <Input name="size" type="number" step="0.1" defaultValue={editingLand?.size} required placeholder="1.2" className="rounded-xl h-12" />
+              </div>
+              <div className="space-y-2">
+                <Label>Jenis Tanaman</Label>
+                <Input name="crop" defaultValue={editingLand?.crop} required placeholder="Misal: Tomat Cherry" className="rounded-xl h-12" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Select name="status" defaultValue={editingLand?.status || "Masa Tanam"}>
+                  <SelectTrigger className="rounded-xl h-12">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Masa Tanam">Masa Tanam</SelectItem>
+                    <SelectItem value="Siap Panen">Siap Panen</SelectItem>
+                    <SelectItem value="Baru Panen">Baru Panen</SelectItem>
+                    <SelectItem value="Lahan Kosong">Lahan Kosong</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Estimasi Panen</Label>
+                <Input name="harvest" type="date" defaultValue={editingLand?.harvest} className="rounded-xl h-12" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Sistem Irigasi</Label>
+                <Select name="irrigation" defaultValue={editingLand?.irrigation || "Drip"}>
+                  <SelectTrigger className="rounded-xl h-12">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Drip">Drip Irrigation</SelectItem>
+                    <SelectItem value="Rainfed">Rainfed (Tadah Hujan)</SelectItem>
+                    <SelectItem value="Sprinkler">Sprinkler</SelectItem>
+                    <SelectItem value="Manual">Penyiraman Manual</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Kondisi Tanah</Label>
+                <Input name="soil" defaultValue={editingLand?.soil} placeholder="Misal: Vulkanik, Subur" className="rounded-xl h-12" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Foto Lahan</Label>
+              <div 
+                onClick={() => landImageInputRef.current?.click()}
+                className={cn(
+                  "relative border-2 border-dashed border-primary/20 rounded-2xl p-8 text-center bg-primary/5 cursor-pointer hover:bg-primary/10 transition-colors overflow-hidden h-40 flex flex-col items-center justify-center",
+                  landImage && "border-none p-0"
+                )}
+              >
+                {landImage ? (
+                  <div className="relative w-full h-full group">
+                    <Image src={landImage} alt="Preview" fill className="object-cover" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <Button type="button" variant="destructive" size="sm" className="rounded-full" onClick={(e) => { e.stopPropagation(); setLandImage(null); }}>
+                        <X className="h-4 w-4 mr-1" /> Hapus
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <Upload className="h-8 w-8 text-primary/40 mb-2" />
+                    <p className="text-xs font-bold">Klik untuk upload foto</p>
+                  </>
+                )}
+                <input type="file" ref={landImageInputRef} className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, 'land')} />
+              </div>
+            </div>
+            <DialogFooter className="gap-2">
+              <Button type="button" variant="ghost" onClick={() => setIsLandDialogOpen(false)}>Batal</Button>
+              <Button type="submit" className="flex-1 h-14 rounded-xl bg-secondary hover:bg-secondary/90 text-white font-black text-lg">
+                {editingLand ? 'Simpan Perubahan' : 'Simpan Data Lahan'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
-
