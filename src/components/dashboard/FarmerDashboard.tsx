@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -24,7 +23,8 @@ import {
   MoreVertical,
   Camera,
   Layers,
-  BarChart3
+  BarChart3,
+  Users
 } from "lucide-react";
 import { predictHarvestWindow, PredictHarvestWindowOutput } from "@/ai/flows/predict-harvest-window";
 import { useToast } from "@/hooks/use-toast";
