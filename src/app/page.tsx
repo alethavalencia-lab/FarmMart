@@ -40,7 +40,7 @@ export default function LandingPage() {
   
   const quickNav = [
     { id: 'quick-nav-farmers', label: "Petani Kami", icon: Users },
-    { id: 'quick-nav-live', label: "Live Panen", icon: PlayCircle },
+    { id: 'quick-nav-live', label: "Live Tani", icon: PlayCircle },
     { id: 'quick-nav-fresh', label: "Produk Segar", icon: Sprout },
     { id: 'quick-nav-invest', label: "Investasi Tani", icon: TrendingUp },
     { id: 'quick-nav-b2b', label: "B2B Partnership", icon: Globe },
@@ -149,7 +149,7 @@ export default function LandingPage() {
                 <Link href="/live">
                   <Button size="lg" variant="outline" className="rounded-full border-2 border-white text-white hover:bg-white/10 px-10 h-16 text-lg font-bold backdrop-blur-sm group transition-all active:scale-95">
                     <PlayCircle className="mr-3 h-6 w-6 group-hover:scale-110 transition-transform" />
-                    Jelajahi Live Panen
+                    Jelajahi Live Tani
                   </Button>
                 </Link>
               </div>
@@ -341,7 +341,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Live Panen Social Commerce Section */}
+      {/* Live Tani Social Commerce Section */}
       <section className="py-24 container mx-auto px-6 overflow-hidden">
         <div className="bg-black rounded-[4rem] p-12 md:p-20 relative flex flex-col lg:flex-row items-center gap-12 border border-white/10 shadow-[0_0_80px_rgba(46,125,50,0.2)]">
           <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-[100px] -mr-48 -mt-48"></div>
@@ -349,7 +349,7 @@ export default function LandingPage() {
           <div className="lg:w-1/2 space-y-8 relative z-10 text-center lg:text-left">
             <div className="space-y-4">
               <Badge className="bg-red-500/10 text-red-500 border-red-500/20 px-4 py-1.5 rounded-full font-bold flex items-center gap-2 w-fit mx-auto lg:mx-0">
-                <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse"></div> LIVE PANEN
+                <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse"></div> LIVE TANI
               </Badge>
               <h2 className="text-4xl md:text-6xl font-black font-headline text-white leading-tight">Social Commerce: <br /><span className="text-secondary">Belanja dari Lahan.</span></h2>
               <p className="text-white/60 text-lg leading-relaxed max-w-xl">Hadirkan pengalaman belanja yang transparan. Tonton langsung proses panen, berinteraksi dengan petani, and beli produk segar seketika itu juga.</p>
@@ -565,7 +565,7 @@ export default function LandingPage() {
             <div className="space-y-6">
               <h4 className="text-lg font-black font-headline text-primary uppercase tracking-widest">Layanan</h4>
               <ul className="space-y-4">
-                {['Marketplace', 'Live Panen', 'B2B Hub', 'Logistik Tani', 'Analitik Pasar'].map((link, i) => (
+                {['Marketplace', 'Live Tani', 'B2B Hub', 'Logistik Tani', 'Analitik Pasar'].map((link, i) => (
                   <li key={i}><Link href="#" className="text-muted-foreground font-semibold hover:text-secondary transition-colors">{link}</Link></li>
                 ))}
               </ul>

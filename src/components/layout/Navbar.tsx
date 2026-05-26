@@ -51,7 +51,7 @@ export function Navbar() {
         )}>
           {[
             { label: "Marketplace", href: "/marketplace" },
-            { label: "Live Panen", href: "/live" },
+            { label: "Live Tani", href: "/live" },
             { label: "Portofolio", href: "/dashboard" },
             { label: "B2B Hub", href: "/b2b" },
           ].map((item) => (

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Navbar } from "@/components/layout/Navbar";
@@ -106,7 +107,7 @@ export default function LiveCommercePage() {
           <div className="p-4 border-b flex items-center justify-between">
             <h3 className="font-bold flex items-center gap-2">
               <MessageCircle className="h-5 w-5 text-primary" />
-              Obrolan Langsung
+              Obrolan Langsung (Live Tani)
             </h3>
             <div className="flex gap-2">
               <Button variant="ghost" size="icon" className="text-muted-foreground"><Share2 className="h-5 w-5" /></Button>
@@ -119,8 +120,8 @@ export default function LiveCommercePage() {
               { user: "Andi Saputra", msg: "Tomatnya kelihatan segar banget pak!", color: "bg-blue-100" },
               { user: "Siti Aminah", msg: "Bisa kirim ke Jakarta Barat gak?", color: "bg-pink-100" },
               { user: "Budi Jaya", msg: "Udah checkout 5 kg ya pak maman!", color: "bg-green-100" },
-              { user: "Tani Mart Bot", msg: "Stok tinggal 15 kg lagi. Segera pesan!", color: "bg-primary/10", isBot: true },
-              { user: "Rudi Hartono", msg: "Wih live panen keren banget fiturnya.", color: "bg-orange-100" },
+              { user: "Farm Mart Bot", msg: "Stok tinggal 15 kg lagi. Segera pesan!", color: "bg-primary/10", isBot: true },
+              { user: "Rudi Hartono", msg: "Wih live tani keren banget fiturnya.", color: "bg-orange-100" },
             ].map((chat, i) => (
               <div key={i} className="flex gap-3">
                 <Avatar className="h-8 w-8">
