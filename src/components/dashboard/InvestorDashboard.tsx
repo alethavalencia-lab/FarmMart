@@ -10,6 +10,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip,
 import { TrendingUp, Wallet, ShieldCheck, Leaf, Sparkles, ArrowUpRight } from "lucide-react";
 import { generateInvestorSummary, InvestorPortfolioOutput } from "@/ai/flows/generate-investor-summary";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 const portfolioData = [
   { name: "Jagung Organik", value: 4500, roi: 18 },

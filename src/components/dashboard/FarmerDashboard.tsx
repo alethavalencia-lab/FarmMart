@@ -11,6 +11,7 @@ import { Progress } from "@/components/ui/progress";
 import { Sprout, CloudRain, Sun, Thermometer, Calendar, Send, Sparkles, TrendingUp, Package } from "lucide-react";
 import { predictHarvestWindow, PredictHarvestWindowOutput } from "@/ai/flows/predict-harvest-window";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 export function FarmerDashboard() {
   const { toast } = useToast();

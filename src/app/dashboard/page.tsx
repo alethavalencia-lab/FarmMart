@@ -7,6 +7,7 @@ import { FarmerDashboard } from "@/components/dashboard/FarmerDashboard";
 import { InvestorDashboard } from "@/components/dashboard/InvestorDashboard";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Sprout, ShoppingCart, BarChart3, Users, Settings, LogOut, LayoutDashboard } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function DashboardPage() {
   const searchParams = useSearchParams();
@@ -77,8 +78,4 @@ export default function DashboardPage() {
       </div>
     </div>
   );
-}
-
-function cn(...inputs: any[]) {
-  return inputs.filter(Boolean).join(" ");
 }
