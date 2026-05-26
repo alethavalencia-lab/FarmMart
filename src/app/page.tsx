@@ -9,8 +9,6 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { cn } from "@/lib/utils";
 
 export default function LandingPage() {
-  const heroImg = PlaceHolderImages.find(img => img.id === 'hero-farm');
-  
   const featuredProducts = [
     { name: "Tomat Cherry Organik", price: "Rp 24.000", id: "prod-tomato" },
     { name: "Cabai Rawit Premium", price: "Rp 18.500", id: "prod-chili" },
@@ -71,20 +69,15 @@ export default function LandingPage() {
         </div>
 
         <div className="relative group animate-in fade-in slide-in-from-right duration-700">
-          <div className="absolute -inset-4 bg-accent/20 rounded-3xl blur-2xl group-hover:bg-accent/30 transition-all duration-500"></div>
-          <Card className="relative overflow-hidden border-none shadow-2xl rounded-3xl">
-            {heroImg?.imageUrl ? (
-              <Image
-                src={heroImg.imageUrl}
-                alt={heroImg.description || "Farm"}
-                width={600}
-                height={400}
-                className="w-full h-auto object-cover"
-                data-ai-hint={heroImg.imageHint}
-              />
-            ) : (
-              <div className="w-full aspect-[3/2] bg-muted animate-pulse" />
-            )}
+          <div className="absolute -inset-4 bg-accent/20 rounded-[3rem] blur-2xl group-hover:bg-accent/30 transition-all duration-500"></div>
+          <Card className="relative overflow-hidden border-none shadow-2xl rounded-[3rem] h-[500px] w-full">
+            <Image
+              src="https://kj1bcdn.b-cdn.net/media/62657/bkj.jpg"
+              alt="Farm Mart Agriculture Hero"
+              fill
+              className="object-cover"
+              priority
+            />
           </Card>
           
           {/* Floating Stats Card */}
@@ -146,7 +139,7 @@ export default function LandingPage() {
           {featuredProducts.map((item, idx) => (
             <div key={idx} className="group cursor-pointer">
               <div className="relative overflow-hidden rounded-3xl mb-4 aspect-square">
-                {item.image?.imageUrl ? (
+                {item.image?.imageUrl && (
                   <Image
                     src={item.image.imageUrl}
                     alt={item.name}
@@ -154,7 +147,8 @@ export default function LandingPage() {
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
                     data-ai-hint={item.image.imageHint}
                   />
-                ) : (
+                )}
+                {!item.image?.imageUrl && (
                   <div className="w-full h-full bg-muted animate-pulse" />
                 )}
                 <div className="absolute top-4 right-4">
