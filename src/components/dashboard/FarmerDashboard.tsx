@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -25,7 +26,11 @@ import {
   Camera,
   Layers,
   BarChart3,
-  Users
+  Users,
+  MessageCircle,
+  PlayCircle,
+  ChevronRight,
+  ArrowRight
 } from "lucide-react";
 import { predictHarvestWindow, PredictHarvestWindowOutput } from "@/ai/flows/predict-harvest-window";
 import { useToast } from "@/hooks/use-toast";
@@ -43,6 +48,7 @@ export function FarmerDashboard() {
   const [products, setProducts] = useState([
     { id: 1, name: "Tomat Cherry Organik", price: 25000, stock: 45, status: "Aktif", category: "Sayur" },
     { id: 2, name: "Cabai Merah Keriting", price: 35000, stock: 120, status: "Aktif", category: "Rempah" },
+    { id: 3, name: "Melon Cantaloupe Premium", price: 45000, stock: 30, status: "Stok Tipis", category: "Buah" },
   ]);
 
   const [lands, setLands] = useState([
@@ -52,6 +58,20 @@ export function FarmerDashboard() {
 
   const [projects, setProjects] = useState([
     { id: 1, name: "Ekspansi Hidroponik 2024", target: "Rp 500M", funded: "75%", investors: 12, status: "Open" },
+    { id: 2, name: "Irigasi Cerdas Lembang", target: "Rp 250M", funded: "40%", investors: 5, status: "Open" },
+  ]);
+
+  const [orders, setOrders] = useState([
+    { id: "#ORD-9912", items: "5kg Tomat Cherry", total: "Rp 125.000", status: "Proses", buyer: "Resto Sedap (Andi)", time: "2 jam yang lalu", payment: "Lunas" },
+    { id: "#ORD-9910", items: "12kg Cabai Merah", total: "Rp 420.000", status: "Kirim", buyer: "Hotel Grand (Siti)", time: "5 jam yang lalu", payment: "Lunas" },
+    { id: "#ORD-9899", items: "2kg Kunyit Segar", total: "Rp 24.000", status: "Selesai", buyer: "Ibu Siti Aminah", time: "1 hari yang lalu", payment: "Lunas" },
+    { id: "#ORD-9895", items: "10kg Melon Premium", total: "Rp 450.000", status: "Proses", buyer: "Cafe Hijau", time: "3 jam yang lalu", payment: "Pending" },
+  ]);
+
+  const [activities, setActivities] = useState([
+    { text: "Produk 'Tomat Cherry' terjual 5kg ke Resto Sedap", time: "10 menit yang lalu", type: "sale" },
+    { text: "Investor baru 'Budi' mendanai Proyek Hidroponik", time: "1 jam yang lalu", type: "investment" },
+    { text: "Pesanan #ORD-9910 telah dikirim via Kurir Tani", time: "3 jam yang lalu", type: "logistics" },
   ]);
 
   const handlePredict = async () => {
@@ -90,15 +110,20 @@ export function FarmerDashboard() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500 max-w-7xl mx-auto">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div>
+      {/* Header with Live Action */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white/40 p-8 rounded-[3rem] border border-white/20">
+        <div className="space-y-1">
           <h1 className="text-4xl font-black font-headline text-primary tracking-tight">Halo, Pak Tani Maman! 👋</h1>
           <p className="text-muted-foreground text-lg">Pantau performa tani & kelola ekosistem produksi Anda.</p>
         </div>
         <div className="flex flex-wrap gap-3">
+          <Button variant="outline" className="rounded-2xl h-14 px-8 font-bold border-destructive text-destructive hover:bg-destructive/5 group">
+            <PlayCircle className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" /> 
+            Mulai Live Tani
+          </Button>
           <Dialog>
             <DialogTrigger asChild>
-              <Button className="bg-primary hover:bg-primary/90 rounded-2xl h-12 px-6 font-bold shadow-lg shadow-primary/20"><Plus className="mr-2 h-5 w-5" /> Tambah Produk</Button>
+              <Button className="bg-primary hover:bg-primary/90 rounded-2xl h-14 px-8 font-bold shadow-xl shadow-primary/20 transition-all active:scale-95"><Plus className="mr-2 h-5 w-5" /> Tambah Produk</Button>
             </DialogTrigger>
             <DialogContent className="rounded-[2.5rem] sm:max-w-[600px] border-none glassmorphism">
               <DialogHeader>
@@ -109,12 +134,12 @@ export function FarmerDashboard() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Nama Produk</Label>
-                    <Input placeholder="Misal: Tomat Cherry Premium" className="rounded-xl" />
+                    <Input placeholder="Misal: Tomat Cherry Premium" className="rounded-xl h-12" />
                   </div>
                   <div className="space-y-2">
                     <Label>Kategori</Label>
                     <Select>
-                      <SelectTrigger className="rounded-xl">
+                      <SelectTrigger className="rounded-xl h-12">
                         <SelectValue placeholder="Pilih Kategori" />
                       </SelectTrigger>
                       <SelectContent>
@@ -128,11 +153,11 @@ export function FarmerDashboard() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Harga (Rp/Kg)</Label>
-                    <Input type="number" placeholder="25000" className="rounded-xl" />
+                    <Input type="number" placeholder="25000" className="rounded-xl h-12" />
                   </div>
                   <div className="space-y-2">
                     <Label>Stok (Kg)</Label>
-                    <Input type="number" placeholder="50" className="rounded-xl" />
+                    <Input type="number" placeholder="50" className="rounded-xl h-12" />
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -145,7 +170,7 @@ export function FarmerDashboard() {
                   <p className="text-[10px] text-muted-foreground">Format JPG, PNG (Maks 5MB)</p>
                 </div>
                 <DialogFooter>
-                  <Button type="submit" className="w-full h-12 rounded-xl bg-secondary hover:bg-secondary/90 text-white font-bold">Terbitkan Produk</Button>
+                  <Button type="submit" className="w-full h-14 rounded-xl bg-secondary hover:bg-secondary/90 text-white font-black text-lg">Terbitkan Produk</Button>
                 </DialogFooter>
               </form>
             </DialogContent>
@@ -153,6 +178,7 @@ export function FarmerDashboard() {
         </div>
       </div>
 
+      {/* Stats Ribbon */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { label: "Total Penjualan", value: "Rp 154.2M", icon: TrendingUp, color: "text-secondary", bg: "bg-secondary/10" },
@@ -244,61 +270,45 @@ export function FarmerDashboard() {
                       </div>
                       <p className="text-sm italic leading-relaxed text-muted-foreground border-l-4 border-accent pl-4">"{prediction.optimalHarvestWindow.reasoning}"</p>
                     </div>
-                    <div className="p-6 bg-primary/5 rounded-[2rem] border border-primary/10">
-                       <h5 className="font-bold flex items-center gap-2 mb-3"><CheckCircle2 className="h-5 w-5 text-primary" /> Yield Optimization Advice</h5>
-                       <p className="text-sm leading-relaxed text-muted-foreground">{prediction.yieldOptimizationAdvice}</p>
-                       <div className="mt-4 pt-4 border-t border-primary/10 flex justify-between items-center">
-                          <span className="text-sm font-bold">Potensi Kenaikan Hasil:</span>
-                          <Badge className="bg-accent text-white font-black">{prediction.potentialYieldIncrease}</Badge>
-                       </div>
-                    </div>
                     <Button variant="ghost" onClick={() => setPrediction(null)} className="text-muted-foreground font-bold hover:bg-primary/5">Ulangi Analisis</Button>
                   </div>
                 )}
               </CardContent>
             </Card>
 
-            <Card className="rounded-[2.5rem] border-none shadow-xl bg-white overflow-hidden">
-               <CardHeader className="p-8">
-                  <div className="flex justify-between items-center">
-                    <CardTitle className="text-xl font-bold font-headline text-primary">Pesanan Terbaru</CardTitle>
-                    <button className="text-xs font-bold text-secondary hover:underline">Lihat Semua</button>
-                  </div>
-               </CardHeader>
-               <CardContent className="px-8 pb-8 space-y-4">
-                  {[
-                    { id: "#ORD-9912", items: "5kg Tomat Cherry", total: "Rp 125.000", status: "Proses", buyer: "Resto Sedap" },
-                    { id: "#ORD-9910", items: "12kg Cabai Merah", total: "Rp 420.000", status: "Kirim", buyer: "Hotel Grand" },
-                    { id: "#ORD-9899", items: "2kg Kunyit Segar", total: "Rp 24.000", status: "Selesai", buyer: "Ibu Siti" },
-                  ].map((order, i) => (
-                    <div key={i} className="flex items-center justify-between p-4 bg-primary/5 rounded-2xl border border-primary/10 hover:border-primary/30 transition-colors">
-                      <div className="space-y-1">
-                        <p className="font-black text-sm">{order.id}</p>
-                        <p className="text-xs text-muted-foreground">{order.buyer} • {order.items}</p>
-                      </div>
-                      <div className="text-right space-y-1">
-                        <p className="font-bold text-primary text-sm">{order.total}</p>
-                        <Badge className={cn(
-                          "scale-75 origin-right font-black border-none",
-                          order.status === 'Proses' ? "bg-blue-500" : order.status === 'Kirim' ? "bg-orange-500" : "bg-green-500"
-                        )}>{order.status}</Badge>
-                      </div>
+            <div className="space-y-6">
+              <Card className="rounded-[2.5rem] border-none shadow-xl bg-white overflow-hidden">
+                <CardHeader className="p-8">
+                    <div className="flex justify-between items-center">
+                      <CardTitle className="text-xl font-bold font-headline text-primary">Store Activity</CardTitle>
+                      <button className="text-xs font-bold text-secondary hover:underline">See All</button>
                     </div>
-                  ))}
-                  <div className="pt-4 p-6 bg-accent/5 rounded-[2rem] border border-accent/20">
-                     <div className="flex items-center gap-3 mb-3">
-                        <BarChart3 className="text-accent h-5 w-5" />
-                        <span className="font-bold text-sm">Produk Terlaris Minggu Ini</span>
-                     </div>
-                     <div className="space-y-3">
-                        <div className="flex justify-between text-xs"><span>Tomat Cherry</span><span className="font-bold">450 Kg</span></div>
-                        <Progress value={85} className="h-2 bg-accent/10" />
-                        <div className="flex justify-between text-xs"><span>Cabai Merah</span><span className="font-bold">120 Kg</span></div>
-                        <Progress value={45} className="h-2 bg-accent/10" />
-                     </div>
-                  </div>
-               </CardContent>
-            </Card>
+                </CardHeader>
+                <CardContent className="px-8 pb-8 space-y-5">
+                    {activities.map((act, i) => (
+                      <div key={i} className="flex gap-4 items-start">
+                        <div className={cn(
+                          "p-2 rounded-full",
+                          act.type === 'sale' ? "bg-green-100 text-green-600" : act.type === 'investment' ? "bg-accent/10 text-accent" : "bg-blue-100 text-blue-600"
+                        )}>
+                          {act.type === 'sale' ? <ShoppingBag className="h-4 w-4" /> : act.type === 'investment' ? <TrendingUp className="h-4 w-4" /> : <Package className="h-4 w-4" />}
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium leading-tight">{act.text}</p>
+                          <p className="text-[10px] text-muted-foreground font-bold uppercase mt-1">{act.time}</p>
+                        </div>
+                      </div>
+                    ))}
+                </CardContent>
+              </Card>
+
+              <Card className="rounded-[2.5rem] border-none shadow-xl bg-secondary p-8 text-white relative overflow-hidden">
+                <div className="absolute bottom-0 right-0 w-32 h-32 bg-white/10 rounded-full -mb-16 -mr-16 blur-2xl"></div>
+                <h4 className="text-lg font-bold mb-4">Waktunya Live Tani!</h4>
+                <p className="text-sm text-white/80 mb-6">Tingkatkan penjualan dengan berinteraksi langsung bersama pembeli.</p>
+                <Button className="w-full bg-white text-secondary hover:bg-white/90 font-bold rounded-xl h-12">Mulai Live Sekarang</Button>
+              </Card>
+            </div>
           </div>
         </TabsContent>
 
@@ -308,7 +318,10 @@ export function FarmerDashboard() {
               <Card key={p.id} className="rounded-[2rem] border-none shadow-xl overflow-hidden group">
                 <div className="relative aspect-video bg-primary/5">
                   <Image src={`https://picsum.photos/seed/prod${p.id}/400/300`} alt={p.name} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
-                  <Badge className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-primary border-none font-bold">{p.status}</Badge>
+                  <Badge className={cn(
+                    "absolute top-4 right-4 bg-white/90 backdrop-blur-sm border-none font-bold",
+                    p.status === 'Stok Tipis' ? "text-orange-500" : "text-primary"
+                  )}>{p.status}</Badge>
                 </div>
                 <CardContent className="p-6 space-y-4">
                   <div className="flex justify-between items-start">
@@ -335,11 +348,53 @@ export function FarmerDashboard() {
                 </CardContent>
               </Card>
             ))}
-            <button className="flex flex-col items-center justify-center gap-4 rounded-[2rem] border-2 border-dashed border-primary/20 hover:bg-primary/5 transition-all p-8 group">
+            <button className="flex flex-col items-center justify-center gap-4 rounded-[2rem] border-2 border-dashed border-primary/20 hover:bg-primary/5 transition-all p-8 group h-full min-h-[300px]">
                <div className="p-4 bg-primary/10 rounded-full group-hover:scale-110 transition-transform"><Plus className="h-8 w-8 text-primary" /></div>
                <p className="font-bold text-primary">Tambah Produk</p>
             </button>
           </div>
+        </TabsContent>
+
+        <TabsContent value="orders" className="animate-in fade-in duration-500">
+          <Card className="rounded-[2.5rem] border-none shadow-xl overflow-hidden bg-white">
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead className="bg-primary/5 border-b">
+                    <tr>
+                      <th className="px-8 py-5 font-bold text-sm text-primary">ID Pesanan</th>
+                      <th className="px-8 py-5 font-bold text-sm text-primary">Pembeli</th>
+                      <th className="px-8 py-5 font-bold text-sm text-primary">Produk</th>
+                      <th className="px-8 py-5 font-bold text-sm text-primary">Waktu</th>
+                      <th className="px-8 py-5 font-bold text-sm text-primary">Total</th>
+                      <th className="px-8 py-5 font-bold text-sm text-primary">Status</th>
+                      <th className="px-8 py-5 font-bold text-sm text-primary"></th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y">
+                    {orders.map((order, i) => (
+                      <tr key={i} className="hover:bg-primary/5 transition-colors">
+                        <td className="px-8 py-5 font-black text-sm">{order.id}</td>
+                        <td className="px-8 py-5 font-medium text-sm">{order.buyer}</td>
+                        <td className="px-8 py-5 text-sm text-muted-foreground">{order.items}</td>
+                        <td className="px-8 py-5 text-xs font-bold text-muted-foreground uppercase">{order.time}</td>
+                        <td className="px-8 py-5 font-black text-primary text-sm">{order.total}</td>
+                        <td className="px-8 py-5">
+                          <Badge className={cn(
+                            "font-black border-none px-4 py-1",
+                            order.status === 'Proses' ? "bg-blue-500" : order.status === 'Kirim' ? "bg-orange-500" : "bg-green-500"
+                          )}>{order.status}</Badge>
+                        </td>
+                        <td className="px-8 py-5 text-right">
+                          <Button variant="ghost" size="icon" className="rounded-full"><ChevronRight className="h-5 w-5" /></Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="lands" className="animate-in fade-in duration-500">
@@ -369,108 +424,68 @@ export function FarmerDashboard() {
                       <p className="font-bold text-green-600">Subur (pH 6.5)</p>
                     </div>
                   </div>
-                  <Button className="w-full rounded-xl bg-primary/10 text-primary hover:bg-primary/20 font-bold">Detail Lahan</Button>
+                  <Button className="w-full h-12 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 font-bold transition-all">Detail Lahan</Button>
                 </CardContent>
               </Card>
             ))}
-            <Dialog>
-              <DialogTrigger asChild>
-                <button className="flex flex-col items-center justify-center gap-4 rounded-[2.5rem] border-2 border-dashed border-primary/20 hover:bg-primary/5 transition-all p-8 group h-full min-h-[300px]">
-                   <div className="p-4 bg-primary/10 rounded-full group-hover:scale-110 transition-transform"><Plus className="h-8 w-8 text-primary" /></div>
-                   <p className="font-bold text-primary">Input Data Lahan</p>
-                </button>
-              </DialogTrigger>
-              <DialogContent className="rounded-[2.5rem] sm:max-w-[600px] border-none glassmorphism">
-                <DialogHeader>
-                  <DialogTitle className="text-2xl font-bold">Daftarkan Lahan Baru</DialogTitle>
-                  <DialogDescription>Masukkan informasi teknis lahan garapan Anda.</DialogDescription>
-                </DialogHeader>
-                <form onSubmit={addLand} className="space-y-6 py-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>Nama Lahan</Label>
-                      <Input placeholder="Misal: Kebun Utara" className="rounded-xl h-12" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Lokasi (Kota/Kab)</Label>
-                      <Input placeholder="Misal: Lembang" className="rounded-xl h-12" />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>Luas Lahan (Ha)</Label>
-                      <Input type="number" step="0.1" placeholder="1.2" className="rounded-xl h-12" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Jenis Tanaman Utama</Label>
-                      <Input placeholder="Misal: Padi" className="rounded-xl h-12" />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Sistem Irigasi</Label>
-                    <Select>
-                      <SelectTrigger className="rounded-xl h-12">
-                        <SelectValue placeholder="Pilih Sistem" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="drip">Drip Irrigation</SelectItem>
-                        <SelectItem value="rainfed">Rainfed (Hujan)</SelectItem>
-                        <SelectItem value="sprinkler">Sprinkler</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <DialogFooter>
-                    <Button type="submit" className="w-full h-12 rounded-xl bg-secondary hover:bg-secondary/90 text-white font-bold">Simpan Data Lahan</Button>
-                  </DialogFooter>
-                </form>
-              </DialogContent>
-            </Dialog>
+            <button className="flex flex-col items-center justify-center gap-4 rounded-[2.5rem] border-2 border-dashed border-primary/20 hover:bg-primary/5 transition-all p-8 group h-full min-h-[300px]">
+               <div className="p-4 bg-primary/10 rounded-full group-hover:scale-110 transition-transform"><Plus className="h-8 w-8 text-primary" /></div>
+               <p className="font-bold text-primary">Input Data Lahan</p>
+            </button>
           </div>
         </TabsContent>
 
         <TabsContent value="investments" className="animate-in fade-in duration-500">
-           <div className="grid lg:grid-cols-2 gap-8">
+           <div className="grid lg:grid-cols-2 gap-10">
              {projects.map((proj) => (
-               <Card key={proj.id} className="rounded-[2.5rem] border-none shadow-xl bg-white overflow-hidden p-8 flex flex-col sm:flex-row gap-8">
-                  <div className="relative w-full sm:w-48 h-48 rounded-3xl overflow-hidden shrink-0">
+               <Card key={proj.id} className="rounded-[3rem] border-none shadow-2xl bg-white overflow-hidden p-8 flex flex-col sm:flex-row gap-10 hover:translate-y-[-4px] transition-all duration-300">
+                  <div className="relative w-full sm:w-60 h-60 rounded-[2rem] overflow-hidden shrink-0 shadow-lg">
                     <Image src={`https://picsum.photos/seed/proj${proj.id}/400/400`} alt={proj.name} fill className="object-cover" />
                   </div>
-                  <div className="flex-1 space-y-6">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <Badge className="bg-primary/10 text-primary border-none font-black mb-2">{proj.status}</Badge>
-                        <h4 className="text-2xl font-black leading-tight">{proj.name}</h4>
-                      </div>
-                      <Button variant="ghost" size="icon" className="rounded-full"><MoreVertical className="h-5 w-5" /></Button>
-                    </div>
+                  <div className="flex-1 space-y-8 flex flex-col justify-between">
                     <div className="space-y-3">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground font-medium">Dana Terkumpul</span>
-                        <span className="font-black text-primary">{proj.funded} ({proj.target})</span>
+                      <div className="flex justify-between items-start">
+                        <Badge className="bg-primary/10 text-primary border-none font-black px-4 py-1">{proj.status}</Badge>
+                        <Button variant="ghost" size="icon" className="rounded-full -mt-2"><MoreVertical className="h-5 w-5" /></Button>
                       </div>
-                      <Progress value={75} className="h-3 bg-primary/10" />
-                      <div className="flex items-center gap-4 text-xs font-bold text-muted-foreground">
-                        <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {proj.investors} Investor</span>
-                        <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> 12 Hari Lagi</span>
+                      <h4 className="text-3xl font-black leading-tight font-headline text-primary">{proj.name}</h4>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-end">
+                        <div className="space-y-1">
+                          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Dana Terkumpul</p>
+                          <p className="text-2xl font-black text-primary">{proj.funded}</p>
+                        </div>
+                        <p className="text-sm font-bold text-muted-foreground">Target: {proj.target}</p>
+                      </div>
+                      <Progress value={parseInt(proj.funded)} className="h-4 bg-primary/5" />
+                      <div className="flex items-center justify-between text-xs font-bold text-muted-foreground border-t pt-4">
+                        <span className="flex items-center gap-2 bg-primary/5 px-3 py-1.5 rounded-full"><Users className="h-3.5 w-3.5" /> {proj.investors} Investor</span>
+                        <span className="flex items-center gap-2 bg-accent/5 px-3 py-1.5 rounded-full"><Calendar className="h-3.5 w-3.5" /> 12 Hari Lagi</span>
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                       <Button className="flex-1 rounded-xl bg-primary text-white font-bold">Detail Proyek</Button>
-                       <Button variant="outline" className="flex-1 rounded-xl font-bold border-primary/20">Update Progress</Button>
+                    
+                    <div className="flex gap-3">
+                       <Button className="flex-1 h-12 rounded-xl bg-primary text-white font-black text-sm shadow-lg shadow-primary/20">Detail Proyek</Button>
+                       <Button variant="outline" className="flex-1 h-12 rounded-xl font-bold border-primary/20 hover:bg-primary/5">Update Progress</Button>
                     </div>
                   </div>
                </Card>
              ))}
              <Dialog>
                <DialogTrigger asChild>
-                 <button className="flex flex-col items-center justify-center gap-4 rounded-[2.5rem] border-2 border-dashed border-primary/20 hover:bg-primary/5 transition-all p-12 group">
-                    <div className="p-4 bg-primary/10 rounded-full group-hover:scale-110 transition-transform"><Plus className="h-8 w-8 text-primary" /></div>
-                    <p className="font-bold text-primary">Ajukan Proyek Investasi Baru</p>
+                 <button className="flex flex-col items-center justify-center gap-4 rounded-[3rem] border-2 border-dashed border-primary/20 hover:bg-primary/5 transition-all p-12 group h-full min-h-[400px]">
+                    <div className="p-6 bg-primary/10 rounded-full group-hover:scale-110 transition-transform"><Plus className="h-10 w-10 text-primary" /></div>
+                    <div className="text-center space-y-1">
+                      <p className="text-xl font-black text-primary">Ajukan Proyek Baru</p>
+                      <p className="text-sm text-muted-foreground">Dapatkan dukungan permodalan komunitas</p>
+                    </div>
                  </button>
                </DialogTrigger>
                <DialogContent className="rounded-[2.5rem] sm:max-w-[700px] border-none glassmorphism">
                  <DialogHeader>
-                   <DialogTitle className="text-2xl font-bold">Ajukan Proyek Investasi</DialogTitle>
+                   <DialogTitle className="text-2xl font-bold text-primary">Ajukan Proyek Investasi</DialogTitle>
                    <DialogDescription>Dapatkan dukungan permodalan dari komunitas investor Farm Mart.</DialogDescription>
                  </DialogHeader>
                  <form onSubmit={addProject} className="space-y-6 py-4">
@@ -499,7 +514,7 @@ export function FarmerDashboard() {
                      <Textarea placeholder="Jelaskan potensi proyek Anda kepada calon investor..." className="rounded-xl min-h-[120px]" />
                    </div>
                    <DialogFooter>
-                     <Button type="submit" className="w-full h-14 rounded-xl bg-secondary hover:bg-secondary/90 text-white font-black text-lg">Ajukan Sekarang</Button>
+                     <Button type="submit" className="w-full h-14 rounded-xl bg-secondary hover:bg-secondary/90 text-white font-black text-lg shadow-xl shadow-secondary/20">Ajukan Sekarang</Button>
                    </DialogFooter>
                  </form>
                </DialogContent>
