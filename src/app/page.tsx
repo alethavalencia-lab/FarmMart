@@ -36,7 +36,6 @@ export default function LandingPage() {
     setMounted(true);
   }, []);
 
-  // Updated hero image with the new agriculture-focused URL
   const heroImageUrl = "https://kj1bcdn.b-cdn.net/media/62657/bkj.jpg";
   
   const quickNav = [
@@ -108,9 +107,9 @@ export default function LandingPage() {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="relative h-screen min-h-[850px] w-full flex items-center overflow-hidden">
-        {/* Premium Rounded Background Container */}
-        <div className="absolute inset-0 z-0 p-4 sm:p-6 lg:p-8">
+      <section className="relative h-screen min-h-[900px] w-full flex items-center overflow-hidden">
+        {/* Immersive Background Container */}
+        <div className="absolute inset-0 z-0 p-2 sm:p-4">
           <div className="relative w-full h-full rounded-[2.5rem] sm:rounded-[3.5rem] lg:rounded-[4rem] overflow-hidden shadow-2xl">
             <Image
               src={heroImageUrl}
@@ -124,8 +123,8 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Content Container */}
-        <div className="container mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center pt-24 pb-20 sm:pb-32">
+        {/* Content Container - Adjusted Padding for Lower Content and Spacing */}
+        <div className="container mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center pt-36 pb-32 sm:pb-48">
           <div className="space-y-8 animate-in fade-in slide-in-from-left duration-1000">
             <div className="space-y-4">
               <Badge className="bg-secondary text-white border-none px-4 py-1.5 rounded-full font-bold tracking-wide">
@@ -154,7 +153,8 @@ export default function LandingPage() {
               </Link>
             </div>
 
-            <div className="flex items-center gap-8 pt-8 border-t border-white/20 max-w-md">
+            {/* Statistics Section - Separated from Content Column with more space */}
+            <div className="flex items-center gap-8 pt-10 border-t border-white/20 max-w-md">
               <div className="text-center">
                 <p className="text-3xl font-bold text-white">15k+</p>
                 <p className="text-xs text-white/60 font-semibold uppercase">Petani Aktif</p>
@@ -209,8 +209,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Quick Access Cards - Reduced negative margin and improved spacing */}
-      <section className="relative z-30 -mt-12 container mx-auto px-6 pb-12">
+      {/* Quick Access Cards - Positioned Lower to prevent overlap */}
+      <section className="relative z-30 -mt-24 container mx-auto px-6 pb-12">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {quickNav.map((item, i) => (
             <Card key={i} className="group glassmorphism border-none shadow-xl rounded-[2rem] overflow-hidden cursor-pointer hover:scale-105 transition-all duration-300">
