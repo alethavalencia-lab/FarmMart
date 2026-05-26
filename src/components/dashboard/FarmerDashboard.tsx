@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -43,12 +43,19 @@ export function FarmerDashboard() {
   const { toast } = useToast();
   const [predicting, setPredicting] = useState(false);
   const [prediction, setPrediction] = useState<PredictHarvestWindowOutput | null>(null);
+  const [isAddingProduct, setIsAddingProduct] = useState(false);
+  const [isAddingProject, setIsAddingProject] = useState(false);
 
-  // Mock data states
+  // Mock data states with local persistence
   const [products, setProducts] = useState([
     { id: 1, name: "Tomat Cherry Organik", price: 25000, stock: 45, status: "Aktif", category: "Sayur" },
     { id: 2, name: "Cabai Merah Keriting", price: 35000, stock: 120, status: "Aktif", category: "Rempah" },
     { id: 3, name: "Melon Cantaloupe Premium", price: 45000, stock: 30, status: "Stok Tipis", category: "Buah" },
+  ]);
+
+  const [projects, setProjects] = useState([
+    { id: 1, name: "Ekspansi Hidroponik 2024", target: "Rp 500.000.000", funded: "75%", investors: 12, status: "Open" },
+    { id: 2, name: "Irigasi Cerdas Lembang", target: "Rp 250.000.000", funded: "40%", investors: 5, status: "Open" },
   ]);
 
   const [lands, setLands] = useState([
@@ -56,16 +63,10 @@ export function FarmerDashboard() {
     { id: 2, name: "Lahan Dieng B", location: "Wonosobo", size: "0.8 Ha", crop: "Kentang" },
   ]);
 
-  const [projects, setProjects] = useState([
-    { id: 1, name: "Ekspansi Hidroponik 2024", target: "Rp 500M", funded: "75%", investors: 12, status: "Open" },
-    { id: 2, name: "Irigasi Cerdas Lembang", target: "Rp 250M", funded: "40%", investors: 5, status: "Open" },
-  ]);
-
   const [orders, setOrders] = useState([
     { id: "#ORD-9912", items: "5kg Tomat Cherry", total: "Rp 125.000", status: "Proses", buyer: "Resto Sedap (Andi)", time: "2 jam yang lalu", payment: "Lunas" },
     { id: "#ORD-9910", items: "12kg Cabai Merah", total: "Rp 420.000", status: "Kirim", buyer: "Hotel Grand (Siti)", time: "5 jam yang lalu", payment: "Lunas" },
     { id: "#ORD-9899", items: "2kg Kunyit Segar", total: "Rp 24.000", status: "Selesai", buyer: "Ibu Siti Aminah", time: "1 hari yang lalu", payment: "Lunas" },
-    { id: "#ORD-9895", items: "10kg Melon Premium", total: "Rp 450.000", status: "Proses", buyer: "Cafe Hijau", time: "3 jam yang lalu", payment: "Pending" },
   ]);
 
   const [activities, setActivities] = useState([
@@ -73,6 +74,24 @@ export function FarmerDashboard() {
     { text: "Investor baru 'Budi' mendanai Proyek Hidroponik", time: "1 jam yang lalu", type: "investment" },
     { text: "Pesanan #ORD-9910 telah dikirim via Kurir Tani", time: "3 jam yang lalu", type: "logistics" },
   ]);
+
+  // Load from LocalStorage on mount
+  useEffect(() => {
+    const savedProducts = localStorage.getItem("farmer_products");
+    if (savedProducts) setProducts(JSON.parse(savedProducts));
+
+    const savedProjects = localStorage.getItem("farmer_projects");
+    if (savedProjects) setProjects(JSON.parse(savedProjects));
+  }, []);
+
+  // Save to LocalStorage on change
+  useEffect(() => {
+    localStorage.setItem("farmer_products", JSON.stringify(products));
+  }, [products]);
+
+  useEffect(() => {
+    localStorage.setItem("farmer_projects", JSON.stringify(projects));
+  }, [projects]);
 
   const handlePredict = async () => {
     setPredicting(true);
@@ -93,19 +112,53 @@ export function FarmerDashboard() {
     }
   };
 
-  const addProduct = (e: React.FormEvent) => {
+  const addProduct = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    toast({ title: "Produk Berhasil Ditambahkan", description: "Produk Anda sekarang tersedia di marketplace." });
+    const formData = new FormData(e.currentTarget);
+    
+    const newProduct = {
+      id: Date.now(),
+      name: formData.get("name") as string,
+      category: formData.get("category") as string || "Sayur",
+      price: Number(formData.get("price")),
+      stock: Number(formData.get("stock")),
+      status: "Aktif",
+    };
+
+    setProducts(prev => [...prev, newProduct]);
+    setIsAddingProduct(false);
+    
+    toast({ 
+      title: "Produk Berhasil Ditambahkan", 
+      description: `${newProduct.name} sekarang tersedia di marketplace.` 
+    });
   };
 
-  const addLand = (e: React.FormEvent) => {
+  const addProject = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    toast({ title: "Lahan Berhasil Didaftarkan", description: "Data lahan telah tersimpan dalam sistem." });
+    const formData = new FormData(e.currentTarget);
+
+    const newProject = {
+      id: Date.now(),
+      name: formData.get("name") as string,
+      target: `Rp ${Number(formData.get("target")).toLocaleString('id-ID')}`,
+      funded: "0%",
+      investors: 0,
+      status: "Open",
+    };
+
+    setProjects(prev => [...prev, newProject]);
+    setIsAddingProject(false);
+
+    toast({ 
+      title: "Proyek Investasi Diajukan", 
+      description: "Proyek Anda telah terdaftar dan menunggu pendanaan." 
+    });
   };
 
-  const addProject = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast({ title: "Proyek Investasi Diajukan", description: "Menunggu verifikasi dari tim kurator Farm Mart." });
+  const deleteProduct = (id: number) => {
+    setProducts(prev => prev.filter(p => p.id !== id));
+    toast({ title: "Produk Dihapus", description: "Produk telah ditarik dari marketplace." });
   };
 
   return (
@@ -121,9 +174,11 @@ export function FarmerDashboard() {
             <PlayCircle className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" /> 
             Mulai Live Tani
           </Button>
-          <Dialog>
+          <Dialog open={isAddingProduct} onOpenChange={setIsAddingProduct}>
             <DialogTrigger asChild>
-              <Button className="bg-primary hover:bg-primary/90 rounded-2xl h-14 px-8 font-bold shadow-xl shadow-primary/20 transition-all active:scale-95"><Plus className="mr-2 h-5 w-5" /> Tambah Produk</Button>
+              <Button className="bg-primary hover:bg-primary/90 rounded-2xl h-14 px-8 font-bold shadow-xl shadow-primary/20 transition-all active:scale-95">
+                <Plus className="mr-2 h-5 w-5" /> Tambah Produk
+              </Button>
             </DialogTrigger>
             <DialogContent className="rounded-[2.5rem] sm:max-w-[600px] border-none glassmorphism">
               <DialogHeader>
@@ -134,18 +189,18 @@ export function FarmerDashboard() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Nama Produk</Label>
-                    <Input placeholder="Misal: Tomat Cherry Premium" className="rounded-xl h-12" />
+                    <Input name="name" required placeholder="Misal: Tomat Cherry Premium" className="rounded-xl h-12" />
                   </div>
                   <div className="space-y-2">
                     <Label>Kategori</Label>
-                    <Select>
+                    <Select name="category" defaultValue="Sayur">
                       <SelectTrigger className="rounded-xl h-12">
                         <SelectValue placeholder="Pilih Kategori" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="sayur">Sayuran</SelectItem>
-                        <SelectItem value="buah">Buah-buahan</SelectItem>
-                        <SelectItem value="rempah">Rempah</SelectItem>
+                        <SelectItem value="Sayur">Sayuran</SelectItem>
+                        <SelectItem value="Buah">Buah-buahan</SelectItem>
+                        <SelectItem value="Rempah">Rempah</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -153,24 +208,25 @@ export function FarmerDashboard() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Harga (Rp/Kg)</Label>
-                    <Input type="number" placeholder="25000" className="rounded-xl h-12" />
+                    <Input name="price" type="number" required placeholder="25000" className="rounded-xl h-12" />
                   </div>
                   <div className="space-y-2">
                     <Label>Stok (Kg)</Label>
-                    <Input type="number" placeholder="50" className="rounded-xl h-12" />
+                    <Input name="stock" type="number" required placeholder="50" className="rounded-xl h-12" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label>Deskripsi Produk</Label>
-                  <Textarea placeholder="Ceritakan kesegaran produk Anda..." className="rounded-xl min-h-[100px]" />
+                  <Textarea name="description" placeholder="Ceritakan kesegaran produk Anda..." className="rounded-xl min-h-[100px]" />
                 </div>
                 <div className="border-2 border-dashed border-primary/20 rounded-2xl p-8 text-center bg-primary/5 cursor-pointer hover:bg-primary/10 transition-colors">
                   <Camera className="h-10 w-10 text-primary/40 mx-auto mb-2" />
                   <p className="text-sm font-bold">Klik untuk upload foto produk</p>
                   <p className="text-[10px] text-muted-foreground">Format JPG, PNG (Maks 5MB)</p>
                 </div>
-                <DialogFooter>
-                  <Button type="submit" className="w-full h-14 rounded-xl bg-secondary hover:bg-secondary/90 text-white font-black text-lg">Terbitkan Produk</Button>
+                <DialogFooter className="gap-2">
+                  <Button type="button" variant="ghost" onClick={() => setIsAddingProduct(false)} className="rounded-xl">Batal</Button>
+                  <Button type="submit" className="flex-1 h-14 rounded-xl bg-secondary hover:bg-secondary/90 text-white font-black text-lg">Terbitkan Produk</Button>
                 </DialogFooter>
               </form>
             </DialogContent>
@@ -182,7 +238,7 @@ export function FarmerDashboard() {
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { label: "Total Penjualan", value: "Rp 154.2M", icon: TrendingUp, color: "text-secondary", bg: "bg-secondary/10" },
-          { label: "Produk Aktif", value: "12 Jenis", icon: Package, color: "text-primary", bg: "bg-primary/10" },
+          { label: "Produk Aktif", value: `${products.length} Jenis`, icon: Package, color: "text-primary", bg: "bg-primary/10" },
           { label: "Investor Aktif", value: "8 Mitra", icon: Users, color: "text-accent", bg: "bg-accent/10" },
           { label: "Lahan Kelola", value: "4.5 Ha", icon: MapPin, color: "text-blue-600", bg: "bg-blue-50" },
         ].map((stat, i) => (
@@ -320,8 +376,8 @@ export function FarmerDashboard() {
                   <Image src={`https://picsum.photos/seed/prod${p.id}/400/300`} alt={p.name} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
                   <Badge className={cn(
                     "absolute top-4 right-4 bg-white/90 backdrop-blur-sm border-none font-bold",
-                    p.status === 'Stok Tipis' ? "text-orange-500" : "text-primary"
-                  )}>{p.status}</Badge>
+                    p.stock < 10 ? "text-orange-500" : "text-primary"
+                  )}>{p.stock < 10 ? 'Stok Tipis' : 'Aktif'}</Badge>
                 </div>
                 <CardContent className="p-6 space-y-4">
                   <div className="flex justify-between items-start">
@@ -343,12 +399,12 @@ export function FarmerDashboard() {
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <Button variant="outline" className="rounded-xl h-10 text-xs font-bold border-primary/20">Edit</Button>
-                    <Button variant="outline" className="rounded-xl h-10 text-xs font-bold border-destructive/20 text-destructive hover:bg-destructive/5">Hapus</Button>
+                    <Button variant="outline" onClick={() => deleteProduct(p.id)} className="rounded-xl h-10 text-xs font-bold border-destructive/20 text-destructive hover:bg-destructive/5">Hapus</Button>
                   </div>
                 </CardContent>
               </Card>
             ))}
-            <button className="flex flex-col items-center justify-center gap-4 rounded-[2rem] border-2 border-dashed border-primary/20 hover:bg-primary/5 transition-all p-8 group h-full min-h-[300px]">
+            <button onClick={() => setIsAddingProduct(true)} className="flex flex-col items-center justify-center gap-4 rounded-[2rem] border-2 border-dashed border-primary/20 hover:bg-primary/5 transition-all p-8 group h-full min-h-[300px]">
                <div className="p-4 bg-primary/10 rounded-full group-hover:scale-110 transition-transform"><Plus className="h-8 w-8 text-primary" /></div>
                <p className="font-bold text-primary">Tambah Produk</p>
             </button>
@@ -381,7 +437,7 @@ export function FarmerDashboard() {
                         <td className="px-8 py-5 font-black text-primary text-sm">{order.total}</td>
                         <td className="px-8 py-5">
                           <Badge className={cn(
-                            "font-black border-none px-4 py-1",
+                            "font-black border-none px-4 py-1 text-white",
                             order.status === 'Proses' ? "bg-blue-500" : order.status === 'Kirim' ? "bg-orange-500" : "bg-green-500"
                           )}>{order.status}</Badge>
                         </td>
@@ -473,7 +529,7 @@ export function FarmerDashboard() {
                   </div>
                </Card>
              ))}
-             <Dialog>
+             <Dialog open={isAddingProject} onOpenChange={setIsAddingProject}>
                <DialogTrigger asChild>
                  <button className="flex flex-col items-center justify-center gap-4 rounded-[3rem] border-2 border-dashed border-primary/20 hover:bg-primary/5 transition-all p-12 group h-full min-h-[400px]">
                     <div className="p-6 bg-primary/10 rounded-full group-hover:scale-110 transition-transform"><Plus className="h-10 w-10 text-primary" /></div>
@@ -492,29 +548,30 @@ export function FarmerDashboard() {
                    <div className="grid grid-cols-2 gap-4">
                      <div className="space-y-2">
                        <Label>Nama Proyek</Label>
-                       <Input placeholder="Misal: Ekspansi Melon Cantaloupe" className="rounded-xl h-12" />
+                       <Input name="name" required placeholder="Misal: Ekspansi Melon Cantaloupe" className="rounded-xl h-12" />
                      </div>
                      <div className="space-y-2">
                        <Label>Target Dana (Rp)</Label>
-                       <Input type="number" placeholder="250000000" className="rounded-xl h-12" />
+                       <Input name="target" type="number" required placeholder="250000000" className="rounded-xl h-12" />
                      </div>
                    </div>
                    <div className="grid grid-cols-2 gap-4">
                      <div className="space-y-2">
                        <Label>Estimasi ROI (%)</Label>
-                       <Input type="number" placeholder="15" className="rounded-xl h-12" />
+                       <Input name="roi" type="number" placeholder="15" className="rounded-xl h-12" />
                      </div>
                      <div className="space-y-2">
                        <Label>Durasi Proyek (Bulan)</Label>
-                       <Input type="number" placeholder="6" className="rounded-xl h-12" />
+                       <Input name="duration" type="number" placeholder="6" className="rounded-xl h-12" />
                      </div>
                    </div>
                    <div className="space-y-2">
                      <Label>Deskripsi Proyek & Tujuan Penggunaan Dana</Label>
-                     <Textarea placeholder="Jelaskan potensi proyek Anda kepada calon investor..." className="rounded-xl min-h-[120px]" />
+                     <Textarea name="description" placeholder="Jelaskan potensi proyek Anda kepada calon investor..." className="rounded-xl min-h-[120px]" />
                    </div>
-                   <DialogFooter>
-                     <Button type="submit" className="w-full h-14 rounded-xl bg-secondary hover:bg-secondary/90 text-white font-black text-lg shadow-xl shadow-secondary/20">Ajukan Sekarang</Button>
+                   <DialogFooter className="gap-2">
+                     <Button type="button" variant="ghost" onClick={() => setIsAddingProject(false)} className="rounded-xl">Batal</Button>
+                     <Button type="submit" className="flex-1 h-14 rounded-xl bg-secondary hover:bg-secondary/90 text-white font-black text-lg shadow-xl shadow-secondary/20">Ajukan Sekarang</Button>
                    </DialogFooter>
                  </form>
                </DialogContent>
