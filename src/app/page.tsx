@@ -36,7 +36,7 @@ export default function LandingPage() {
     setMounted(true);
   }, []);
 
-  const heroImageUrl = "https://kj1bcdn.b-cdn.net/media/62657/bkj.jpg";
+  const heroImageUrl = "https://res.cloudinary.com/dxsfqi45d/image/upload/f_auto,q_auto/nature_mo7kej";
   
   const quickNav = [
     { id: 'quick-nav-farmers', label: "Petani Kami", icon: Users },
@@ -191,7 +191,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Statistics Section - Repositioned to prevent overlap with lower cards */}
+          {/* Statistics Section */}
           <div className="flex flex-wrap items-center justify-center lg:justify-start gap-8 sm:gap-16 pt-12 border-t border-white/20 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
             <div className="text-center lg:text-left">
               <p className="text-4xl font-black text-white">15k+</p>
