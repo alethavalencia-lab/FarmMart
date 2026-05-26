@@ -127,7 +127,9 @@ export default function LiveCommercePage() {
                   <AvatarFallback className={chat.color}>{chat.user[0]}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="text-xs font-bold text-primary">{chat.user} {chat.isBot && <Badge className="scale-75 bg-primary/20 text-primary border-none">MOD</Badge>}</p>
+                  <div className="text-xs font-bold text-primary flex items-center gap-1">
+                    {chat.user} {chat.isBot && <Badge className="scale-75 bg-primary/20 text-primary border-none">MOD</Badge>}
+                  </div>
                   <p className="text-sm text-muted-foreground bg-gray-50 p-2 rounded-2xl rounded-tl-none">{chat.msg}</p>
                 </div>
               </div>
