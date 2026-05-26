@@ -41,7 +41,7 @@ export function Navbar() {
             "text-2xl font-black font-headline tracking-tighter hidden sm:inline-block transition-colors",
             scrolled ? "text-primary" : "text-white"
           )}>
-            Farm<span className="text-secondary">Mart</span>
+            Farm <span className="text-secondary">Mart</span>
           </span>
         </Link>
 

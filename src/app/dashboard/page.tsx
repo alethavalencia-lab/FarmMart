@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useSearchParams } from "next/navigation";
@@ -44,7 +45,7 @@ export default function DashboardPage() {
               />
             </div>
             <span className="text-xl font-bold font-headline tracking-tight text-primary">
-              Farm<span className="text-secondary">Mart</span>
+              Farm <span className="text-secondary">Mart</span>
             </span>
           </div>
 

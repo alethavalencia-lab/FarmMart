@@ -36,7 +36,8 @@ export default function LandingPage() {
     setMounted(true);
   }, []);
 
-  const heroImg = PlaceHolderImages.find(img => img.id === 'hero-farm-cinematic');
+  // Updated hero image with the new agriculture-focused URL
+  const heroImageUrl = "https://drive.google.com/uc?export=view&id=1f8P1fGRoOzWRsbjG896oHsmDgdXdfH_e";
   
   const quickNav = [
     { id: 'quick-nav-farmers', label: "Petani Kami", icon: Users },
@@ -107,22 +108,21 @@ export default function LandingPage() {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="relative h-[90vh] min-h-[700px] w-full flex items-center overflow-hidden">
+      <section className="relative h-[95vh] min-h-[750px] w-full flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          {heroImg?.imageUrl && (
-            <Image
-              src={heroImg.imageUrl}
-              alt="Farm Mart Hero"
-              fill
-              className="object-cover brightness-[0.7] scale-105"
-              priority
-              data-ai-hint={heroImg.imageHint}
-            />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+          <Image
+            src={heroImageUrl}
+            alt="Farm Mart Hero"
+            fill
+            className="object-cover brightness-[0.85] scale-100"
+            priority
+            unoptimized
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent"></div>
         </div>
 
-        <div className="container mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+        {/* Added pt-24 to content container to move it lower and avoid navbar overlap */}
+        <div className="container mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center pt-24">
           <div className="space-y-8 animate-in fade-in slide-in-from-left duration-1000">
             <div className="space-y-4">
               <Badge className="bg-secondary text-white border-none px-4 py-1.5 rounded-full font-bold tracking-wide">
@@ -132,7 +132,7 @@ export default function LandingPage() {
                 Dari Lahan Terbaik, <br />
                 <span className="text-secondary italic">Langsung ke Tangan Anda.</span>
               </h1>
-              <p className="text-xl text-white/80 max-w-xl font-body leading-relaxed">
+              <p className="text-xl text-white/90 max-w-xl font-body leading-relaxed">
                 Hubungkan petani, konsumen, investor, dan mitra bisnis dalam satu ekosistem pertanian digital modern yang transparan, segar, dan berkelanjutan.
               </p>
             </div>
@@ -541,7 +541,7 @@ export default function LandingPage() {
                   />
                 </div>
                 <span className="text-2xl font-black font-headline tracking-tight text-primary">
-                  Farm<span className="text-secondary">Mart</span>
+                  Farm <span className="text-secondary">Mart</span>
                 </span>
               </Link>
               <p className="text-muted-foreground max-w-sm text-lg leading-relaxed font-medium">
