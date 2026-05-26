@@ -107,7 +107,7 @@ export default function LandingPage() {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="relative h-screen min-h-[900px] w-full flex items-center overflow-hidden">
+      <section className="relative min-h-[900px] w-full flex items-center overflow-hidden">
         {/* Immersive Background Container */}
         <div className="absolute inset-0 z-0 p-2 sm:p-4">
           <div className="relative w-full h-full rounded-[2.5rem] sm:rounded-[3.5rem] lg:rounded-[4rem] overflow-hidden shadow-2xl">
@@ -123,94 +123,96 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Content Container - Adjusted Padding for Lower Content and Spacing */}
-        <div className="container mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center pt-36 pb-32 sm:pb-48">
-          <div className="space-y-8 animate-in fade-in slide-in-from-left duration-1000">
-            <div className="space-y-4">
-              <Badge className="bg-secondary text-white border-none px-4 py-1.5 rounded-full font-bold tracking-wide">
-                #1 AGRITECH ECOSYSTEM
-              </Badge>
-              <h1 className="text-5xl md:text-7xl font-bold font-headline text-white leading-tight">
-                Dari Lahan Terbaik, <br />
-                <span className="text-secondary italic">Langsung ke Tangan Anda.</span>
-              </h1>
-              <p className="text-xl text-white/90 max-w-xl font-body leading-relaxed">
-                Hubungkan petani, konsumen, investor, dan mitra bisnis dalam satu ekosistem pertanian digital modern yang transparan, segar, dan berkelanjutan.
-              </p>
-            </div>
-            
-            <div className="flex flex-wrap gap-5">
-              <Link href="/marketplace">
-                <Button size="lg" className="rounded-full bg-primary hover:bg-primary/90 text-white px-10 h-16 shadow-2xl shadow-primary/40 text-lg font-bold transition-all active:scale-95">
-                  Belanja Sekarang
-                </Button>
-              </Link>
-              <Link href="/live">
-                <Button size="lg" variant="outline" className="rounded-full border-2 border-white text-white hover:bg-white/10 px-10 h-16 text-lg font-bold backdrop-blur-sm group transition-all active:scale-95">
-                  <PlayCircle className="mr-3 h-6 w-6 group-hover:scale-110 transition-transform" />
-                  Jelajahi Live Panen
-                </Button>
-              </Link>
+        {/* Content Container */}
+        <div className="container mx-auto px-6 relative z-10 pt-48 pb-40 sm:pb-56">
+          <div className="grid lg:grid-cols-2 gap-16 items-center mb-24">
+            <div className="space-y-8 animate-in fade-in slide-in-from-left duration-1000">
+              <div className="space-y-4">
+                <Badge className="bg-secondary text-white border-none px-4 py-1.5 rounded-full font-bold tracking-wide">
+                  #1 AGRITECH ECOSYSTEM
+                </Badge>
+                <h1 className="text-5xl md:text-7xl font-bold font-headline text-white leading-tight">
+                  Dari Lahan Terbaik, <br />
+                  <span className="text-secondary italic">Langsung ke Tangan Anda.</span>
+                </h1>
+                <p className="text-xl text-white/90 max-w-xl font-body leading-relaxed">
+                  Hubungkan petani, konsumen, investor, dan mitra bisnis dalam satu ekosistem pertanian digital modern yang transparan, segar, dan berkelanjutan.
+                </p>
+              </div>
+              
+              <div className="flex flex-wrap gap-5">
+                <Link href="/marketplace">
+                  <Button size="lg" className="rounded-full bg-primary hover:bg-primary/90 text-white px-10 h-16 shadow-2xl shadow-primary/40 text-lg font-bold transition-all active:scale-95">
+                    Belanja Sekarang
+                  </Button>
+                </Link>
+                <Link href="/live">
+                  <Button size="lg" variant="outline" className="rounded-full border-2 border-white text-white hover:bg-white/10 px-10 h-16 text-lg font-bold backdrop-blur-sm group transition-all active:scale-95">
+                    <PlayCircle className="mr-3 h-6 w-6 group-hover:scale-110 transition-transform" />
+                    Jelajahi Live Panen
+                  </Button>
+                </Link>
+              </div>
             </div>
 
-            {/* Statistics Section - Separated from Content Column with more space */}
-            <div className="flex items-center gap-8 pt-10 border-t border-white/20 max-w-md">
-              <div className="text-center">
-                <p className="text-3xl font-bold text-white">15k+</p>
-                <p className="text-xs text-white/60 font-semibold uppercase">Petani Aktif</p>
+            <div className="hidden lg:block relative h-[600px]">
+              <div className="absolute top-10 right-0 glassmorphism p-6 rounded-[2.5rem] shadow-2xl w-72 animate-bounce-slow border-white/30 z-20">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="bg-secondary p-3 rounded-2xl">
+                    <TrendingUp className="text-white h-6 w-6" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider">Market Growth</p>
+                    <p className="text-2xl font-black text-primary">+24.5%</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="h-1.5 w-full bg-primary/10 rounded-full overflow-hidden">
+                    <div className="h-full w-[80%] bg-primary"></div>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground font-medium">Demand rising in West Java area</p>
+                </div>
               </div>
-              <div className="h-8 w-px bg-white/20"></div>
-              <div className="text-center">
-                <p className="text-3xl font-bold text-white">250+</p>
-                <p className="text-xs text-white/60 font-semibold uppercase">Komoditas</p>
-              </div>
-              <div className="h-8 w-px bg-white/20"></div>
-              <div className="text-center">
-                <p className="text-3xl font-bold text-white">4.9/5</p>
-                <p className="text-xs text-white/60 font-semibold uppercase">Rating Kami</p>
+
+              <div className="absolute bottom-10 left-0 glassmorphism p-6 rounded-[2.5rem] shadow-2xl w-64 animate-float border-white/30 z-20">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse"></div>
+                  <span className="text-[10px] font-black uppercase text-red-500 tracking-widest">Live Now</span>
+                </div>
+                <div className="relative h-24 rounded-2xl overflow-hidden mb-3">
+                  <Image src="https://picsum.photos/seed/livemini/300/200" alt="Live" fill className="object-cover" />
+                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                    <PlayCircle className="text-white h-8 w-8" />
+                  </div>
+                </div>
+                <p className="text-sm font-bold line-clamp-1">Panen Tomat Lembang</p>
+                <p className="text-[10px] text-muted-foreground">1.2k Menonton</p>
               </div>
             </div>
           </div>
 
-          <div className="hidden lg:block relative h-[600px]">
-            <div className="absolute top-10 right-0 glassmorphism p-6 rounded-[2.5rem] shadow-2xl w-72 animate-bounce-slow border-white/30 z-20">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="bg-secondary p-3 rounded-2xl">
-                  <TrendingUp className="text-white h-6 w-6" />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider">Market Growth</p>
-                  <p className="text-2xl font-black text-primary">+24.5%</p>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <div className="h-1.5 w-full bg-primary/10 rounded-full overflow-hidden">
-                  <div className="h-full w-[80%] bg-primary"></div>
-                </div>
-                <p className="text-[10px] text-muted-foreground font-medium">Demand rising in West Java area</p>
-              </div>
+          {/* Statistics Section - Repositioned to prevent overlap with lower cards */}
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-8 sm:gap-16 pt-12 border-t border-white/20 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
+            <div className="text-center lg:text-left">
+              <p className="text-4xl font-black text-white">15k+</p>
+              <p className="text-[10px] text-white/60 font-black uppercase tracking-[0.2em]">Petani Aktif</p>
             </div>
-
-            <div className="absolute bottom-10 left-0 glassmorphism p-6 rounded-[2.5rem] shadow-2xl w-64 animate-float border-white/30 z-20">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse"></div>
-                <span className="text-[10px] font-black uppercase text-red-500 tracking-widest">Live Now</span>
-              </div>
-              <div className="relative h-24 rounded-2xl overflow-hidden mb-3">
-                <Image src="https://picsum.photos/seed/livemini/300/200" alt="Live" fill className="object-cover" />
-                <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-                  <PlayCircle className="text-white h-8 w-8" />
-                </div>
-              </div>
-              <p className="text-sm font-bold line-clamp-1">Panen Tomat Lembang</p>
-              <p className="text-[10px] text-muted-foreground">1.2k Menonton</p>
+            <div className="hidden sm:block h-12 w-px bg-white/20"></div>
+            <div className="text-center lg:text-left">
+              <p className="text-4xl font-black text-white">250+</p>
+              <p className="text-[10px] text-white/60 font-black uppercase tracking-[0.2em]">Komoditas</p>
+            </div>
+            <div className="hidden sm:block h-12 w-px bg-white/20"></div>
+            <div className="text-center lg:text-left">
+              <p className="text-4xl font-black text-white">4.9/5</p>
+              <p className="text-[10px] text-white/60 font-black uppercase tracking-[0.2em]">Rating Kami</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Quick Access Cards - Positioned Lower to prevent overlap */}
-      <section className="relative z-30 -mt-24 container mx-auto px-6 pb-12">
+      {/* Quick Access Cards */}
+      <section className="relative z-30 -mt-20 container mx-auto px-6 pb-12">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {quickNav.map((item, i) => (
             <Card key={i} className="group glassmorphism border-none shadow-xl rounded-[2rem] overflow-hidden cursor-pointer hover:scale-105 transition-all duration-300">
