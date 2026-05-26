@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,7 +30,9 @@ import {
   MessageCircle,
   PlayCircle,
   ChevronRight,
-  ArrowRight
+  ArrowRight,
+  X,
+  Upload
 } from "lucide-react";
 import { predictHarvestWindow, PredictHarvestWindowOutput } from "@/ai/flows/predict-harvest-window";
 import { useToast } from "@/hooks/use-toast";
@@ -46,17 +48,15 @@ export function FarmerDashboard() {
   const [isAddingProduct, setIsAddingProduct] = useState(false);
   const [isAddingProject, setIsAddingProject] = useState(false);
 
-  // Mock data states with local persistence
-  const [products, setProducts] = useState([
-    { id: 1, name: "Tomat Cherry Organik", price: 25000, stock: 45, status: "Aktif", category: "Sayur" },
-    { id: 2, name: "Cabai Merah Keriting", price: 35000, stock: 120, status: "Aktif", category: "Rempah" },
-    { id: 3, name: "Melon Cantaloupe Premium", price: 45000, stock: 30, status: "Stok Tipis", category: "Buah" },
-  ]);
+  // Image states for forms
+  const [productImage, setProductImage] = useState<string | null>(null);
+  const [projectImage, setProjectImage] = useState<string | null>(null);
+  const productImageInputRef = useRef<HTMLInputElement>(null);
+  const projectImageInputRef = useRef<HTMLInputElement>(null);
 
-  const [projects, setProjects] = useState([
-    { id: 1, name: "Ekspansi Hidroponik 2024", target: "Rp 500.000.000", funded: "75%", investors: 12, status: "Open" },
-    { id: 2, name: "Irigasi Cerdas Lembang", target: "Rp 250.000.000", funded: "40%", investors: 5, status: "Open" },
-  ]);
+  // Mock data states with local persistence
+  const [products, setProducts] = useState<any[]>([]);
+  const [projects, setProjects] = useState<any[]>([]);
 
   const [lands, setLands] = useState([
     { id: 1, name: "Kebun Lembang A", location: "Lembang", size: "1.2 Ha", crop: "Tomat" },
@@ -78,19 +78,38 @@ export function FarmerDashboard() {
   // Load from LocalStorage on mount
   useEffect(() => {
     const savedProducts = localStorage.getItem("farmer_products");
-    if (savedProducts) setProducts(JSON.parse(savedProducts));
+    if (savedProducts) {
+      setProducts(JSON.parse(savedProducts));
+    } else {
+      setProducts([
+        { id: 1, name: "Tomat Cherry Organik", price: 25000, stock: 45, status: "Aktif", category: "Sayur" },
+        { id: 2, name: "Cabai Merah Keriting", price: 35000, stock: 120, status: "Aktif", category: "Rempah" },
+        { id: 3, name: "Melon Cantaloupe Premium", price: 45000, stock: 30, status: "Stok Tipis", category: "Buah" },
+      ]);
+    }
 
     const savedProjects = localStorage.getItem("farmer_projects");
-    if (savedProjects) setProjects(JSON.parse(savedProjects));
+    if (savedProjects) {
+      setProjects(JSON.parse(savedProjects));
+    } else {
+      setProjects([
+        { id: 1, name: "Ekspansi Hidroponik 2024", target: "Rp 500.000.000", funded: "75%", investors: 12, status: "Open" },
+        { id: 2, name: "Irigasi Cerdas Lembang", target: "Rp 250.000.000", funded: "40%", investors: 5, status: "Open" },
+      ]);
+    }
   }, []);
 
   // Save to LocalStorage on change
   useEffect(() => {
-    localStorage.setItem("farmer_products", JSON.stringify(products));
+    if (products.length > 0) {
+      localStorage.setItem("farmer_products", JSON.stringify(products));
+    }
   }, [products]);
 
   useEffect(() => {
-    localStorage.setItem("farmer_projects", JSON.stringify(projects));
+    if (projects.length > 0) {
+      localStorage.setItem("farmer_projects", JSON.stringify(projects));
+    }
   }, [projects]);
 
   const handlePredict = async () => {
@@ -112,6 +131,18 @@ export function FarmerDashboard() {
     }
   };
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, type: 'product' | 'project') => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (type === 'product') setProductImage(reader.result as string);
+        else setProjectImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const addProduct = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -123,10 +154,12 @@ export function FarmerDashboard() {
       price: Number(formData.get("price")),
       stock: Number(formData.get("stock")),
       status: "Aktif",
+      image: productImage
     };
 
     setProducts(prev => [...prev, newProduct]);
     setIsAddingProduct(false);
+    setProductImage(null);
     
     toast({ 
       title: "Produk Berhasil Ditambahkan", 
@@ -145,10 +178,12 @@ export function FarmerDashboard() {
       funded: "0%",
       investors: 0,
       status: "Open",
+      image: projectImage
     };
 
     setProjects(prev => [...prev, newProject]);
     setIsAddingProject(false);
+    setProjectImage(null);
 
     toast({ 
       title: "Proyek Investasi Diajukan", 
@@ -174,7 +209,10 @@ export function FarmerDashboard() {
             <PlayCircle className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" /> 
             Mulai Live Tani
           </Button>
-          <Dialog open={isAddingProduct} onOpenChange={setIsAddingProduct}>
+          <Dialog open={isAddingProduct} onOpenChange={(open) => {
+            setIsAddingProduct(open);
+            if (!open) setProductImage(null);
+          }}>
             <DialogTrigger asChild>
               <Button className="bg-primary hover:bg-primary/90 rounded-2xl h-14 px-8 font-bold shadow-xl shadow-primary/20 transition-all active:scale-95">
                 <Plus className="mr-2 h-5 w-5" /> Tambah Produk
@@ -219,11 +257,51 @@ export function FarmerDashboard() {
                   <Label>Deskripsi Produk</Label>
                   <Textarea name="description" placeholder="Ceritakan kesegaran produk Anda..." className="rounded-xl min-h-[100px]" />
                 </div>
-                <div className="border-2 border-dashed border-primary/20 rounded-2xl p-8 text-center bg-primary/5 cursor-pointer hover:bg-primary/10 transition-colors">
-                  <Camera className="h-10 w-10 text-primary/40 mx-auto mb-2" />
-                  <p className="text-sm font-bold">Klik untuk upload foto produk</p>
-                  <p className="text-[10px] text-muted-foreground">Format JPG, PNG (Maks 5MB)</p>
+                
+                <div className="space-y-2">
+                  <Label>Foto Produk</Label>
+                  <div 
+                    onClick={() => productImageInputRef.current?.click()}
+                    className={cn(
+                      "relative border-2 border-dashed border-primary/20 rounded-2xl p-8 text-center bg-primary/5 cursor-pointer hover:bg-primary/10 transition-colors overflow-hidden h-48 flex flex-col items-center justify-center",
+                      productImage && "border-none p-0"
+                    )}
+                  >
+                    {productImage ? (
+                      <div className="relative w-full h-full group">
+                        <Image src={productImage} alt="Preview" fill className="object-cover" />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <Button 
+                            type="button" 
+                            variant="destructive" 
+                            size="sm" 
+                            className="rounded-full"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setProductImage(null);
+                            }}
+                          >
+                            <X className="h-4 w-4 mr-1" /> Hapus
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <Upload className="h-10 w-10 text-primary/40 mb-2" />
+                        <p className="text-sm font-bold">Klik untuk upload foto produk</p>
+                        <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">Format JPG, PNG, WEBP (Maks 5MB)</p>
+                      </>
+                    )}
+                    <input 
+                      type="file" 
+                      ref={productImageInputRef}
+                      className="hidden" 
+                      accept="image/*"
+                      onChange={(e) => handleImageUpload(e, 'product')}
+                    />
+                  </div>
                 </div>
+
                 <DialogFooter className="gap-2">
                   <Button type="button" variant="ghost" onClick={() => setIsAddingProduct(false)} className="rounded-xl">Batal</Button>
                   <Button type="submit" className="flex-1 h-14 rounded-xl bg-secondary hover:bg-secondary/90 text-white font-black text-lg">Terbitkan Produk</Button>
@@ -373,7 +451,7 @@ export function FarmerDashboard() {
             {products.map((p) => (
               <Card key={p.id} className="rounded-[2rem] border-none shadow-xl overflow-hidden group">
                 <div className="relative aspect-video bg-primary/5">
-                  <Image src={`https://picsum.photos/seed/prod${p.id}/400/300`} alt={p.name} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <Image src={p.image || `https://picsum.photos/seed/prod${p.id}/400/300`} alt={p.name} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
                   <Badge className={cn(
                     "absolute top-4 right-4 bg-white/90 backdrop-blur-sm border-none font-bold",
                     p.stock < 10 ? "text-orange-500" : "text-primary"
@@ -496,7 +574,7 @@ export function FarmerDashboard() {
              {projects.map((proj) => (
                <Card key={proj.id} className="rounded-[3rem] border-none shadow-2xl bg-white overflow-hidden p-8 flex flex-col sm:flex-row gap-10 hover:translate-y-[-4px] transition-all duration-300">
                   <div className="relative w-full sm:w-60 h-60 rounded-[2rem] overflow-hidden shrink-0 shadow-lg">
-                    <Image src={`https://picsum.photos/seed/proj${proj.id}/400/400`} alt={proj.name} fill className="object-cover" />
+                    <Image src={proj.image || `https://picsum.photos/seed/proj${proj.id}/400/400`} alt={proj.name} fill className="object-cover" />
                   </div>
                   <div className="flex-1 space-y-8 flex flex-col justify-between">
                     <div className="space-y-3">
@@ -529,7 +607,10 @@ export function FarmerDashboard() {
                   </div>
                </Card>
              ))}
-             <Dialog open={isAddingProject} onOpenChange={setIsAddingProject}>
+             <Dialog open={isAddingProject} onOpenChange={(open) => {
+               setIsAddingProject(open);
+               if (!open) setProjectImage(null);
+             }}>
                <DialogTrigger asChild>
                  <button className="flex flex-col items-center justify-center gap-4 rounded-[3rem] border-2 border-dashed border-primary/20 hover:bg-primary/5 transition-all p-12 group h-full min-h-[400px]">
                     <div className="p-6 bg-primary/10 rounded-full group-hover:scale-110 transition-transform"><Plus className="h-10 w-10 text-primary" /></div>
@@ -569,6 +650,51 @@ export function FarmerDashboard() {
                      <Label>Deskripsi Proyek & Tujuan Penggunaan Dana</Label>
                      <Textarea name="description" placeholder="Jelaskan potensi proyek Anda kepada calon investor..." className="rounded-xl min-h-[120px]" />
                    </div>
+
+                   <div className="space-y-2">
+                    <Label>Foto Proyek</Label>
+                    <div 
+                      onClick={() => projectImageInputRef.current?.click()}
+                      className={cn(
+                        "relative border-2 border-dashed border-primary/20 rounded-2xl p-8 text-center bg-primary/5 cursor-pointer hover:bg-primary/10 transition-colors overflow-hidden h-48 flex flex-col items-center justify-center",
+                        projectImage && "border-none p-0"
+                      )}
+                    >
+                      {projectImage ? (
+                        <div className="relative w-full h-full group">
+                          <Image src={projectImage} alt="Preview" fill className="object-cover" />
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <Button 
+                              type="button" 
+                              variant="destructive" 
+                              size="sm" 
+                              className="rounded-full"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setProjectImage(null);
+                              }}
+                            >
+                              <X className="h-4 w-4 mr-1" /> Hapus
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <Upload className="h-10 w-10 text-primary/40 mb-2" />
+                          <p className="text-sm font-bold">Klik untuk upload foto proyek</p>
+                          <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">Format JPG, PNG, WEBP (Maks 5MB)</p>
+                        </>
+                      )}
+                      <input 
+                        type="file" 
+                        ref={projectImageInputRef}
+                        className="hidden" 
+                        accept="image/*"
+                        onChange={(e) => handleImageUpload(e, 'project')}
+                      />
+                    </div>
+                  </div>
+
                    <DialogFooter className="gap-2">
                      <Button type="button" variant="ghost" onClick={() => setIsAddingProject(false)} className="rounded-xl">Batal</Button>
                      <Button type="submit" className="flex-1 h-14 rounded-xl bg-secondary hover:bg-secondary/90 text-white font-black text-lg shadow-xl shadow-secondary/20">Ajukan Sekarang</Button>
