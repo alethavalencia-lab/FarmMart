@@ -37,7 +37,7 @@ export default function LandingPage() {
   }, []);
 
   // Updated hero image with the new agriculture-focused URL
-  const heroImageUrl = "https://drive.google.com/uc?export=view&id=1f8P1fGRoOzWRsbjG896oHsmDgdXdfH_e";
+  const heroImageUrl = "https://kj1bcdn.b-cdn.net/media/62657/bkj.jpg";
   
   const quickNav = [
     { id: 'quick-nav-farmers', label: "Petani Kami", icon: Users },
@@ -109,20 +109,23 @@ export default function LandingPage() {
       
       {/* Hero Section */}
       <section className="relative h-[95vh] min-h-[750px] w-full flex items-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <Image
-            src={heroImageUrl}
-            alt="Farm Mart Hero"
-            fill
-            className="object-cover brightness-[0.85] scale-100"
-            priority
-            unoptimized
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent"></div>
+        {/* Premium Rounded Background Container */}
+        <div className="absolute inset-0 z-0 p-4 sm:p-6 lg:p-8">
+          <div className="relative w-full h-full rounded-[2.5rem] sm:rounded-[3.5rem] lg:rounded-[4rem] overflow-hidden shadow-2xl">
+            <Image
+              src={heroImageUrl}
+              alt="Farm Mart Hero"
+              fill
+              className="object-cover brightness-[0.85] scale-100"
+              priority
+              unoptimized
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent"></div>
+          </div>
         </div>
 
-        {/* Added pt-24 to content container to move it lower and avoid navbar overlap */}
-        <div className="container mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center pt-24">
+        {/* Content Container - Increased padding top to move content lower and avoid overlap */}
+        <div className="container mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center pt-32 sm:pt-40 lg:pt-48">
           <div className="space-y-8 animate-in fade-in slide-in-from-left duration-1000">
             <div className="space-y-4">
               <Badge className="bg-secondary text-white border-none px-4 py-1.5 rounded-full font-bold tracking-wide">
