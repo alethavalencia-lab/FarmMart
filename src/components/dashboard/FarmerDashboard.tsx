@@ -218,7 +218,7 @@ export function FarmerDashboard() {
                 <Plus className="mr-2 h-5 w-5" /> Tambah Produk
               </Button>
             </DialogTrigger>
-            <DialogContent className="rounded-[2.5rem] sm:max-w-[600px] border-none glassmorphism">
+            <DialogContent className="rounded-[2.5rem] sm:max-w-[600px] border-none glassmorphism max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle className="text-2xl font-bold">Upload Produk Baru</DialogTitle>
                 <DialogDescription>Isi detail produk hasil panen Anda untuk dipasarkan.</DialogDescription>
@@ -302,7 +302,7 @@ export function FarmerDashboard() {
                   </div>
                 </div>
 
-                <DialogFooter className="gap-2">
+                <DialogFooter className="gap-2 pt-4">
                   <Button type="button" variant="ghost" onClick={() => setIsAddingProduct(false)} className="rounded-xl">Batal</Button>
                   <Button type="submit" className="flex-1 h-14 rounded-xl bg-secondary hover:bg-secondary/90 text-white font-black text-lg">Terbitkan Produk</Button>
                 </DialogFooter>
@@ -620,7 +620,7 @@ export function FarmerDashboard() {
                     </div>
                  </button>
                </DialogTrigger>
-               <DialogContent className="rounded-[2.5rem] sm:max-w-[700px] border-none glassmorphism">
+               <DialogContent className="rounded-[2.5rem] sm:max-w-[700px] border-none glassmorphism max-h-[90vh] overflow-y-auto">
                  <DialogHeader>
                    <DialogTitle className="text-2xl font-bold text-primary">Ajukan Proyek Investasi</DialogTitle>
                    <DialogDescription>Dapatkan dukungan permodalan dari komunitas investor Farm Mart.</DialogDescription>
@@ -695,7 +695,7 @@ export function FarmerDashboard() {
                     </div>
                   </div>
 
-                   <DialogFooter className="gap-2">
+                   <DialogFooter className="gap-2 pt-4">
                      <Button type="button" variant="ghost" onClick={() => setIsAddingProject(false)} className="rounded-xl">Batal</Button>
                      <Button type="submit" className="flex-1 h-14 rounded-xl bg-secondary hover:bg-secondary/90 text-white font-black text-lg shadow-xl shadow-secondary/20">Ajukan Sekarang</Button>
                    </DialogFooter>
