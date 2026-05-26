@@ -1,7 +1,7 @@
-
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 import { Navbar } from "@/components/layout/Navbar";
 import { FarmerDashboard } from "@/components/dashboard/FarmerDashboard";
 import { InvestorDashboard } from "@/components/dashboard/InvestorDashboard";
@@ -34,6 +34,20 @@ export default function DashboardPage() {
       <Navbar />
       <div className="flex pt-20">
         <aside className="hidden lg:block w-72 h-[calc(100vh-80px)] fixed left-0 top-20 border-r bg-white/50 backdrop-blur-sm p-6 space-y-8">
+          <div className="flex items-center gap-3 px-4 mb-8">
+            <div className="relative h-10 w-10">
+              <Image
+                src="https://drive.google.com/uc?export=view&id=1iPX9w3Kum27Z858Vo-CV1mGQQPuvYv8a"
+                alt="Farm Mart Logo"
+                fill
+                className="object-contain"
+              />
+            </div>
+            <span className="text-xl font-bold font-headline tracking-tight text-primary">
+              Farm<span className="text-secondary">Mart</span>
+            </span>
+          </div>
+
           <div className="space-y-2">
             <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest px-4">Menu Utama</p>
             <nav className="space-y-1">

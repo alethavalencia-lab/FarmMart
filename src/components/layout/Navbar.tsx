@@ -1,9 +1,9 @@
-
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Sprout, ShoppingCart, User, Menu } from "lucide-react";
+import { ShoppingCart, Menu } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
@@ -25,11 +25,17 @@ export function Navbar() {
         scrolled ? "glassmorphism shadow-md" : "bg-transparent"
       )}
     >
-      <Link href="/" className="flex items-center gap-2">
-        <div className="bg-primary p-2 rounded-xl">
-          <Sprout className="text-white h-6 w-6" />
+      <Link href="/" className="flex items-center gap-3 group">
+        <div className="relative h-[52px] w-[52px]">
+          <Image
+            src="https://drive.google.com/uc?export=view&id=1iPX9w3Kum27Z858Vo-CV1mGQQPuvYv8a"
+            alt="Farm Mart Logo"
+            fill
+            className="object-contain"
+            priority
+          />
         </div>
-        <span className="text-2xl font-bold font-headline tracking-tight text-primary">
+        <span className="text-2xl font-bold font-headline tracking-tight text-primary hidden sm:inline-block">
           Farm<span className="text-secondary">Mart</span>
         </span>
       </Link>

@@ -1,15 +1,15 @@
-
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Sprout, ShoppingCart, BarChart3, Users, Lock } from "lucide-react";
+import { Sprout, ShoppingCart, BarChart3, Users } from "lucide-react";
 
 export default function AuthPage() {
   const router = useRouter();
@@ -33,8 +33,13 @@ export default function AuthPage() {
         
         <Card className="w-full max-w-xl border-none shadow-2xl rounded-3xl overflow-hidden glassmorphism">
           <CardHeader className="text-center pb-8 pt-12">
-            <div className="mx-auto w-16 h-16 bg-primary/10 flex items-center justify-center rounded-2xl mb-4">
-              <Lock className="text-primary h-8 w-8" />
+            <div className="mx-auto relative h-20 w-20 mb-4">
+              <Image
+                src="https://drive.google.com/uc?export=view&id=1iPX9w3Kum27Z858Vo-CV1mGQQPuvYv8a"
+                alt="Farm Mart Logo"
+                fill
+                className="object-contain"
+              />
             </div>
             <CardTitle className="text-3xl font-bold font-headline text-primary">Selamat Datang</CardTitle>
             <CardDescription className="text-base">Silakan pilih peran Anda untuk melanjutkan ke dashboard.</CardDescription>
@@ -88,7 +93,6 @@ export default function AuthPage() {
               <TabsContent value="register">
                 <div className="text-center py-8">
                   <p className="text-muted-foreground mb-4">Pilih peran pendaftaran Anda</p>
-                  {/* Reuse similar UI or different flow */}
                   <Button variant="outline" className="w-full rounded-xl h-12">Mulai sebagai Petani Mitra</Button>
                 </div>
               </TabsContent>

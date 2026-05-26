@@ -97,7 +97,7 @@ export default function LandingPage() {
       <section className="py-20 bg-primary/5">
         <div className="max-w-7xl mx-auto px-6 text-center mb-16">
           <h2 className="text-4xl font-bold font-headline mb-4 text-primary">Ekosistem untuk Semua</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">Kami menghadirkan platform yang adil dan efisien untuk setiap pemangku kepentingan dalam rantai pasok agrikultur.</p>
+          <p className="text-muted-foreground max-w-2xl mx-auto">Kami menghadirkan platform yang adil and efisien untuk setiap pemangku kepentingan dalam rantai pasok agrikultur.</p>
         </div>
 
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -189,14 +189,19 @@ export default function LandingPage() {
 
       <footer className="bg-background py-12 px-6 border-t">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex items-center gap-2">
-            <div className="bg-primary p-2 rounded-xl">
-              <Sprout className="text-white h-5 w-5" />
+          <Link href="/" className="flex items-center gap-3">
+            <div className="relative h-10 w-10">
+              <Image
+                src="https://drive.google.com/uc?export=view&id=1iPX9w3Kum27Z858Vo-CV1mGQQPuvYv8a"
+                alt="Farm Mart Logo"
+                fill
+                className="object-contain"
+              />
             </div>
             <span className="text-xl font-bold font-headline tracking-tight text-primary">
               Farm<span className="text-secondary">Mart</span>
             </span>
-          </div>
+          </Link>
           <p className="text-sm text-muted-foreground">© 2024 Farm Mart. Built for Premium Agritech Future.</p>
           <div className="flex gap-6">
             <Link href="#" className="text-sm hover:text-secondary transition-colors">Twitter</Link>
