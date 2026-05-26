@@ -1,64 +1,95 @@
+
 {
   "placeholderImages": [
     {
-      "id": "hero-farm",
-      "description": "Lush green farm fields with modern irrigation",
-      "imageUrl": "https://picsum.photos/seed/farm1/1200/800",
-      "imageHint": "green farm"
+      "id": "hero-farm-cinematic",
+      "description": "Cinematic Indonesian terraced rice fields at dawn",
+      "imageUrl": "https://picsum.photos/seed/farm-hero/1920/1080",
+      "imageHint": "indonesia terrace"
     },
     {
-      "id": "fresh-produce",
-      "description": "Basket of fresh organic vegetables",
-      "imageUrl": "https://picsum.photos/seed/veg1/600/400",
-      "imageHint": "organic vegetables"
+      "id": "quick-nav-farmers",
+      "description": "Iconic farmer portrait",
+      "imageUrl": "https://picsum.photos/seed/q1/400/300",
+      "imageHint": "indonesia farmer"
     },
     {
-      "id": "farmer-working",
-      "description": "Professional farmer checking crops",
-      "imageUrl": "https://picsum.photos/seed/farmer1/600/400",
-      "imageHint": "modern farmer"
+      "id": "quick-nav-live",
+      "description": "Video camera on farm",
+      "imageUrl": "https://picsum.photos/seed/q2/400/300",
+      "imageHint": "live farm"
     },
     {
-      "id": "investor-growth",
-      "description": "Green plant growing out of soil with charts",
-      "imageUrl": "https://picsum.photos/seed/invest1/600/400",
-      "imageHint": "investment growth"
+      "id": "quick-nav-fresh",
+      "description": "Basket of harvest",
+      "imageUrl": "https://picsum.photos/seed/q3/400/300",
+      "imageHint": "fresh harvest"
     },
     {
-      "id": "live-stream",
-      "description": "Live harvesting scene with orange accents",
-      "imageUrl": "https://picsum.photos/seed/live1/800/600",
-      "imageHint": "harvesting action"
+      "id": "quick-nav-invest",
+      "description": "Plant seedling growing",
+      "imageUrl": "https://picsum.photos/seed/q4/400/300",
+      "imageHint": "growing plant"
     },
     {
-      "id": "b2b-warehouse",
-      "description": "Modern agricultural distribution center",
-      "imageUrl": "https://picsum.photos/seed/b2b1/800/600",
-      "imageHint": "warehouse storage"
+      "id": "quick-nav-b2b",
+      "description": "Warehouse distribution",
+      "imageUrl": "https://picsum.photos/seed/q5/400/300",
+      "imageHint": "agri warehouse"
     },
     {
-      "id": "prod-tomato",
-      "description": "Fresh organic cherry tomatoes",
-      "imageUrl": "https://picsum.photos/seed/tomato/300/300",
-      "imageHint": "cherry tomatoes"
+      "id": "quick-nav-market",
+      "description": "Modern market stall",
+      "imageUrl": "https://picsum.photos/seed/q6/400/300",
+      "imageHint": "agri market"
     },
     {
-      "id": "prod-chili",
-      "description": "Spicy premium red chili peppers",
-      "imageUrl": "https://picsum.photos/seed/chili/300/300",
-      "imageHint": "red chili"
+      "id": "prod-sayur",
+      "description": "Premium organic vegetables",
+      "imageUrl": "https://picsum.photos/seed/p1/500/500",
+      "imageHint": "organic vegetable"
     },
     {
-      "id": "prod-carrot",
-      "description": "Fresh carrots from Lembang highland",
-      "imageUrl": "https://picsum.photos/seed/carrot/300/300",
-      "imageHint": "fresh carrots"
+      "id": "prod-buah",
+      "description": "Exotic tropical fruits",
+      "imageUrl": "https://picsum.photos/seed/p2/500/500",
+      "imageHint": "tropical fruit"
     },
     {
-      "id": "prod-spinach",
-      "description": "Organic Japanese spinach (Horenzo)",
-      "imageUrl": "https://picsum.photos/seed/spinach/300/300",
-      "imageHint": "green spinach"
+      "id": "prod-rempah",
+      "description": "Fresh spices collection",
+      "imageUrl": "https://picsum.photos/seed/p3/500/500",
+      "imageHint": "spices"
+    },
+    {
+      "id": "prod-organik",
+      "description": "Organic eggs and honey",
+      "imageUrl": "https://picsum.photos/seed/p4/500/500",
+      "imageHint": "organic honey"
+    },
+    {
+      "id": "farmer-story-1",
+      "description": "Farmer Maman in West Java",
+      "imageUrl": "https://picsum.photos/seed/s1/800/1000",
+      "imageHint": "farmer face"
+    },
+    {
+      "id": "farmer-story-2",
+      "description": "Coffee Farmer Toraja",
+      "imageUrl": "https://picsum.photos/seed/s2/800/1000",
+      "imageHint": "coffee farm"
+    },
+    {
+      "id": "farmer-story-3",
+      "description": "Rice Farmer Dieng",
+      "imageUrl": "https://picsum.photos/seed/s3/800/1000",
+      "imageHint": "rice farm"
+    },
+    {
+      "id": "app-mockup",
+      "description": "Farm Mart Mobile App Mockup",
+      "imageUrl": "https://picsum.photos/seed/app/600/1200",
+      "imageHint": "mobile app"
     }
   ]
 }
