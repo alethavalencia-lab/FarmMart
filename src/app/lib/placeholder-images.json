@@ -1,0 +1,41 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "hero-farm",
+      "description": "Lush green farm fields with modern irrigation",
+      "imageUrl": "https://picsum.photos/seed/farm1/1200/800",
+      "imageHint": "green farm"
+    },
+    {
+      "id": "fresh-produce",
+      "description": "Basket of fresh organic vegetables",
+      "imageUrl": "https://picsum.photos/seed/veg1/600/400",
+      "imageHint": "organic vegetables"
+    },
+    {
+      "id": "farmer-working",
+      "description": "Professional farmer checking crops",
+      "imageUrl": "https://picsum.photos/seed/farmer1/600/400",
+      "imageHint": "modern farmer"
+    },
+    {
+      "id": "investor-growth",
+      "description": "Green plant growing out of soil with charts",
+      "imageUrl": "https://picsum.photos/seed/invest1/600/400",
+      "imageHint": "investment growth"
+    },
+    {
+      "id": "live-stream",
+      "description": "Live harvesting scene with orange accents",
+      "imageUrl": "https://picsum.photos/seed/live1/800/600",
+      "imageHint": "harvesting action"
+    },
+    {
+      "id": "b2b-warehouse",
+      "description": "Modern agricultural distribution center",
+      "imageUrl": "https://picsum.photos/seed/b2b1/800/600",
+      "imageHint": "warehouse storage"
+    }
+  ]
+}
