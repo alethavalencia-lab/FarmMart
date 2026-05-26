@@ -1,4 +1,3 @@
-
 {
   "placeholderImages": [
     {
@@ -36,6 +35,30 @@
       "description": "Modern agricultural distribution center",
       "imageUrl": "https://picsum.photos/seed/b2b1/800/600",
       "imageHint": "warehouse storage"
+    },
+    {
+      "id": "prod-tomato",
+      "description": "Fresh organic cherry tomatoes",
+      "imageUrl": "https://picsum.photos/seed/tomato/300/300",
+      "imageHint": "cherry tomatoes"
+    },
+    {
+      "id": "prod-chili",
+      "description": "Spicy premium red chili peppers",
+      "imageUrl": "https://picsum.photos/seed/chili/300/300",
+      "imageHint": "red chili"
+    },
+    {
+      "id": "prod-carrot",
+      "description": "Fresh carrots from Lembang highland",
+      "imageUrl": "https://picsum.photos/seed/carrot/300/300",
+      "imageHint": "fresh carrots"
+    },
+    {
+      "id": "prod-spinach",
+      "description": "Organic Japanese spinach (Horenzo)",
+      "imageUrl": "https://picsum.photos/seed/spinach/300/300",
+      "imageHint": "green spinach"
     }
   ]
 }

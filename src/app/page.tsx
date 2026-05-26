@@ -10,7 +10,16 @@ import { cn } from "@/lib/utils";
 
 export default function LandingPage() {
   const heroImg = PlaceHolderImages.find(img => img.id === 'hero-farm');
-  const freshVeg = PlaceHolderImages.find(img => img.id === 'fresh-produce');
+  
+  const featuredProducts = [
+    { name: "Tomat Cherry Organik", price: "Rp 24.000", id: "prod-tomato" },
+    { name: "Cabai Rawit Premium", price: "Rp 18.500", id: "prod-chili" },
+    { name: "Wortel Segar Lembang", price: "Rp 12.000", id: "prod-carrot" },
+    { name: "Bayam Jepang (Horenzo)", price: "Rp 15.000", id: "prod-spinach" },
+  ].map(p => ({
+    ...p,
+    image: PlaceHolderImages.find(img => img.id === p.id)
+  }));
 
   return (
     <div className="min-h-screen bg-background">
@@ -64,14 +73,18 @@ export default function LandingPage() {
         <div className="relative group animate-in fade-in slide-in-from-right duration-700">
           <div className="absolute -inset-4 bg-accent/20 rounded-3xl blur-2xl group-hover:bg-accent/30 transition-all duration-500"></div>
           <Card className="relative overflow-hidden border-none shadow-2xl rounded-3xl">
-            <Image
-              src={heroImg?.imageUrl || ""}
-              alt="Farm"
-              width={600}
-              height={400}
-              className="w-full h-auto object-cover"
-              data-ai-hint="green farm"
-            />
+            {heroImg?.imageUrl ? (
+              <Image
+                src={heroImg.imageUrl}
+                alt={heroImg.description || "Farm"}
+                width={600}
+                height={400}
+                className="w-full h-auto object-cover"
+                data-ai-hint={heroImg.imageHint}
+              />
+            ) : (
+              <div className="w-full aspect-[3/2] bg-muted animate-pulse" />
+            )}
           </Card>
           
           {/* Floating Stats Card */}
@@ -130,20 +143,20 @@ export default function LandingPage() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[
-            { name: "Tomat Cherry Organik", price: "Rp 24.000", img: "https://picsum.photos/seed/tomato/300/300" },
-            { name: "Cabai Rawit Premium", price: "Rp 18.500", img: "https://picsum.photos/seed/chili/300/300" },
-            { name: "Wortel Segar Lembang", price: "Rp 12.000", img: "https://picsum.photos/seed/carrot/300/300" },
-            { name: "Bayam Jepang (Horenzo)", price: "Rp 15.000", img: "https://picsum.photos/seed/spinach/300/300" },
-          ].map((item, idx) => (
+          {featuredProducts.map((item, idx) => (
             <div key={idx} className="group cursor-pointer">
               <div className="relative overflow-hidden rounded-3xl mb-4 aspect-square">
-                <Image
-                  src={item.img}
-                  alt={item.name}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-500"
-                />
+                {item.image?.imageUrl ? (
+                  <Image
+                    src={item.image.imageUrl}
+                    alt={item.name}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    data-ai-hint={item.image.imageHint}
+                  />
+                ) : (
+                  <div className="w-full h-full bg-muted animate-pulse" />
+                )}
                 <div className="absolute top-4 right-4">
                   <Badge className="bg-white/90 text-primary border-none">Segar</Badge>
                 </div>

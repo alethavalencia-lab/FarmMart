@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Navbar } from "@/components/layout/Navbar";
@@ -13,6 +12,7 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export default function LiveCommercePage() {
   const liveImg = PlaceHolderImages.find(img => img.id === 'live-stream');
+  const pinnedProduct = PlaceHolderImages.find(img => img.id === 'prod-tomato');
 
   return (
     <div className="min-h-screen bg-background overflow-hidden flex flex-col">
@@ -21,12 +21,20 @@ export default function LiveCommercePage() {
       <div className="flex-1 flex flex-col lg:flex-row pt-20 h-screen max-h-screen">
         {/* Main Video Section */}
         <div className="flex-1 relative bg-black flex items-center justify-center overflow-hidden">
-          <Image
-            src={liveImg?.imageUrl || ""}
-            alt="Live Stream"
-            fill
-            className="object-cover opacity-80"
-          />
+          {liveImg?.imageUrl ? (
+            <Image
+              src={liveImg.imageUrl}
+              alt="Live Stream"
+              fill
+              className="object-cover opacity-80"
+              priority
+              data-ai-hint={liveImg.imageHint}
+            />
+          ) : (
+            <div className="w-full h-full bg-black flex items-center justify-center">
+               <Play className="h-12 w-12 text-white/20" />
+            </div>
+          )}
           
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40"></div>
           
@@ -66,7 +74,17 @@ export default function LiveCommercePage() {
             <Card className="glassmorphism border-none text-white overflow-hidden rounded-3xl group cursor-pointer hover:scale-[1.02] transition-all">
               <CardContent className="p-3 flex items-center gap-4">
                 <div className="relative w-20 h-20 rounded-2xl overflow-hidden flex-shrink-0">
-                  <Image src="https://picsum.photos/seed/tomato/200/200" alt="Pinned Product" fill className="object-cover" />
+                  {pinnedProduct?.imageUrl ? (
+                    <Image 
+                      src={pinnedProduct.imageUrl} 
+                      alt="Pinned Product" 
+                      fill 
+                      className="object-cover" 
+                      data-ai-hint={pinnedProduct.imageHint}
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-white/10" />
+                  )}
                 </div>
                 <div className="flex-1">
                   <p className="text-xs font-bold text-secondary mb-1">PRODUK UTAMA</p>
