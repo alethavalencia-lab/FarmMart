@@ -10,13 +10,13 @@
     {
       "id": "quick-nav-farmers",
       "description": "Iconic farmer portrait",
-      "imageUrl": "https://picsum.photos/seed/q1/400/300",
+      "imageUrl": "https://res.cloudinary.com/dxsfqi45d/image/upload/v1779955921/ChatGPT_Image_May_28_2026_03_11_40_PM_xflunv.png",
       "imageHint": "indonesia farmer"
     },
     {
       "id": "quick-nav-live",
       "description": "Video camera on farm",
-      "imageUrl": "https://picsum.photos/seed/q2/400/300",
+      "imageUrl": "https://res.cloudinary.com/dxsfqi45d/image/upload/f_auto,q_auto/ChatGPT_Image_May_28_2026_03_03_23_PM_xkwbry.png",
       "imageHint": "live farm"
     },
     {
@@ -28,19 +28,19 @@
     {
       "id": "quick-nav-invest",
       "description": "Plant seedling growing",
-      "imageUrl": "https://picsum.photos/seed/q4/400/300",
+      "imageUrl": "https://res.cloudinary.com/dxsfqi45d/image/upload/v1779956690/ChatGPT_Image_May_28_2026_03_24_31_PM_b3q8hr.png",
       "imageHint": "growing plant"
     },
     {
       "id": "quick-nav-b2b",
       "description": "Warehouse distribution",
-      "imageUrl": "https://picsum.photos/seed/q5/400/300",
+      "imageUrl": "https://res.cloudinary.com/dxsfqi45d/image/upload/v1779957787/ChatGPT_Image_May_28_2026_03_42_30_PM_qovs8q.png",
       "imageHint": "agri warehouse"
     },
     {
       "id": "quick-nav-market",
       "description": "Modern market stall",
-      "imageUrl": "https://picsum.photos/seed/q6/400/300",
+      "imageUrl": "https://res.cloudinary.com/dxsfqi45d/image/upload/q_auto/f_auto/v1779955747/ChatGPT_Image_May_28_2026_03_08_39_PM_kqhrrw.png",
       "imageHint": "agri market"
     },
     {
@@ -90,6 +90,18 @@
       "description": "Farm Mart Mobile App Mockup",
       "imageUrl": "https://picsum.photos/seed/app/600/1200",
       "imageHint": "mobile app"
+    },
+    {
+      "id": "live-stream",
+      "description": "Live farming stream",
+      "imageUrl": "https://res.cloudinary.com/dxsfqi45d/image/upload/f_auto,q_auto/ChatGPT_Image_May_28_2026_03_03_23_PM_xkwbry.png",
+      "imageHint": "live farm"
+    },
+    {
+      "id": "prod-tomato",
+      "description": "Fresh organic cherry tomatoes",
+      "imageUrl": "https://picsum.photos/seed/tomato/500/500",
+      "imageHint": "cherry tomatoes"
     }
   ]
 }
