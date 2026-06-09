@@ -70,19 +70,19 @@
     {
       "id": "farmer-story-1",
       "description": "Farmer Maman in West Java",
-      "imageUrl": "https://picsum.photos/seed/s1/800/1000",
+      "imageUrl": "https://res.cloudinary.com/dhp46iviu/image/upload/v1780967388/ChatGPT_Image_Jun_9_2026_08_09_08_AM_tf3ale.png",
       "imageHint": "farmer face"
     },
     {
       "id": "farmer-story-2",
       "description": "Coffee Farmer Toraja",
-      "imageUrl": "https://picsum.photos/seed/s2/800/1000",
+      "imageUrl": "https://res.cloudinary.com/dhp46iviu/image/upload/v1780967484/ChatGPT_Image_Jun_9_2026_08_10_34_AM_c7zutm.png",
       "imageHint": "coffee farm"
     },
     {
       "id": "farmer-story-3",
       "description": "Rice Farmer Dieng",
-      "imageUrl": "https://picsum.photos/seed/s3/800/1000",
+      "imageUrl": "https://res.cloudinary.com/dhp46iviu/image/upload/v1780967622/ChatGPT_Image_Jun_9_2026_08_13_23_AM_swlegc.png",
       "imageHint": "rice farm"
     },
     {
