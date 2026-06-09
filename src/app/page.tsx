@@ -185,7 +185,7 @@ export default function LandingPage() {
                     <PlayCircle className="text-white h-8 w-8" />
                   </div>
                 </div>
-                <p className="text-sm font-bold line-clamp-1">Panen Tomat Lembang</p>
+                <p className="text-sm font-bold line-clamp-1">Panen Selada Lembang</p>
                 <p className="text-[10px] text-muted-foreground">1.2k Menonton</p>
               </div>
             </div>
@@ -385,11 +385,11 @@ export default function LandingPage() {
               <div className="absolute bottom-6 left-6 right-6 space-y-4">
                  <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md p-2 rounded-2xl border border-white/20">
                     <div className="h-10 w-10 rounded-xl overflow-hidden relative">
-                       <Image src="https://picsum.photos/seed/prodmini/100/100" alt="Product" fill className="object-cover" />
+                       <Image src="https://picsum.photos/seed/lettuce/100/100" alt="Product" fill className="object-cover" />
                     </div>
                     <div className="flex-1">
                        <p className="text-[10px] text-white/70 font-bold">FEATURED</p>
-                       <p className="text-xs text-white font-bold line-clamp-1">Tomat Cherry Organik</p>
+                       <p className="text-xs text-white font-bold line-clamp-1">Selada Organik Segar</p>
                     </div>
                     <Button size="sm" className="bg-secondary text-white h-8 rounded-lg text-[10px] font-bold">Beli</Button>
                  </div>
@@ -606,3 +606,4 @@ export default function LandingPage() {
     </div>
   );
 }
+
