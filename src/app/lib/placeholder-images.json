@@ -45,27 +45,27 @@
     },
     {
       "id": "prod-sayur",
-      "description": "Premium organic vegetables",
-      "imageUrl": "https://picsum.photos/seed/p1/500/500",
-      "imageHint": "organic vegetable"
+      "description": "Kentang Organik",
+      "imageUrl": "https://res.cloudinary.com/dhp46iviu/image/upload/v1780965627/hai-nguyen-LSZfNPVZjTw-unsplash_ks9fe6.webp",
+      "imageHint": "organic potato"
     },
     {
       "id": "prod-buah",
-      "description": "Exotic tropical fruits",
-      "imageUrl": "https://picsum.photos/seed/p2/500/500",
-      "imageHint": "tropical fruit"
+      "description": "Melon Cantaloupe Premium",
+      "imageUrl": "https://res.cloudinary.com/dhp46iviu/image/upload/v1780966187/OIP_lstdbk.jpg",
+      "imageHint": "cantaloupe melon"
     },
     {
       "id": "prod-rempah",
-      "description": "Fresh spices collection",
-      "imageUrl": "https://picsum.photos/seed/p3/500/500",
-      "imageHint": "spices"
+      "description": "Kunyit Segar Dieng",
+      "imageUrl": "https://res.cloudinary.com/dhp46iviu/image/upload/v1780966228/pile-of-fresh-kunyit-indonesian-spelling-or-turmeric-curcuma-longa-of-the-ginger-family-on-sale-in-market-photo_gf8gis.jpg",
+      "imageHint": "fresh turmeric"
     },
     {
       "id": "prod-organik",
-      "description": "Organic eggs and honey",
-      "imageUrl": "https://picsum.photos/seed/p4/500/500",
-      "imageHint": "organic honey"
+      "description": "Madu Hutan Asli",
+      "imageUrl": "https://res.cloudinary.com/dhp46iviu/image/upload/v1780966328/Sadd1d1163d2a46bcbff6dbce656407b1g_oxopeu.jpg",
+      "imageHint": "forest honey"
     },
     {
       "id": "farmer-story-1",
