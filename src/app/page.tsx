@@ -180,7 +180,7 @@ export default function LandingPage() {
                   <span className="text-[10px] font-black uppercase text-red-500 tracking-widest">Live Now</span>
                 </div>
                 <div className="relative h-24 rounded-2xl overflow-hidden mb-3">
-                  <Image src="https://picsum.photos/seed/livemini/300/200" alt="Live" fill className="object-cover" />
+                  <Image src="https://res.cloudinary.com/dxsfqi45d/image/upload/v1779958695/Screenshot_2026-05-28_155251_rll9xs.png" alt="Live" fill className="object-cover" />
                   <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
                     <PlayCircle className="text-white h-8 w-8" />
                   </div>
@@ -374,7 +374,7 @@ export default function LandingPage() {
           <div className="lg:w-1/2 relative group">
             <div className="absolute -inset-4 bg-primary/20 rounded-[3rem] blur-2xl group-hover:bg-primary/30 transition-all"></div>
             <div className="relative h-[500px] w-full max-w-[400px] mx-auto rounded-[3rem] overflow-hidden border-8 border-white/10 shadow-2xl">
-              <Image src="https://picsum.photos/seed/liveview/800/1200" alt="Live Mockup" fill className="object-cover" />
+              <Image src="https://res.cloudinary.com/dhp46iviu/image/upload/q_auto/f_auto/v1780968259/ChatGPT_Image_Jun_9_2026_08_23_51_AM_hcarto.png" alt="Live Mockup" fill className="object-cover" />
               <div className="absolute inset-0 bg-black/30"></div>
               
               {/* Overlay UI */}
