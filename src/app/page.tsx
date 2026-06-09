@@ -507,7 +507,7 @@ export default function LandingPage() {
            <div className="lg:w-1/2 relative flex justify-center">
               <div className="absolute -inset-10 bg-white/10 rounded-full blur-[100px]"></div>
               <div className="relative h-[600px] w-full max-w-[300px] rounded-[3.5rem] overflow-hidden border-8 border-white/20 shadow-[0_0_100px_rgba(255,255,255,0.1)]">
-                 <Image src="https://picsum.photos/seed/appmock/600/1200" alt="App Mockup" fill className="object-cover" />
+                 <Image src="https://res.cloudinary.com/dhp46iviu/image/upload/v1780969444/ChatGPT_Image_Jun_9_2026_08_43_16_AM_nythaq.png" alt="App Mockup" fill className="object-cover" />
               </div>
            </div>
         </div>
@@ -606,4 +606,3 @@ export default function LandingPage() {
     </div>
   );
 }
-
