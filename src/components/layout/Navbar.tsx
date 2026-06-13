@@ -5,14 +5,16 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Menu, Search, Bell, MessageCircle, PlayCircle } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const isDashboard = pathname?.includes("/dashboard");
+  const { toast } = useToast();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +23,22 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleActionClick = useCallback((e: React.MouseEvent) => {
+    if (pathname === "/") {
+      e.preventDefault();
+      const element = document.getElementById("registration-section");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+        
+        toast({
+          title: "Pendaftaran Diperlukan",
+          description: "Silakan buat akun Farm Mart terlebih dahulu untuk mengakses fitur ini.",
+          duration: 3000,
+        });
+      }
+    }
+  }, [pathname, toast]);
 
   return (
     <nav
@@ -59,22 +77,22 @@ export function Navbar() {
               { label: "Portofolio", href: "/dashboard" },
               { label: "B2B Hub", href: "/b2b" },
             ].map((item) => (
-              <Link 
+              <button
                 key={item.href}
-                href={item.href} 
+                onClick={handleActionClick}
                 className={cn(
                   "text-sm font-black uppercase tracking-widest transition-all hover:text-secondary",
                   scrolled ? "text-primary/70" : "text-white/80"
                 )}
               >
                 {item.label}
-              </Link>
+              </button>
             ))}
           </div>
         )}
 
         <div className="flex items-center gap-3 sm:gap-5">
-          <Button variant="ghost" size="icon" className={cn(
+          <Button onClick={handleActionClick} variant="ghost" size="icon" className={cn(
             "rounded-full transition-colors",
             scrolled || isDashboard ? "text-primary hover:bg-primary/10" : "text-white hover:bg-white/10"
           )}>
@@ -99,18 +117,22 @@ export function Navbar() {
             </div>
           ) : (
             <>
-              <Button variant="ghost" size="icon" className={cn(
+              <Button onClick={handleActionClick} variant="ghost" size="icon" className={cn(
                 "rounded-full transition-colors relative",
                 scrolled ? "text-primary hover:bg-primary/10" : "text-white hover:bg-white/10"
               )}>
                 <ShoppingCart className="h-5 w-5" />
                 <span className="absolute -top-1 -right-1 bg-secondary text-white text-[10px] font-black h-4 w-4 rounded-full flex items-center justify-center shadow-lg">2</span>
               </Button>
-              <Link href="/auth">
-                <Button className="rounded-full bg-secondary hover:bg-secondary/90 text-white font-black px-6 sm:px-8 h-10 sm:h-12 shadow-xl shadow-secondary/20 transition-all active:scale-95 text-xs sm:text-sm uppercase tracking-widest">
-                  Masuk
-                </Button>
-              </Link>
+              <button
+                onClick={handleActionClick}
+                className={cn(
+                  "rounded-full font-black px-6 sm:px-8 h-10 sm:h-12 shadow-xl transition-all active:scale-95 text-xs sm:text-sm uppercase tracking-widest flex items-center justify-center",
+                  scrolled ? "bg-secondary text-white shadow-secondary/20" : "bg-white text-primary shadow-white/20"
+                )}
+              >
+                Masuk
+              </button>
             </>
           )}
 

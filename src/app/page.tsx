@@ -27,14 +27,35 @@ import Image from "next/image";
 import Link from "next/link";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function LandingPage() {
   const [mounted, setMounted] = useState(false);
+  const [highlight, setHighlight] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const handleScrollToRegistration = useCallback((e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
+    
+    const element = document.getElementById("registration-section");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+      setHighlight(true);
+      
+      toast({
+        title: "Pendaftaran Diperlukan",
+        description: "Silakan buat akun Farm Mart terlebih dahulu untuk mengakses fitur ini.",
+        duration: 3000,
+      });
+
+      setTimeout(() => setHighlight(false), 2000);
+    }
+  }, [toast]);
 
   const heroImageUrl = "https://res.cloudinary.com/dxsfqi45d/image/upload/f_auto,q_auto/nature_mo7kej";
   
@@ -141,17 +162,13 @@ export default function LandingPage() {
               </div>
               
               <div className="flex flex-wrap gap-5">
-                <Link href="/marketplace">
-                  <Button size="lg" className="rounded-full bg-primary hover:bg-primary/90 text-white px-10 h-16 shadow-2xl shadow-primary/40 text-lg font-bold transition-all active:scale-95">
-                    Belanja Sekarang
-                  </Button>
-                </Link>
-                <Link href="/live">
-                  <Button size="lg" variant="outline" className="rounded-full border-2 border-white text-white hover:bg-white/10 px-10 h-16 text-lg font-bold backdrop-blur-sm group transition-all active:scale-95">
-                    <PlayCircle className="mr-3 h-6 w-6 group-hover:scale-110 transition-transform" />
-                    Jelajahi Live Tani
-                  </Button>
-                </Link>
+                <Button onClick={handleScrollToRegistration} size="lg" className="rounded-full bg-primary hover:bg-primary/90 text-white px-10 h-16 shadow-2xl shadow-primary/40 text-lg font-bold transition-all active:scale-95">
+                  Belanja Sekarang
+                </Button>
+                <Button onClick={handleScrollToRegistration} size="lg" variant="outline" className="rounded-full border-2 border-white text-white hover:bg-white/10 px-10 h-16 text-lg font-bold backdrop-blur-sm group transition-all active:scale-95">
+                  <PlayCircle className="mr-3 h-6 w-6 group-hover:scale-110 transition-transform" />
+                  Jelajahi Live Tani
+                </Button>
               </div>
             </div>
 
@@ -215,7 +232,7 @@ export default function LandingPage() {
       <section className="relative z-30 -mt-20 container mx-auto px-6 pb-12">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {quickNav.map((item, i) => (
-            <Card key={i} className="group glassmorphism border-none shadow-xl rounded-[2rem] overflow-hidden cursor-pointer hover:scale-105 transition-all duration-300">
+            <Card key={i} onClick={handleScrollToRegistration} className="group glassmorphism border-none shadow-xl rounded-[2rem] overflow-hidden cursor-pointer hover:scale-105 transition-all duration-300">
               <CardContent className="p-4 flex flex-col items-center text-center space-y-3">
                 <div className="relative w-full aspect-video rounded-2xl overflow-hidden opacity-80 group-hover:opacity-100 transition-opacity">
                   {item.image?.imageUrl && (
@@ -240,21 +257,19 @@ export default function LandingPage() {
             <h2 className="text-4xl md:text-5xl font-bold font-headline text-primary leading-tight">Populer Hari Ini</h2>
             <p className="text-muted-foreground max-w-lg">Produk segar kurasi terbaik dari mitra tani kami, siap dikirim untuk kebutuhan harian Anda.</p>
           </div>
-          <Link href="/marketplace">
-            <Button variant="ghost" className="font-bold text-lg group text-secondary p-0 h-auto hover:bg-transparent">
-              Lihat Semua Produk <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform" />
-            </Button>
-          </Link>
+          <Button onClick={handleScrollToRegistration} variant="ghost" className="font-bold text-lg group text-secondary p-0 h-auto hover:bg-transparent">
+            Lihat Semua Produk <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform" />
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {popularToday.map((p, idx) => (
-            <div key={idx} className="group relative bg-white rounded-[2.5rem] p-4 shadow-sm hover:shadow-2xl transition-all duration-500 border border-primary/5">
+            <div key={idx} onClick={handleScrollToRegistration} className="group cursor-pointer relative bg-white rounded-[2.5rem] p-4 shadow-sm hover:shadow-2xl transition-all duration-500 border border-primary/5">
               <div className="relative aspect-square rounded-[2rem] overflow-hidden mb-6">
                 {p.image?.imageUrl && (
                   <Image src={p.image.imageUrl} alt={p.name} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
                 )}
-                <button className="absolute top-4 right-4 p-2.5 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-secondary hover:text-white transition-all">
+                <button onClick={(e) => { e.stopPropagation(); handleScrollToRegistration(); }} className="absolute top-4 right-4 p-2.5 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-secondary hover:text-white transition-all">
                   <Heart className="h-4 w-4" />
                 </button>
                 <div className="absolute bottom-4 left-4 flex gap-1">
@@ -274,7 +289,7 @@ export default function LandingPage() {
                 </div>
                 <div className="flex items-center justify-between pt-2 border-t border-primary/5">
                   <p className="text-xl font-black text-primary">{p.price}</p>
-                  <Button size="icon" className="rounded-2xl bg-primary hover:bg-secondary shadow-lg shadow-primary/20 group-hover:scale-110 transition-all">
+                  <Button onClick={(e) => { e.stopPropagation(); handleScrollToRegistration(); }} size="icon" className="rounded-2xl bg-primary hover:bg-secondary shadow-lg shadow-primary/20 group-hover:scale-110 transition-all">
                     <ShoppingCart className="h-4 w-4" />
                   </Button>
                 </div>
@@ -288,8 +303,8 @@ export default function LandingPage() {
       <section className="py-24 bg-primary/5 overflow-hidden">
         <div className="container mx-auto px-6 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {ecosystem.map((card, i) => (
-            <Card key={i} className={cn(
-              "group relative h-[450px] border-none rounded-[3rem] overflow-hidden shadow-xl transition-all duration-500 hover:-translate-y-4",
+            <Card key={i} onClick={handleScrollToRegistration} className={cn(
+              "group relative h-[450px] cursor-pointer border-none rounded-[3rem] overflow-hidden shadow-xl transition-all duration-500 hover:-translate-y-4",
               card.bg
             )}>
               <div className="absolute inset-0 opacity-20 mix-blend-overlay scale-125 group-hover:scale-100 transition-transform duration-1000">
@@ -299,7 +314,7 @@ export default function LandingPage() {
                 <Badge className="bg-white/20 text-white w-fit mb-4 px-4 py-1 rounded-full text-xs font-bold border-none uppercase tracking-widest">{card.role}</Badge>
                 <h3 className="text-3xl font-black font-headline mb-4 leading-tight">{card.title}</h3>
                 <p className="text-sm opacity-80 mb-8 leading-relaxed">{card.desc}</p>
-                <Button className="w-full h-14 rounded-full bg-white text-primary hover:bg-white/90 font-bold text-base shadow-xl group/btn">
+                <Button onClick={(e) => { e.stopPropagation(); handleScrollToRegistration(); }} className="w-full h-14 rounded-full bg-white text-primary hover:bg-white/90 font-bold text-base shadow-xl group/btn">
                   {card.cta} <ChevronRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
                 </Button>
               </CardContent>
@@ -318,7 +333,7 @@ export default function LandingPage() {
 
         <div className="grid lg:grid-cols-3 gap-10">
           {stories.map((story, i) => (
-            <div key={i} className="group relative h-[600px] rounded-[3rem] overflow-hidden shadow-2xl">
+            <div key={i} onClick={handleScrollToRegistration} className="group cursor-pointer relative h-[600px] rounded-[3rem] overflow-hidden shadow-2xl">
               {story.image?.imageUrl && (
                 <Image src={story.image.imageUrl} alt={story.name} fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
               )}
@@ -332,7 +347,7 @@ export default function LandingPage() {
                   </p>
                 </div>
                 <p className="text-sm italic leading-relaxed opacity-90 border-l-2 border-secondary pl-4">"{story.story}"</p>
-                <Button variant="link" className="text-secondary p-0 h-auto font-bold text-base hover:no-underline hover:gap-3 transition-all">
+                <Button variant="link" onClick={(e) => { e.stopPropagation(); handleScrollToRegistration(); }} className="text-secondary p-0 h-auto font-bold text-base hover:no-underline hover:gap-3 transition-all">
                   Baca Kisah Selengkapnya <ArrowRight className="h-5 w-5 ml-2" />
                 </Button>
               </div>
@@ -366,12 +381,12 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <Button size="lg" className="rounded-full bg-secondary hover:bg-secondary/90 text-white px-10 h-16 shadow-2xl shadow-secondary/40 text-lg font-bold w-full sm:w-auto transition-all active:scale-95">
+            <Button onClick={handleScrollToRegistration} size="lg" className="rounded-full bg-secondary hover:bg-secondary/90 text-white px-10 h-16 shadow-2xl shadow-secondary/40 text-lg font-bold w-full sm:w-auto transition-all active:scale-95">
               Tonton Sekarang
             </Button>
           </div>
 
-          <div className="lg:w-1/2 relative group">
+          <div className="lg:w-1/2 relative group cursor-pointer" onClick={handleScrollToRegistration}>
             <div className="absolute -inset-4 bg-primary/20 rounded-[3rem] blur-2xl group-hover:bg-primary/30 transition-all"></div>
             <div className="relative h-[500px] w-full max-w-[400px] mx-auto rounded-[3rem] overflow-hidden border-8 border-white/10 shadow-2xl">
               <Image src="https://res.cloudinary.com/dhp46iviu/image/upload/q_auto/f_auto/v1780968259/ChatGPT_Image_Jun_9_2026_08_23_51_AM_hcarto.png" alt="Live Mockup" fill className="object-cover" />
@@ -391,7 +406,7 @@ export default function LandingPage() {
                        <p className="text-[10px] text-white/70 font-bold">FEATURED</p>
                        <p className="text-xs text-white font-bold line-clamp-1">Selada Organik Segar</p>
                     </div>
-                    <Button size="sm" className="bg-secondary text-white h-8 rounded-lg text-[10px] font-bold">Beli</Button>
+                    <Button onClick={(e) => { e.stopPropagation(); handleScrollToRegistration(); }} size="sm" className="bg-secondary text-white h-8 rounded-lg text-[10px] font-bold">Beli</Button>
                  </div>
                  <div className="flex gap-2">
                     <div className="flex-1 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center px-4 text-white/60 text-xs">Say hi to Pak Tani...</div>
@@ -419,7 +434,7 @@ export default function LandingPage() {
                 { label: "Permintaan Sayur Hijau", value: "Tinggi", change: "+12.0%", status: "up" },
                 { label: "Estimasi Yield Padi", value: "6.2 Ton/Ha", change: "+2.5%", status: "up" },
               ].map((item, i) => (
-                <div key={i} className="flex items-center justify-between p-6 bg-primary/5 rounded-[2rem] border border-primary/10">
+                <div key={i} onClick={handleScrollToRegistration} className="flex cursor-pointer items-center justify-between p-6 bg-primary/5 rounded-[2rem] border border-primary/10 hover:bg-primary/10 transition-colors">
                   <div className="flex items-center gap-4">
                     <div className="bg-primary/10 p-3 rounded-2xl">
                       <BarChart3 className="text-primary h-6 w-6" />
@@ -435,9 +450,9 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative group cursor-pointer" onClick={handleScrollToRegistration}>
             <div className="absolute -inset-10 bg-accent/10 rounded-full blur-[100px] animate-pulse"></div>
-            <Card className="relative z-10 rounded-[3rem] border-none shadow-2xl overflow-hidden bg-white p-10 space-y-8">
+            <Card className="relative z-10 rounded-[3rem] border-none shadow-2xl overflow-hidden bg-white p-10 space-y-8 group-hover:scale-[1.02] transition-transform">
                <div className="flex items-center justify-between">
                   <h3 className="text-2xl font-bold">Investasi Tani ROI</h3>
                   <Badge className="bg-primary/10 text-primary border-none">Annual Projection</Badge>
@@ -495,26 +510,29 @@ export default function LandingPage() {
               </div>
 
               <div className="flex flex-wrap justify-center lg:justify-start gap-4 pt-4">
-                 <Button className="h-16 px-8 rounded-2xl bg-white text-primary hover:bg-white/90 font-bold flex items-center gap-3">
+                 <Button onClick={handleScrollToRegistration} className="h-16 px-8 rounded-2xl bg-white text-primary hover:bg-white/90 font-bold flex items-center gap-3">
                     <Smartphone className="h-6 w-6" /> App Store
                  </Button>
-                 <Button variant="outline" className="h-16 px-8 rounded-2xl border-white/30 bg-white/10 hover:bg-white/20 text-white font-bold flex items-center gap-3">
+                 <Button onClick={handleScrollToRegistration} variant="outline" className="h-16 px-8 rounded-2xl border-white/30 bg-white/10 hover:bg-white/20 text-white font-bold flex items-center gap-3">
                     <Smartphone className="h-6 w-6" /> Play Store
                  </Button>
               </div>
            </div>
 
-           <div className="lg:w-1/2 relative flex justify-center">
+           <div className="lg:w-1/2 relative flex justify-center cursor-pointer" onClick={handleScrollToRegistration}>
               <div className="absolute -inset-10 bg-white/10 rounded-full blur-[100px]"></div>
-              <div className="relative h-[600px] w-full max-w-[300px] rounded-[3.5rem] overflow-hidden border-8 border-white/20 shadow-[0_0_100px_rgba(255,255,255,0.1)]">
-                 <Image src="https://res.cloudinary.com/dhp46iviu/image/upload/v1780969444/ChatGPT_Image_Jun_9_2026_08_43_16_AM_nythaq.png" alt="App Mockup" fill className="object-cover" />
+              <div className="relative h-[600px] w-full max-w-[300px] rounded-[3.5rem] overflow-hidden border-8 border-white/20 shadow-[0_0_100px_rgba(255,255,255,0.1)] group">
+                 <Image src="https://res.cloudinary.com/dhp46iviu/image/upload/v1780969444/ChatGPT_Image_Jun_9_2026_08_43_16_AM_nythaq.png" alt="App Mockup" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
               </div>
            </div>
         </div>
       </section>
 
       {/* CTA Bottom Section */}
-      <section className="py-32 container mx-auto px-6 text-center">
+      <section id="registration-section" className={cn(
+        "py-32 container mx-auto px-6 text-center transition-all duration-1000",
+        highlight && "ring-8 ring-secondary/20 rounded-[4rem] bg-secondary/5 scale-[1.02]"
+      )}>
          <div className="max-w-4xl mx-auto space-y-12">
             <h2 className="text-5xl md:text-7xl font-black font-headline text-primary leading-[1.1]">Siap Menjadi Bagian dari <span className="text-secondary">Transformasi Pertanian?</span></h2>
             <p className="text-xl text-muted-foreground leading-relaxed">Gabung sekarang and nikmati ekosistem digital terbaik untuk masa depan pangan Indonesia yang mandiri and berkelanjutan.</p>
@@ -524,7 +542,12 @@ export default function LandingPage() {
                     Mulai Sekarang
                   </Button>
                </Link>
-               <Button size="lg" variant="outline" className="rounded-full border-2 border-secondary text-secondary hover:bg-secondary/5 px-12 h-20 text-xl font-black transition-all active:scale-95">
+               <Button onClick={() => {
+                 toast({
+                   title: "Layanan Dukungan",
+                   description: "Tim kami akan segera menghubungi Anda melalui email.",
+                 });
+               }} size="lg" variant="outline" className="rounded-full border-2 border-secondary text-secondary hover:bg-secondary/5 px-12 h-20 text-xl font-black transition-all active:scale-95">
                   Hubungi Tim Kami
                </Button>
             </div>
@@ -554,7 +577,7 @@ export default function LandingPage() {
               </p>
               <div className="flex gap-4">
                  {['Twitter', 'Instagram', 'LinkedIn', 'YouTube'].map((social, i) => (
-                   <button key={i} className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all">
+                   <button key={i} onClick={handleScrollToRegistration} className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all">
                       <span className="sr-only">{social}</span>
                       <Globe className="h-5 w-5" />
                    </button>
@@ -566,7 +589,7 @@ export default function LandingPage() {
               <h4 className="text-lg font-black font-headline text-primary uppercase tracking-widest">Layanan</h4>
               <ul className="space-y-4">
                 {['Marketplace', 'Live Tani', 'B2B Hub', 'Logistik Tani', 'Analitik Pasar'].map((link, i) => (
-                  <li key={i}><Link href="#" className="text-muted-foreground font-semibold hover:text-secondary transition-colors">{link}</Link></li>
+                  <li key={i}><button onClick={handleScrollToRegistration} className="text-muted-foreground font-semibold hover:text-secondary transition-colors text-left">{link}</button></li>
                 ))}
               </ul>
             </div>
@@ -575,7 +598,7 @@ export default function LandingPage() {
               <h4 className="text-lg font-black font-headline text-primary uppercase tracking-widest">Ecosystem</h4>
               <ul className="space-y-4">
                 {['Gabung Petani', 'Info Investor', 'Karier Kami', 'Sustainability', 'Program Mitra'].map((link, i) => (
-                  <li key={i}><Link href="#" className="text-muted-foreground font-semibold hover:text-secondary transition-colors">{link}</Link></li>
+                  <li key={i}><button onClick={handleScrollToRegistration} className="text-muted-foreground font-semibold hover:text-secondary transition-colors text-left">{link}</button></li>
                 ))}
               </ul>
             </div>
@@ -584,7 +607,7 @@ export default function LandingPage() {
               <h4 className="text-lg font-black font-headline text-primary uppercase tracking-widest">Dukungan</h4>
               <ul className="space-y-4">
                 {['Pusat Bantuan', 'Hubungi Kami', 'Kebijakan Privasi', 'Syarat \u0026 Ketentuan', 'FAQ'].map((link, i) => (
-                  <li key={i}><Link href="#" className="text-muted-foreground font-semibold hover:text-secondary transition-colors">{link}</Link></li>
+                  <li key={i}><button onClick={handleScrollToRegistration} className="text-muted-foreground font-semibold hover:text-secondary transition-colors text-left">{link}</button></li>
                 ))}
               </ul>
             </div>
