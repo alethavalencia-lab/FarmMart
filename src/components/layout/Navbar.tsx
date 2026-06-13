@@ -4,7 +4,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Menu, Search, Bell, MessageCircle, PlayCircle } from "lucide-react";
+import { Menu, Search, Bell, MessageCircle, PlayCircle } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -74,7 +74,7 @@ export function Navbar() {
             {[
               { label: "Marketplace", href: "/marketplace" },
               { label: "Live Tani", href: "/live" },
-              { label: "Portofolio", href: "/dashboard" },
+              { label: "Investasi Tani", href: "/dashboard" },
               { label: "B2B Hub", href: "/b2b" },
             ].map((item) => (
               <button
@@ -117,13 +117,6 @@ export function Navbar() {
             </div>
           ) : (
             <>
-              <Button onClick={handleActionClick} variant="ghost" size="icon" className={cn(
-                "rounded-full transition-colors relative",
-                scrolled ? "text-primary hover:bg-primary/10" : "text-white hover:bg-white/10"
-              )}>
-                <ShoppingCart className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 bg-secondary text-white text-[10px] font-black h-4 w-4 rounded-full flex items-center justify-center shadow-lg">2</span>
-              </Button>
               <button
                 onClick={handleActionClick}
                 className={cn(
