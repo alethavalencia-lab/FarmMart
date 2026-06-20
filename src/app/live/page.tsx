@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingBag, MessageCircle, Send, Users, Heart, Share2, Play } from "lucide-react";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { cn } from "@/lib/utils";
 
 const initialComments = [
   { user: "Andi Saputra", msg: "Tomatnya kelihatan segar banget pak!", color: "bg-blue-100" },
