@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -13,7 +14,6 @@ import {
   Heart, 
   ChevronRight,
   User,
-  Info,
   Store,
   Navigation
 } from "lucide-react";
@@ -27,19 +27,18 @@ import {
   DialogHeader, 
   DialogTitle, 
   DialogDescription,
-  DialogFooter
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
 const categories = [
-  { id: 1, name: "Sayuran", icon: "🥬", count: 124 },
-  { id: 2, name: "Buah-buahan", icon: "🍎", count: 86 },
-  { id: 3, name: "Biji-bijian", icon: "🌾", count: 42 },
-  { id: 4, name: "Rempah-rempah", icon: "🌶️", count: 56 },
-  { id: 5, name: "Umbi-umbian", icon: "🥔", count: 38 },
-  { id: 6, name: "Tanaman Herbal", icon: "🌿", count: 24 },
-  { id: 7, name: "Kacang-kacangan", icon: "🥜", count: 18 },
-  { id: 8, name: "Produk Organik", icon: "🥗", count: 65 },
+  { id: "Sayuran", name: "Sayuran", count: 124 },
+  { id: "Buah-buahan", name: "Buah-buahan", count: 86 },
+  { id: "Biji-bijian", name: "Biji-bijian", count: 42 },
+  { id: "Rempah-rempah", name: "Rempah-rempah", count: 56 },
+  { id: "Umbi-umbian", name: "Umbi-umbian", count: 38 },
+  { id: "Tanaman Herbal", name: "Tanaman Herbal", count: 24 },
+  { id: "Kacang-kacangan", name: "Kacang-kacangan", count: 18 },
+  { id: "Produk Organik", name: "Produk Organik", count: 65 },
 ];
 
 const mockProducts = [
@@ -125,7 +124,7 @@ const mockProducts = [
   },
   {
     id: 6,
-    name: "Bawang Merah",
+    name: "Bawang Merah Brebes",
     category: "Sayuran",
     price: 45000,
     farmer: "Ibu Rahma",
@@ -171,12 +170,29 @@ const mockProducts = [
     stock: "55 kg",
     harvestDate: "2024-05-15"
   },
+  {
+    id: 9,
+    name: "Jahe Merah Super",
+    category: "Rempah-rempah",
+    price: 28000,
+    farmer: "Pak Maman",
+    location: "Lembang, Jabar",
+    rating: 4.8,
+    reviews: 42,
+    status: "Tersedia",
+    badges: ["Best Seller"],
+    image: "https://picsum.photos/seed/ginger/600/400",
+    description: "Jahe merah segar berkualitas tinggi, sangat cocok untuk minuman kesehatan.",
+    stock: "40 kg",
+    harvestDate: "2024-05-12"
+  },
 ];
 
 export function CustomerMarketplace() {
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -191,6 +207,10 @@ export function CustomerMarketplace() {
     if (!mounted) return price.toString();
     return price.toLocaleString();
   };
+
+  const filteredProducts = selectedCategory 
+    ? mockProducts.filter(p => p.category === selectedCategory || (selectedCategory === "Produk Organik" && p.badges.includes("Organik")))
+    : mockProducts;
 
   return (
     <div className="space-y-12 animate-in fade-in duration-700">
@@ -228,17 +248,31 @@ export function CustomerMarketplace() {
             <h2 className="text-2xl font-black font-headline text-primary">Kategori Komoditas</h2>
             <p className="text-muted-foreground">Pilih jenis hasil tani yang Anda butuhkan.</p>
           </div>
-          <Button variant="ghost" className="font-bold text-secondary">Lihat Semua</Button>
+          {selectedCategory && (
+            <Button variant="ghost" className="font-bold text-secondary" onClick={() => setSelectedCategory(null)}>Reset Filter</Button>
+          )}
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
           {categories.map((cat) => (
-            <Card key={cat.id} className="group cursor-pointer rounded-3xl border-none bg-white shadow-sm hover:shadow-xl hover:bg-primary transition-all duration-300">
-              <CardContent className="p-6 flex flex-col items-center justify-center text-center space-y-3">
-                <span className="text-3xl group-hover:scale-125 transition-transform duration-300">{cat.icon}</span>
-                <div>
-                  <p className="font-bold text-sm group-hover:text-white transition-colors">{cat.name}</p>
-                  <p className="text-[10px] text-muted-foreground font-bold group-hover:text-white/70 transition-colors uppercase tracking-widest">{cat.count} Item</p>
-                </div>
+            <Card 
+              key={cat.id} 
+              onClick={() => setSelectedCategory(cat.id)}
+              className={cn(
+                "group cursor-pointer rounded-3xl border-2 transition-all duration-300",
+                selectedCategory === cat.id 
+                  ? "bg-primary border-primary shadow-xl scale-[1.05]" 
+                  : "bg-white border-transparent shadow-sm hover:shadow-lg hover:border-primary/20"
+              )}
+            >
+              <CardContent className="p-6 flex flex-col items-center justify-center text-center space-y-1">
+                <p className={cn(
+                  "font-black text-sm transition-colors",
+                  selectedCategory === cat.id ? "text-white" : "text-primary"
+                )}>{cat.name}</p>
+                <p className={cn(
+                  "text-[10px] font-black uppercase tracking-widest transition-colors",
+                  selectedCategory === cat.id ? "text-white/70" : "text-muted-foreground"
+                )}>{cat.count} Item</p>
               </CardContent>
             </Card>
           ))}
@@ -249,67 +283,75 @@ export function CustomerMarketplace() {
       <section className="space-y-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
           <div className="space-y-1">
-            <h2 className="text-3xl font-black font-headline text-primary">Produk Unggulan</h2>
+            <h2 className="text-3xl font-black font-headline text-primary">
+              {selectedCategory ? `Produk ${selectedCategory}` : "Produk Unggulan"}
+            </h2>
             <p className="text-muted-foreground">Pilihan terbaik minggu ini langsung dari mitra tani kami.</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" className="rounded-full font-bold">Terbaru</Button>
             <Button variant="outline" className="rounded-full font-bold bg-primary text-white border-primary">Populer</Button>
-            <Button variant="outline" className="rounded-full font-bold">Harga Terendah</Button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {mockProducts.map((p) => (
-            <Card key={p.id} onClick={() => handleOpenDetail(p)} className="group cursor-pointer rounded-[2.5rem] border-none shadow-sm hover:shadow-2xl bg-white overflow-hidden transition-all duration-500">
-              <div className="relative aspect-square overflow-hidden">
-                <Image 
-                  src={p.image} 
-                  alt={p.name} 
-                  fill 
-                  className="object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-                <button className="absolute top-4 right-4 h-10 w-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:scale-110 transition-all shadow-lg">
-                  <Heart className="h-5 w-5" />
-                </button>
-                <div className="absolute top-4 left-4 flex flex-col gap-2">
-                  {p.badges.map((badge, i) => (
-                    <Badge key={i} className="bg-primary/90 text-white border-none font-bold text-[10px] px-3 py-1">
-                      {badge}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-              <CardContent className="p-6 space-y-4">
-                <div className="space-y-1">
-                  <p className="text-[10px] font-black text-secondary uppercase tracking-[0.2em]">{p.category}</p>
-                  <h3 className="text-xl font-bold leading-tight group-hover:text-primary transition-colors">{p.name}</h3>
-                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
-                    <User className="h-3 w-3 text-primary" /> {p.farmer}
-                  </div>
-                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
-                    <MapPin className="h-3 w-3 text-primary" /> {p.location}
+        {filteredProducts.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {filteredProducts.map((p) => (
+              <Card key={p.id} onClick={() => handleOpenDetail(p)} className="group cursor-pointer rounded-[2.5rem] border-none shadow-sm hover:shadow-2xl bg-white overflow-hidden transition-all duration-500">
+                <div className="relative aspect-square overflow-hidden">
+                  <Image 
+                    src={p.image} 
+                    alt={p.name} 
+                    fill 
+                    className="object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <button className="absolute top-4 right-4 h-10 w-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:scale-110 transition-all shadow-lg">
+                    <Heart className="h-5 w-5" />
+                  </button>
+                  <div className="absolute top-4 left-4 flex flex-col gap-2">
+                    {p.badges.map((badge, i) => (
+                      <Badge key={i} className="bg-primary/90 text-white border-none font-bold text-[10px] px-3 py-1">
+                        {badge}
+                      </Badge>
+                    ))}
                   </div>
                 </div>
-                
-                <div className="flex items-center justify-between pt-4 border-t border-primary/5">
-                  <div>
-                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest leading-none mb-1">Harga / Kg</p>
-                    <p className="text-xl font-black text-primary">Rp {formatPrice(p.price)}</p>
+                <CardContent className="p-6 space-y-4">
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black text-secondary uppercase tracking-[0.2em]">{p.category}</p>
+                    <h3 className="text-xl font-bold leading-tight group-hover:text-primary transition-colors">{p.name}</h3>
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
+                      <User className="h-3 w-3 text-primary" /> {p.farmer}
+                    </div>
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
+                      <MapPin className="h-3 w-3 text-primary" /> {p.location}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1 bg-yellow-400/10 px-2 py-1 rounded-lg">
-                    <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                    <span className="text-xs font-black">{p.rating}</span>
+                  
+                  <div className="flex items-center justify-between pt-4 border-t border-primary/5">
+                    <div>
+                      <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest leading-none mb-1">Harga / Kg</p>
+                      <p className="text-xl font-black text-primary">Rp {formatPrice(p.price)}</p>
+                    </div>
+                    <div className="flex items-center gap-1 bg-yellow-400/10 px-2 py-1 rounded-lg">
+                      <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
+                      <span className="text-xs font-black">{p.rating}</span>
+                    </div>
                   </div>
-                </div>
-                
-                <Button className="w-full h-11 rounded-2xl bg-primary hover:bg-secondary text-white font-bold transition-all group-hover:shadow-lg">
-                  <ShoppingCart className="mr-2 h-4 w-4" /> Tambah Keranjang
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                  
+                  <Button className="w-full h-11 rounded-2xl bg-primary hover:bg-secondary text-white font-bold transition-all group-hover:shadow-lg">
+                    <ShoppingCart className="mr-2 h-4 w-4" /> Tambah Keranjang
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="py-20 text-center space-y-4 glassmorphism rounded-[3rem]">
+            <p className="text-xl font-bold text-muted-foreground">Tidak ada produk dalam kategori ini.</p>
+            <Button onClick={() => setSelectedCategory(null)} variant="link">Lihat Semua Produk</Button>
+          </div>
+        )}
       </section>
 
       {/* Additional Sections */}
@@ -461,15 +503,6 @@ export function CustomerMarketplace() {
                   <Button variant="outline" className="h-14 w-14 rounded-2xl border-primary/20 hover:bg-primary/5 text-primary p-0">
                     <ShoppingCart className="h-6 w-6" />
                   </Button>
-                </div>
-                
-                <div className="flex justify-center gap-6 pt-2">
-                  <button className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5">
-                    <User className="h-3 w-3" /> Lihat Profil
-                  </button>
-                  <button className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5">
-                    <Store className="h-3 w-3" /> Lihat Kebun
-                  </button>
                 </div>
               </div>
             </div>

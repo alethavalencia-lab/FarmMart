@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -19,7 +20,13 @@ import {
   Settings, 
   LogOut, 
   ChevronRight,
-  AlertCircle
+  AlertCircle,
+  Heart,
+  Package,
+  Bell,
+  MapPin,
+  CreditCard,
+  Star
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -42,8 +49,9 @@ export default function DashboardPage() {
 
   // Sync role-based view if needed
   useEffect(() => {
-    // If not farmer, we might want to default to dashboard for other roles
-    if (role !== "farmer") {
+    if (role === "customer") {
+      setActiveView("marketplace");
+    } else {
       setActiveView("dashboard");
     }
   }, [role]);
@@ -53,34 +61,93 @@ export default function DashboardPage() {
     router.push("/");
   };
 
-  const menuItems = [
-    { id: "dashboard", label: role === "customer" ? "Marketplace" : "Dashboard", icon: LayoutDashboard },
-    { id: "transactions", label: "Transaksi", icon: ShoppingCart },
-    { id: "analytics", label: "Analitik", icon: BarChart3 },
-    { id: "community", label: "Komunitas", icon: Users },
+  const farmerMenu = [
+    { group: "Menu Utama", items: [
+      { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+      { id: "transactions", label: "Transaksi", icon: ShoppingCart },
+      { id: "analytics", label: "Analitik", icon: BarChart3 },
+      { id: "community", label: "Komunitas", icon: Users },
+    ]},
+    { group: "Pengaturan", items: [
+      { id: "profile", label: "Setting Profil", icon: Settings },
+    ]}
   ];
 
-  const getFarmerContent = () => {
-    switch (activeView) {
-      case "dashboard": return <FarmerDashboard />;
-      case "transactions": return <FarmerTransactions />;
-      case "analytics": return <FarmerAnalytics />;
-      case "community": return <FarmerCommunity />;
-      case "profile": return <FarmerProfile />;
-      default: return <FarmerDashboard />;
-    }
-  };
+  const customerMenu = [
+    { group: "Menu Utama", items: [
+      { id: "marketplace", label: "Marketplace", icon: LayoutDashboard },
+      { id: "orders", label: "Pesanan Saya", icon: Package },
+      { id: "favorites", label: "Produk Favorit", icon: Heart },
+      { id: "cart", label: "Keranjang", icon: ShoppingCart },
+      { id: "notifications", label: "Notifikasi", icon: Bell },
+    ]},
+    { group: "Aktivitas Pesanan", items: [
+      { id: "unpaid", label: "Belum Dibayar", icon: CreditCard },
+      { id: "packed", label: "Dikemas", icon: Package },
+      { id: "shipped", label: "Dikirim", icon: Package },
+      { id: "finished", label: "Selesai", icon: Star },
+    ]},
+    { group: "Pengaturan", items: [
+      { id: "profile", label: "Profil Saya", icon: Settings },
+      { id: "address", label: "Alamat Pengiriman", icon: MapPin },
+      { id: "payment", label: "Metode Pembayaran", icon: CreditCard },
+    ]}
+  ];
+
+  const currentMenu = role === "customer" ? customerMenu : farmerMenu;
 
   const renderContent = () => {
     if (role === "farmer") {
-      return getFarmerContent();
+      switch (activeView) {
+        case "dashboard": return <FarmerDashboard />;
+        case "transactions": return <FarmerTransactions />;
+        case "analytics": return <FarmerAnalytics />;
+        case "community": return <FarmerCommunity />;
+        case "profile": return <FarmerProfile />;
+        default: return <FarmerDashboard />;
+      }
     }
+    
     if (role === "investor") {
       return <InvestorDashboard />;
     }
+    
     if (role === "customer") {
-      return <CustomerMarketplace />;
+      switch (activeView) {
+        case "marketplace": return <CustomerMarketplace />;
+        case "profile": return <FarmerProfile />; // Reusing profile for now
+        case "orders": 
+        case "unpaid":
+        case "packed":
+        case "shipped":
+        case "finished":
+          return (
+            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-4 glassmorphism rounded-[3rem] p-12">
+              <Package className="h-16 w-16 text-primary animate-bounce" />
+              <h1 className="text-3xl font-black font-headline text-primary">Riwayat Pesanan</h1>
+              <p className="text-muted-foreground max-w-md">Data pesanan Anda sedang dimuat. Halaman ini akan menampilkan status transaksi {activeView} Anda.</p>
+            </div>
+          );
+        case "favorites":
+          return (
+             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-4 glassmorphism rounded-[3rem] p-12">
+              <Heart className="h-16 w-16 text-destructive animate-pulse" />
+              <h1 className="text-3xl font-black font-headline text-primary">Produk Favorit</h1>
+              <p className="text-muted-foreground max-w-md">Belum ada produk favorit. Mulai jelajahi marketplace dan simpan produk yang Anda sukai.</p>
+            </div>
+          );
+        case "cart":
+          return (
+             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-4 glassmorphism rounded-[3rem] p-12">
+              <ShoppingCart className="h-16 w-16 text-secondary" />
+              <h1 className="text-3xl font-black font-headline text-primary">Keranjang Belanja</h1>
+              <p className="text-muted-foreground max-w-md">Keranjang Anda masih kosong. Yuk, masukkan produk segar dari petani ke keranjang!</p>
+            </div>
+          );
+        default: return <CustomerMarketplace />;
+      }
     }
+
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-4">
         <div className="bg-primary/10 p-8 rounded-full">
@@ -96,7 +163,7 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="flex pt-20">
-        <aside className="hidden lg:block w-72 h-[calc(100vh-80px)] fixed left-0 top-20 border-r bg-white/50 backdrop-blur-sm p-6 space-y-8 z-40">
+        <aside className="hidden lg:block w-72 h-[calc(100vh-80px)] fixed left-0 top-20 border-r bg-white/50 backdrop-blur-sm p-6 space-y-8 z-40 overflow-y-auto">
           <div className="flex items-center gap-3 px-4 mb-8">
             <div className="relative h-10 w-10">
               <Image
@@ -111,51 +178,40 @@ export default function DashboardPage() {
             </span>
           </div>
 
-          <div className="space-y-2">
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest px-4">Menu Utama</p>
-            <nav className="space-y-1">
-              {menuItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveView(item.id)}
-                  className={cn(
-                    "flex items-center gap-3 w-full px-4 py-3 rounded-2xl transition-all duration-300 font-medium group",
-                    activeView === item.id 
-                      ? "bg-primary text-white shadow-lg shadow-primary/20 scale-[1.02]" 
-                      : "text-muted-foreground hover:bg-primary/5 hover:text-primary"
-                  )}
-                >
-                  <item.icon className={cn("h-5 w-5", activeView === item.id ? "text-white" : "group-hover:scale-110 transition-transform")} />
-                  {item.label}
-                  {activeView === item.id && <ChevronRight className="ml-auto h-4 w-4" />}
-                </button>
-              ))}
-            </nav>
-          </div>
-
-          <div className="space-y-2">
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest px-4">Pengaturan</p>
-            <nav className="space-y-1">
-              <button 
-                onClick={() => setActiveView("profile")}
-                className={cn(
-                  "flex items-center gap-3 w-full px-4 py-3 rounded-2xl transition-all duration-300 font-medium group",
-                  activeView === "profile" 
-                    ? "bg-primary text-white shadow-lg shadow-primary/20 scale-[1.02]" 
-                    : "text-muted-foreground hover:bg-primary/5 hover:text-primary"
-                )}
-              >
-                <Settings className="h-5 w-5" />
-                Setting Profil
-              </button>
+          <div className="space-y-6">
+            {currentMenu.map((group, idx) => (
+              <div key={idx} className="space-y-2">
+                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest px-4">{group.group}</p>
+                <nav className="space-y-1">
+                  {group.items.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => setActiveView(item.id)}
+                      className={cn(
+                        "flex items-center gap-3 w-full px-4 py-3 rounded-2xl transition-all duration-300 font-medium group",
+                        activeView === item.id 
+                          ? "bg-primary text-white shadow-lg shadow-primary/20 scale-[1.02]" 
+                          : "text-muted-foreground hover:bg-primary/5 hover:text-primary"
+                      )}
+                    >
+                      <item.icon className={cn("h-4 w-4", activeView === item.id ? "text-white" : "group-hover:scale-110 transition-transform")} />
+                      <span className="text-sm font-bold">{item.label}</span>
+                      {activeView === item.id && <ChevronRight className="ml-auto h-4 w-4" />}
+                    </button>
+                  ))}
+                </nav>
+              </div>
+            ))}
+            
+            <div className="pt-4 border-t border-primary/5">
               <button 
                 onClick={() => setIsLogoutOpen(true)}
-                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-destructive hover:bg-destructive/5 transition-all group font-medium"
+                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-destructive hover:bg-destructive/5 transition-all group font-bold text-sm"
               >
-                <LogOut className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                Keluar
+                <LogOut className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                Keluar Akun
               </button>
-            </nav>
+            </div>
           </div>
         </aside>
 
