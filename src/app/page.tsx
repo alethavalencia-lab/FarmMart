@@ -544,7 +544,7 @@ export default function LandingPage() {
               <div className="space-y-4 pt-4">
                 <div className="flex items-center gap-4 text-primary font-bold">
                    <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary"><Phone className="h-6 w-6" /></div>
-                   <span>+62 812-3456-7890</span>
+                   <span>089698937357</span>
                 </div>
                 <div className="flex items-center gap-4 text-primary font-bold">
                    <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary"><Mail className="h-6 w-6" /></div>
@@ -674,7 +674,7 @@ export default function LandingPage() {
           </div>
           
           <div className="pt-12 border-t border-primary/10 flex flex-col md:flex-row justify-between items-center gap-6">
-            <p className="text-sm text-muted-foreground font-bold">© 2024 Farm Mart Ecosystem. All rights reserved.</p>
+            <p className="text-sm text-muted-foreground font-bold">© 2026 Farm Mart Ecosystem. All rights reserved.</p>
             <div className="flex items-center gap-6">
                <div className="flex items-center gap-2 text-primary font-bold">
                   <Leaf className="h-5 w-5" /> 100% Sustainable
