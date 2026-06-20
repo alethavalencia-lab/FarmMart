@@ -85,7 +85,7 @@ export function FarmerDashboard() {
 
   const PRODUCT_STORAGE_KEY = "farmer_products_v4";
   const PROJECT_STORAGE_KEY = "farmer_projects_v4";
-  const LAND_STORAGE_KEY = "farmer_lands_v5";
+  const LAND_STORAGE_KEY = "farmer_lands_v6";
 
   useEffect(() => {
     setMounted(true);
@@ -122,8 +122,8 @@ export function FarmerDashboard() {
       setLands(JSON.parse(savedLands));
     } else {
       const defaultLands = [
-        { id: 1, name: "Kebun Lembang", location: "Bandung Barat", size: "1.2", crop: "Tomat Ceri", status: "Masa Tanam", irrigation: "Drip", soil: "Subur", harvest: "2024-06-12", image: "https://res.cloudinary.com/dhp46iviu/image/upload/q_auto/f_auto/v1781933067/OIP_9_wlrvjf.webp" },
-        { id: 2, name: "Lahan Dieng B", location: "Wonosobo", size: "0.8", crop: "Kentang Granola", status: "Siap Panen", irrigation: "Rainfed", soil: "Vulkanik", harvest: "2024-05-20", image: "https://res.cloudinary.com/dhp46iviu/image/upload/q_auto/f_auto/v1781933116/kebon_is1xvs.jpg" },
+        { id: 1, name: "Kebun Lembang", location: "Bandung Barat", size: "1.2", crop: "Tomat Ceri", status: "Masa Tanam", irrigation: "Drip", soil: "Subur", harvest: "2026-06-12", image: "https://res.cloudinary.com/dhp46iviu/image/upload/q_auto/f_auto/v1781933067/OIP_9_wlrvjf.webp" },
+        { id: 2, name: "Lahan Dieng B", location: "Wonosobo", size: "0.8", crop: "Kentang Granola", status: "Siap Panen", irrigation: "Rainfed", soil: "Vulkanik", harvest: "2026-05-20", image: "https://res.cloudinary.com/dhp46iviu/image/upload/q_auto/f_auto/v1781933116/kebon_is1xvs.jpg" },
       ];
       setLands(defaultLands);
       localStorage.setItem(LAND_STORAGE_KEY, JSON.stringify(defaultLands));
@@ -155,7 +155,7 @@ export function FarmerDashboard() {
     try {
       const result = await predictHarvestWindow({
         cropType: "Tomat Ceri",
-        plantingDate: "2024-01-15",
+        plantingDate: "2026-01-15",
         historicalYieldData: "Tahun lalu rata-rata 1.2 ton per hektar.",
         currentWeatherTrends: "Musim hujan sedikit lebih lama.",
         soilType: "Loamy",
@@ -433,7 +433,7 @@ export function FarmerDashboard() {
                       </div>
                       <div className="space-y-2">
                         <Label className="font-bold">Tanggal Tanam</Label>
-                        <Input type="date" defaultValue="2024-01-15" className="rounded-xl h-12" />
+                        <Input type="date" defaultValue="2026-01-15" className="rounded-xl h-12" />
                       </div>
                     </div>
                     <Button onClick={handlePredict} disabled={predicting} className="w-full h-14 rounded-2xl bg-secondary hover:bg-secondary/90 text-white font-black text-lg">

@@ -38,9 +38,9 @@ export function FarmerProfile() {
         </div>
         <div className="text-center md:text-left space-y-2">
           <h1 className="text-4xl font-black font-headline text-primary">Pak Tani Maman</h1>
-          <div className="text-muted-foreground font-bold flex items-center justify-center md:justify-start gap-2">
+          <div className="flex items-center justify-center md:justify-start gap-2">
             <Badge className="bg-primary/10 text-primary border-none">Verified Farmer</Badge>
-            <span className="text-xs uppercase tracking-widest">ID: FM-2024001</span>
+            <span className="text-xs uppercase tracking-widest text-muted-foreground font-bold">ID: FM-2026001</span>
           </div>
           <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-2">
              <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground"><MapPin className="h-3 w-3 text-primary" /> Lembang, Jawa Barat</div>
