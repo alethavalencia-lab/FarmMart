@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { 
   Search, 
@@ -15,7 +15,9 @@ import {
   ChevronRight,
   User,
   Store,
-  Navigation
+  Navigation,
+  CheckCircle2,
+  ArrowUpDown
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,7 +29,15 @@ import {
   DialogHeader, 
   DialogTitle, 
   DialogDescription,
+  DialogFooter
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
 const categories = [
@@ -36,163 +46,58 @@ const categories = [
   { id: "Biji-bijian", name: "Biji-bijian", count: 42 },
   { id: "Rempah-rempah", name: "Rempah-rempah", count: 56 },
   { id: "Umbi-umbian", name: "Umbi-umbian", count: 38 },
-  { id: "Tanaman Herbal", name: "Tanaman Herbal", count: 24 },
-  { id: "Kacang-kacangan", name: "Kacang-kacangan", count: 18 },
+  { id: "Tanaman Herbal", name: "Tanaman Herbal", count: 45 },
+  { id: "Kacang-kacangan", name: "Kacang-kacangan", count: 52 },
   { id: "Produk Organik", name: "Produk Organik", count: 65 },
 ];
 
 const mockProducts = [
-  {
-    id: 1,
-    name: "Cabai Merah Premium",
-    category: "Sayuran",
-    price: 32000,
-    farmer: "Pak Maman",
-    location: "Lembang, Bandung",
-    rating: 4.8,
-    reviews: 124,
-    status: "Tersedia",
-    badges: ["Best Seller", "Panen Hari Ini"],
-    image: "https://picsum.photos/seed/chili/600/400",
-    description: "Cabai merah segar pilihan langsung dari kebun Lembang. Memiliki tingkat kepedasan yang konsisten dan warna merah cerah alami.",
-    stock: "85 kg",
-    harvestDate: "2024-05-20"
-  },
-  {
-    id: 2,
-    name: "Tomat Organik",
-    category: "Sayuran",
-    price: 18500,
-    farmer: "Ibu Siti",
-    location: "Cianjur, Jawa Barat",
-    rating: 4.9,
-    reviews: 86,
-    status: "Tersedia",
-    badges: ["Organik"],
-    image: "https://picsum.photos/seed/tomato/600/400",
-    description: "Tomat organik yang ditanam tanpa pestisida kimia. Manis, berair, dan kaya akan vitamin. Sangat cocok untuk salad atau jus.",
-    stock: "42 kg",
-    harvestDate: "2024-05-18"
-  },
-  {
-    id: 3,
-    name: "Beras Premium Cianjur",
-    category: "Biji-bijian",
-    price: 16500,
-    farmer: "Pak Arif",
-    location: "Cianjur, Jawa Barat",
-    rating: 5.0,
-    reviews: 245,
-    status: "Tersedia",
-    badges: ["Best Seller"],
-    image: "https://picsum.photos/seed/rice/600/400",
-    description: "Beras Pandan Wangi asli Cianjur. Tekstur pulen, aroma wangi alami, dan bebas pemutih.",
-    stock: "500 kg",
-    harvestDate: "2024-04-15"
-  },
-  {
-    id: 4,
-    name: "Jagung Manis",
-    category: "Sayuran",
-    price: 12000,
-    farmer: "Pak Budi",
-    location: "Garut, Jawa Barat",
-    rating: 4.7,
-    reviews: 52,
-    status: "Stok Tipis",
-    badges: ["Panen Hari Ini"],
-    image: "https://picsum.photos/seed/corn/600/400",
-    description: "Jagung manis segar yang dipanen langsung saat pesanan masuk. Manis alami dan tekstur renyah.",
-    stock: "15 kg",
-    harvestDate: "2024-05-20"
-  },
-  {
-    id: 5,
-    name: "Kentang Dieng",
-    category: "Umbi-umbian",
-    price: 22000,
-    farmer: "Pak Hidayat",
-    location: "Dieng, Wonosobo",
-    rating: 4.8,
-    reviews: 112,
-    status: "Tersedia",
-    badges: ["Kualitas Ekspor"],
-    image: "https://picsum.photos/seed/potato/600/400",
-    description: "Kentang Granola asli dari dataran tinggi Dieng. Tekstur padat dan sangat baik untuk digoreng atau direbus.",
-    stock: "120 kg",
-    harvestDate: "2024-05-10"
-  },
-  {
-    id: 6,
-    name: "Bawang Merah Brebes",
-    category: "Sayuran",
-    price: 45000,
-    farmer: "Ibu Rahma",
-    location: "Brebes, Jawa Tengah",
-    rating: 4.6,
-    reviews: 78,
-    status: "Tersedia",
-    badges: [],
-    image: "https://picsum.photos/seed/onion/600/400",
-    description: "Bawang merah Brebes yang terkenal dengan aroma kuat dan ketahanan simpan yang baik.",
-    stock: "250 kg",
-    harvestDate: "2024-05-05"
-  },
-  {
-    id: 7,
-    name: "Pisang Cavendish",
-    category: "Buah-buahan",
-    price: 25000,
-    farmer: "Kelompok Tani Lampung",
-    location: "Lampung",
-    rating: 4.9,
-    reviews: 156,
-    status: "Tersedia",
-    badges: ["Fresh"],
-    image: "https://picsum.photos/seed/banana/600/400",
-    description: "Pisang Cavendish kualitas premium. Kulit mulus, daging buah manis lembut, dan kaya nutrisi.",
-    stock: "80 sisir",
-    harvestDate: "2024-05-19"
-  },
-  {
-    id: 8,
-    name: "Alpukat Mentega",
-    category: "Buah-buahan",
-    price: 35000,
-    farmer: "Pak Jaka",
-    location: "Probolinggo, Jatim",
-    rating: 4.7,
-    reviews: 94,
-    status: "Tersedia",
-    badges: ["Organik"],
-    image: "https://picsum.photos/seed/avocado/600/400",
-    description: "Alpukat mentega super. Daging buah tebal, tekstur creamy (seperti mentega), dan rasa gurih manis.",
-    stock: "55 kg",
-    harvestDate: "2024-05-15"
-  },
-  {
-    id: 9,
-    name: "Jahe Merah Super",
-    category: "Rempah-rempah",
-    price: 28000,
-    farmer: "Pak Maman",
-    location: "Lembang, Jabar",
-    rating: 4.8,
-    reviews: 42,
-    status: "Tersedia",
-    badges: ["Best Seller"],
-    image: "https://picsum.photos/seed/ginger/600/400",
-    description: "Jahe merah segar berkualitas tinggi, sangat cocok untuk minuman kesehatan.",
-    stock: "40 kg",
-    harvestDate: "2024-05-12"
-  },
+  // Sayuran
+  { id: 1, name: "Cabai Merah Premium", category: "Sayuran", price: 32000, farmer: "Pak Maman", location: "Lembang, Jawa Barat", rating: 4.8, reviews: 124, status: "Tersedia", badges: ["Best Seller", "Panen Hari Ini"], image: "https://picsum.photos/seed/chili/600/400", stock: "85 kg", harvestDate: "2024-05-20", description: "Cabai merah segar pilihan langsung dari kebun Lembang." },
+  { id: 2, name: "Tomat Organik", category: "Sayuran", price: 18500, farmer: "Ibu Siti", location: "Cianjur, Jawa Barat", rating: 4.9, reviews: 86, status: "Tersedia", badges: ["Organik"], image: "https://picsum.photos/seed/tomato/600/400", stock: "42 kg", harvestDate: "2024-05-18", description: "Tomat organik tanpa pestisida kimia." },
+  { id: 4, name: "Jagung Manis", category: "Sayuran", price: 12000, farmer: "Pak Budi", location: "Garut, Jawa Barat", rating: 4.7, reviews: 52, status: "Stok Tipis", badges: ["Panen Hari Ini"], image: "https://picsum.photos/seed/corn/600/400", stock: "15 kg", harvestDate: "2024-05-20", description: "Jagung manis segar panen harian." },
+  { id: 10, name: "Bayam Hijau Segar", category: "Sayuran", price: 8000, farmer: "Pak Jaka", location: "Bandung, Jawa Barat", rating: 4.6, reviews: 34, status: "Tersedia", badges: ["Organik"], image: "https://picsum.photos/seed/spinach/600/400", stock: "20 kg", harvestDate: "2024-05-21", description: "Bayam organik kaya zat besi." },
+  
+  // Buah-buahan
+  { id: 7, name: "Pisang Cavendish", category: "Buah-buahan", price: 25000, farmer: "Kelompok Tani Lampung", location: "Lampung, Sumatera", rating: 4.9, reviews: 156, status: "Tersedia", badges: ["Fresh"], image: "https://picsum.photos/seed/banana/600/400", stock: "80 sisir", harvestDate: "2024-05-19", description: "Pisang Cavendish kualitas premium." },
+  { id: 8, name: "Alpukat Mentega", category: "Buah-buahan", price: 35000, farmer: "Pak Jaka", location: "Probolinggo, Jawa Timur", rating: 4.7, reviews: 94, status: "Tersedia", badges: ["Organik"], image: "https://picsum.photos/seed/avocado/600/400", stock: "55 kg", harvestDate: "2024-05-15", description: "Alpukat mentega super creamy." },
+  { id: 11, name: "Mangga Harum Manis", category: "Buah-buahan", price: 28000, farmer: "Ibu Ratna", location: "Indramayu, Jawa Barat", rating: 4.8, reviews: 72, status: "Tersedia", badges: ["Best Seller"], image: "https://picsum.photos/seed/mango/600/400", stock: "100 kg", harvestDate: "2024-05-10", description: "Mangga manis harum asli Indramayu." },
+  { id: 12, name: "Jeruk Medan Super", category: "Buah-buahan", price: 22000, farmer: "Pak Ginting", location: "Berastagi, Sumatera", rating: 4.5, reviews: 45, status: "Tersedia", badges: [], image: "https://picsum.photos/seed/orange/600/400", stock: "60 kg", harvestDate: "2024-05-12", description: "Jeruk manis segar dari tanah Karo." },
+
+  // Biji-bijian
+  { id: 3, name: "Beras Premium Cianjur", category: "Biji-bijian", price: 16500, farmer: "Pak Arif", location: "Cianjur, Jawa Barat", rating: 5.0, reviews: 245, status: "Tersedia", badges: ["Best Seller"], image: "https://picsum.photos/seed/rice/600/400", stock: "500 kg", harvestDate: "2024-04-15", description: "Beras Pandan Wangi asli Cianjur." },
+  { id: 13, name: "Kedelai Lokal", category: "Biji-bijian", price: 14000, farmer: "Pak Slamet", location: "Grobogan, Jawa Tengah", rating: 4.6, reviews: 28, status: "Tersedia", badges: [], image: "https://picsum.photos/seed/soybean/600/400", stock: "200 kg", harvestDate: "2024-05-01", description: "Kedelai lokal berkualitas untuk tahu tempe." },
+
+  // Rempah-rempah
+  { id: 9, name: "Jahe Merah Super", category: "Rempah-rempah", price: 28000, farmer: "Pak Maman", location: "Lembang, Jawa Barat", rating: 4.8, reviews: 42, status: "Tersedia", badges: ["Best Seller"], image: "https://picsum.photos/seed/ginger/600/400", stock: "40 kg", harvestDate: "2024-05-12", description: "Jahe merah segar berkualitas tinggi." },
+  { id: 6, name: "Bawang Merah Brebes", category: "Rempah-rempah", price: 45000, farmer: "Ibu Rahma", location: "Brebes, Jawa Tengah", rating: 4.6, reviews: 78, status: "Tersedia", badges: [], image: "https://picsum.photos/seed/onion/600/400", stock: "250 kg", harvestDate: "2024-05-05", description: "Bawang merah Brebes aroma kuat." },
+
+  // Tanaman Herbal
+  { id: 14, name: "Temulawak Segar", category: "Tanaman Herbal", price: 15000, farmer: "Pak Hendra", location: "Sukabumi, Jawa Barat", rating: 4.7, reviews: 19, status: "Tersedia", badges: ["Herbal"], image: "https://picsum.photos/seed/herbal1/600/400", stock: "30 kg", harvestDate: "2024-05-14", description: "Temulawak segar untuk jamu kesehatan." },
+  { id: 15, name: "Daun Mint Organik", category: "Tanaman Herbal", price: 12000, farmer: "Ibu Lani", location: "Bandung, Jawa Barat", rating: 4.9, reviews: 22, status: "Tersedia", badges: ["Organik"], image: "https://picsum.photos/seed/herbal2/600/400", stock: "5 kg", harvestDate: "2024-05-20", description: "Daun mint segar aromatik." },
+  { id: 16, name: "Rosella Kering", category: "Tanaman Herbal", price: 55000, farmer: "Kelompok Wanita Tani", location: "Yogyakarta, DIY", rating: 5.0, reviews: 56, status: "Tersedia", badges: ["Best Seller"], image: "https://picsum.photos/seed/herbal3/600/400", stock: "15 kg", harvestDate: "2024-04-30", description: "Bunga rosella kering kaya antioksidan." },
+  { id: 17, name: "Kunyit Putih", category: "Tanaman Herbal", price: 20000, farmer: "Pak Yusuf", location: "Banyuwangi, Jawa Timur", rating: 4.4, reviews: 12, status: "Tersedia", badges: [], image: "https://picsum.photos/seed/herbal4/600/400", stock: "25 kg", harvestDate: "2024-05-08", description: "Kunyit putih segar pilihan." },
+
+  // Kacang-kacangan
+  { id: 18, name: "Kacang Tanah Kupas", category: "Kacang-kacangan", price: 32000, farmer: "Pak Agus", location: "Tuban, Jawa Timur", rating: 4.7, reviews: 67, status: "Tersedia", badges: ["Best Seller"], image: "https://picsum.photos/seed/nut1/600/400", stock: "100 kg", harvestDate: "2024-05-02", description: "Kacang tanah kupas kering berkualitas." },
+  { id: 19, name: "Edamame Segar", category: "Kacang-kacangan", price: 24000, farmer: "Ibu Desi", location: "Jember, Jawa Timur", rating: 4.9, reviews: 89, status: "Tersedia", badges: ["Organik", "Fresh"], image: "https://picsum.photos/seed/nut2/600/400", stock: "40 kg", harvestDate: "2024-05-21", description: "Edamame jepang kualitas ekspor." },
+  { id: 20, name: "Kacang Mete Mentah", category: "Kacang-kacangan", price: 145000, farmer: "Pak Wayan", location: "Karangasem, Bali", rating: 5.0, reviews: 112, status: "Tersedia", badges: ["Premium"], image: "https://picsum.photos/seed/nut3/600/400", stock: "20 kg", harvestDate: "2024-04-20", description: "Kacang mete pilihan dari Bali." },
+  { id: 21, name: "Kacang Hijau Organik", category: "Kacang-kacangan", price: 19000, farmer: "Pak Mansur", location: "Demak, Jawa Tengah", rating: 4.6, reviews: 33, status: "Tersedia", badges: ["Organik"], image: "https://picsum.photos/seed/nut4/600/400", stock: "150 kg", harvestDate: "2024-05-10", description: "Kacang hijau berkualitas tinggi." },
+  { id: 22, name: "Kacang Merah", category: "Kacang-kacangan", price: 38000, farmer: "Ibu Tini", location: "Manado, Sulawesi Utara", rating: 4.8, reviews: 24, status: "Tersedia", badges: [], image: "https://picsum.photos/seed/nut5/600/400", stock: "50 kg", harvestDate: "2024-05-05", description: "Kacang merah besar untuk sup." },
 ];
 
 export function CustomerMarketplace() {
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  
+  // Filters State
+  const [priceRange, setPriceRange] = useState<string>("all");
+  const [locationFilter, setLocationFilter] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<string>("popular");
 
   useEffect(() => {
     setMounted(true);
@@ -208,9 +113,54 @@ export function CustomerMarketplace() {
     return price.toLocaleString();
   };
 
-  const filteredProducts = selectedCategory 
-    ? mockProducts.filter(p => p.category === selectedCategory || (selectedCategory === "Produk Organik" && p.badges.includes("Organik")))
-    : mockProducts;
+  const filteredProducts = useMemo(() => {
+    let result = [...mockProducts];
+
+    // Search Filter
+    if (searchQuery) {
+      result = result.filter(p => 
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.category.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Category Filter
+    if (selectedCategory) {
+      if (selectedCategory === "Produk Organik") {
+        result = result.filter(p => p.badges.includes("Organik"));
+      } else {
+        result = result.filter(p => p.category === selectedCategory);
+      }
+    }
+
+    // Price Filter
+    if (priceRange !== "all") {
+      if (priceRange === "under25") result = result.filter(p => p.price < 25000);
+      else if (priceRange === "25to50") result = result.filter(p => p.price >= 25000 && p.price <= 50000);
+      else if (priceRange === "above50") result = result.filter(p => p.price > 50000);
+    }
+
+    // Location Filter
+    if (locationFilter !== "all") {
+      result = result.filter(p => p.location.includes(locationFilter));
+    }
+
+    // Sorting
+    if (sortBy === "price-low") result.sort((a, b) => a.price - b.price);
+    else if (sortBy === "price-high") result.sort((a, b) => b.price - a.price);
+    else if (sortBy === "latest") result.sort((a, b) => b.id - a.id);
+    else if (sortBy === "popular") result.sort((a, b) => b.reviews - a.reviews);
+
+    return result;
+  }, [searchQuery, selectedCategory, priceRange, locationFilter, sortBy]);
+
+  const resetFilters = () => {
+    setPriceRange("all");
+    setLocationFilter("all");
+    setSortBy("popular");
+    setSelectedCategory(null);
+    setSearchQuery("");
+  };
 
   return (
     <div className="space-y-12 animate-in fade-in duration-700">
@@ -230,11 +180,16 @@ export function CustomerMarketplace() {
             <div className="relative flex-1">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari hasil pertanian segar (tomat, cabai, beras...)" 
                 className="pl-12 h-14 rounded-2xl border-none bg-white text-foreground text-lg shadow-xl"
               />
             </div>
-            <Button className="h-14 px-8 rounded-2xl bg-secondary hover:bg-secondary/90 text-white font-black text-lg shadow-xl shadow-secondary/20">
+            <Button 
+              onClick={() => setIsFilterOpen(true)}
+              className="h-14 px-8 rounded-2xl bg-secondary hover:bg-secondary/90 text-white font-black text-lg shadow-xl shadow-secondary/20"
+            >
               <Filter className="mr-2 h-5 w-5" /> Filter
             </Button>
           </div>
@@ -248,15 +203,15 @@ export function CustomerMarketplace() {
             <h2 className="text-2xl font-black font-headline text-primary">Kategori Komoditas</h2>
             <p className="text-muted-foreground">Pilih jenis hasil tani yang Anda butuhkan.</p>
           </div>
-          {selectedCategory && (
-            <Button variant="ghost" className="font-bold text-secondary" onClick={() => setSelectedCategory(null)}>Reset Filter</Button>
+          {(selectedCategory || searchQuery !== "" || priceRange !== "all" || locationFilter !== "all") && (
+            <Button variant="ghost" className="font-bold text-secondary" onClick={resetFilters}>Reset Semua Filter</Button>
           )}
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
           {categories.map((cat) => (
             <Card 
               key={cat.id} 
-              onClick={() => setSelectedCategory(cat.id)}
+              onClick={() => setSelectedCategory(cat.id === selectedCategory ? null : cat.id)}
               className={cn(
                 "group cursor-pointer rounded-3xl border-2 transition-all duration-300",
                 selectedCategory === cat.id 
@@ -284,13 +239,23 @@ export function CustomerMarketplace() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
           <div className="space-y-1">
             <h2 className="text-3xl font-black font-headline text-primary">
-              {selectedCategory ? `Produk ${selectedCategory}` : "Produk Unggulan"}
+              {selectedCategory ? `Produk ${selectedCategory}` : searchQuery ? `Hasil Pencarian: ${searchQuery}` : "Produk Unggulan"}
             </h2>
             <p className="text-muted-foreground">Pilihan terbaik minggu ini langsung dari mitra tani kami.</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" className="rounded-full font-bold">Terbaru</Button>
-            <Button variant="outline" className="rounded-full font-bold bg-primary text-white border-primary">Populer</Button>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-[180px] rounded-full border-primary/20 h-10 font-bold">
+                <ArrowUpDown className="mr-2 h-4 w-4" />
+                <SelectValue placeholder="Urutkan" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="popular">Terpopuler</SelectItem>
+                <SelectItem value="latest">Terbaru</SelectItem>
+                <SelectItem value="price-low">Harga Terendah</SelectItem>
+                <SelectItem value="price-high">Harga Tertinggi</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -347,72 +312,78 @@ export function CustomerMarketplace() {
             ))}
           </div>
         ) : (
-          <div className="py-20 text-center space-y-4 glassmorphism rounded-[3rem]">
-            <p className="text-xl font-bold text-muted-foreground">Tidak ada produk dalam kategori ini.</p>
-            <Button onClick={() => setSelectedCategory(null)} variant="link">Lihat Semua Produk</Button>
+          <div className="py-32 text-center space-y-6 glassmorphism rounded-[3rem]">
+            <div className="mx-auto bg-primary/5 p-8 rounded-full w-fit">
+               <Search className="h-12 w-12 text-primary/30" />
+            </div>
+            <div className="space-y-2">
+              <p className="text-2xl font-black font-headline text-primary">Tidak ada hasil ditemukan</p>
+              <p className="text-muted-foreground">Maaf, kami tidak dapat menemukan produk yang sesuai dengan kriteria Anda.</p>
+            </div>
+            <Button onClick={resetFilters} variant="outline" className="rounded-2xl h-12 px-8 font-bold border-primary/20">Hapus Semua Filter</Button>
           </div>
         )}
       </section>
 
-      {/* Additional Sections */}
-      <section className="grid lg:grid-cols-2 gap-8">
-        <Card className="rounded-[3rem] border-none shadow-xl bg-white p-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-secondary/10 rounded-full -mr-32 -mt-32 blur-[80px]"></div>
-          <div className="relative z-10 space-y-6">
-            <div className="flex items-center gap-3">
-              <div className="h-12 w-12 bg-secondary/10 rounded-2xl flex items-center justify-center">
-                <Leaf className="h-6 w-6 text-secondary" />
-              </div>
-              <h3 className="text-2xl font-black font-headline text-primary">Petani Terdekat</h3>
-            </div>
-            <p className="text-muted-foreground">Hasil tani lebih segar dengan jarak tempuh minimal. Temukan pahlawan pangan di sekitar Anda.</p>
+      {/* Filter Dialog */}
+      <Dialog open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+        <DialogContent className="rounded-[3rem] border-none glassmorphism sm:max-w-[500px] outline-none">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-black font-headline text-primary">Filter Marketplace</DialogTitle>
+            <DialogDescription>Sesuaikan pencarian produk tani Anda.</DialogDescription>
+          </DialogHeader>
+          <div className="py-6 space-y-8">
             <div className="space-y-4">
-              {[1, 2].map((i) => (
-                <div key={i} className="flex items-center gap-4 p-4 bg-primary/5 rounded-[2rem] border border-primary/5 hover:bg-primary/10 transition-colors cursor-pointer">
-                  <div className="h-14 w-14 rounded-2xl overflow-hidden relative">
-                    <Image src={`https://picsum.photos/seed/farm${i}/100/100`} alt="Farm" fill className="object-cover" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-bold text-sm">Kebun Berkah {i === 1 ? 'Maman' : 'Siti'}</h4>
-                    <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
-                      <Navigation className="h-3 w-3" /> {i === 1 ? '2.4' : '4.8'} km dari lokasi Anda
-                    </p>
-                  </div>
-                  <ChevronRight className="h-5 w-5 text-primary" />
-                </div>
-              ))}
-            </div>
-          </div>
-        </Card>
-
-        <Card className="rounded-[3rem] border-none shadow-xl bg-primary p-8 relative overflow-hidden text-white">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-[80px]"></div>
-          <div className="relative z-10 space-y-6">
-            <div className="flex items-center gap-3">
-              <div className="h-12 w-12 bg-white/10 rounded-2xl flex items-center justify-center">
-                <Store className="h-6 w-6 text-white" />
+              <label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Rentang Harga</label>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { id: "all", label: "Semua Harga" },
+                  { id: "under25", label: "Di bawah 25rb" },
+                  { id: "25to50", label: "25rb - 50rb" },
+                  { id: "above50", label: "Di atas 50rb" }
+                ].map((range) => (
+                  <button
+                    key={range.id}
+                    onClick={() => setPriceRange(range.id)}
+                    className={cn(
+                      "px-4 py-3 rounded-2xl text-xs font-bold border-2 transition-all",
+                      priceRange === range.id 
+                        ? "bg-primary border-primary text-white shadow-lg" 
+                        : "border-primary/10 hover:border-primary/40 text-muted-foreground"
+                    )}
+                  >
+                    {range.label}
+                  </button>
+                ))}
               </div>
-              <h3 className="text-2xl font-black font-headline">Promo Musim Panen</h3>
             </div>
-            <p className="text-white/70">Dapatkan harga spesial untuk komoditas yang sedang melimpah bulan ini. Stok terbatas!</p>
-            <div className="grid grid-cols-2 gap-4">
-               <div className="bg-white/10 p-4 rounded-[2rem] border border-white/10 text-center space-y-2">
-                 <p className="text-xs font-bold uppercase tracking-widest text-secondary">Hingga</p>
-                 <p className="text-4xl font-black">40%</p>
-                 <p className="text-[10px] opacity-70">Khusus Sayur Hijau</p>
-               </div>
-               <div className="bg-white/10 p-4 rounded-[2rem] border border-white/10 text-center space-y-2">
-                 <p className="text-xs font-bold uppercase tracking-widest text-secondary">Cashback</p>
-                 <p className="text-4xl font-black">15k</p>
-                 <p className="text-[10px] opacity-70">Min. Belanja 100k</p>
-               </div>
+
+            <div className="space-y-4">
+              <label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Lokasi Petani</label>
+              <Select value={locationFilter} onValueChange={setLocationFilter}>
+                <SelectTrigger className="rounded-2xl h-14 border-primary/10 focus:ring-primary">
+                  <SelectValue placeholder="Pilih Lokasi" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Lokasi</SelectItem>
+                  <SelectItem value="Jawa Barat">Jawa Barat</SelectItem>
+                  <SelectItem value="Jawa Tengah">Jawa Tengah</SelectItem>
+                  <SelectItem value="Jawa Timur">Jawa Timur</SelectItem>
+                  <SelectItem value="Sumatera">Sumatera</SelectItem>
+                  <SelectItem value="Bali">Bali</SelectItem>
+                  <SelectItem value="Sulawesi">Sulawesi</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <Button className="w-full h-14 rounded-2xl bg-white text-primary hover:bg-white/90 font-black text-lg shadow-xl shadow-black/20">
-              Klaim Semua Promo
-            </Button>
           </div>
-        </Card>
-      </section>
+          <DialogFooter className="flex-col sm:flex-row gap-3 pt-4">
+            <Button variant="ghost" onClick={resetFilters} className="rounded-2xl h-14 px-8 font-bold">Reset</Button>
+            <Button onClick={() => setIsFilterOpen(false)} className="flex-1 rounded-2xl h-14 bg-primary text-white font-black text-lg shadow-xl shadow-primary/20">
+              Terapkan Filter
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Product Detail Modal */}
       <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>

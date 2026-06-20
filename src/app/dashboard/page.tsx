@@ -1,13 +1,14 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Navbar } from "@/components/layout/Navbar";
 import { FarmerDashboard } from "@/components/dashboard/FarmerDashboard";
 import { InvestorDashboard } from "@/components/dashboard/InvestorDashboard";
 import { CustomerMarketplace } from "@/components/dashboard/CustomerMarketplace";
+import { CustomerNotifications } from "@/components/dashboard/CustomerNotifications";
 import { FarmerTransactions } from "@/components/dashboard/FarmerTransactions";
 import { FarmerAnalytics } from "@/components/dashboard/FarmerAnalytics";
 import { FarmerCommunity } from "@/components/dashboard/FarmerCommunity";
@@ -40,7 +41,7 @@ import {
   AlertDialogTitle 
 } from "@/components/ui/alert-dialog";
 
-export default function DashboardPage() {
+function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const role = searchParams.get("role") || "farmer";
@@ -115,6 +116,7 @@ export default function DashboardPage() {
     if (role === "customer") {
       switch (activeView) {
         case "marketplace": return <CustomerMarketplace />;
+        case "notifications": return <CustomerNotifications />;
         case "profile": return <FarmerProfile />; // Reusing profile for now
         case "orders": 
         case "unpaid":
@@ -122,7 +124,7 @@ export default function DashboardPage() {
         case "shipped":
         case "finished":
           return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-4 glassmorphism rounded-[3rem] p-12">
+            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-4 glassmorphism rounded-[3rem] p-12 animate-in fade-in duration-500">
               <Package className="h-16 w-16 text-primary animate-bounce" />
               <h1 className="text-3xl font-black font-headline text-primary">Riwayat Pesanan</h1>
               <p className="text-muted-foreground max-w-md">Data pesanan Anda sedang dimuat. Halaman ini akan menampilkan status transaksi {activeView} Anda.</p>
@@ -130,7 +132,7 @@ export default function DashboardPage() {
           );
         case "favorites":
           return (
-             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-4 glassmorphism rounded-[3rem] p-12">
+             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-4 glassmorphism rounded-[3rem] p-12 animate-in fade-in duration-500">
               <Heart className="h-16 w-16 text-destructive animate-pulse" />
               <h1 className="text-3xl font-black font-headline text-primary">Produk Favorit</h1>
               <p className="text-muted-foreground max-w-md">Belum ada produk favorit. Mulai jelajahi marketplace dan simpan produk yang Anda sukai.</p>
@@ -138,7 +140,7 @@ export default function DashboardPage() {
           );
         case "cart":
           return (
-             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-4 glassmorphism rounded-[3rem] p-12">
+             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-4 glassmorphism rounded-[3rem] p-12 animate-in fade-in duration-500">
               <ShoppingCart className="h-16 w-16 text-secondary" />
               <h1 className="text-3xl font-black font-headline text-primary">Keranjang Belanja</h1>
               <p className="text-muted-foreground max-w-md">Keranjang Anda masih kosong. Yuk, masukkan produk segar dari petani ke keranjang!</p>
@@ -243,5 +245,13 @@ export default function DashboardPage() {
         </AlertDialogContent>
       </AlertDialog>
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center">Loading...</div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }
