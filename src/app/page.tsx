@@ -148,7 +148,7 @@ export default function LandingPage() {
         {/* Content Container */}
         <div className="container mx-auto px-6 relative z-10 pt-48 pb-40 sm:pb-56">
           <div className="grid lg:grid-cols-2 gap-16 items-center mb-24">
-            <div className="space-y-8 animate-in fade-in slide-in-from-left duration-1000">
+            <div className="space-y-8 animate-in fade-in duration-1000">
               <div className="space-y-4">
                 <Badge className="bg-secondary text-white border-none px-4 py-1.5 rounded-full font-bold tracking-wide">
                   #1 AGRITECH ECOSYSTEM
@@ -210,7 +210,7 @@ export default function LandingPage() {
           </div>
 
           {/* Statistics Section */}
-          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-8 sm:gap-16 pt-12 border-t border-white/20 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-8 sm:gap-16 pt-12 border-t border-white/20 animate-in fade-in duration-1000 delay-500">
             <div className="text-center lg:text-left">
               <p className="text-4xl font-black text-white">15k+</p>
               <p className="text-[10px] text-white/60 font-black uppercase tracking-[0.2em]">Petani Aktif</p>
@@ -453,8 +453,8 @@ export default function LandingPage() {
 
           <div className="relative group cursor-pointer" onClick={handleScrollToRegistration}>
             <div className="absolute -inset-10 bg-accent/10 rounded-full blur-[100px] animate-pulse"></div>
-            <Card className="relative z-10 rounded-[3rem] border-none shadow-2xl overflow-hidden bg-white p-10 flex items-center justify-center group-hover:scale-[1.02] transition-transform min-h-[480px]">
-               <div className="relative w-full h-full min-h-[400px]">
+            <Card className="relative z-10 rounded-[3rem] border-none shadow-2xl overflow-hidden bg-white group-hover:scale-[1.02] transition-transform h-[480px] w-full">
+               <div className="relative w-full h-full p-2">
                   {roiChartImg?.imageUrl && (
                     <Image 
                       src={roiChartImg.imageUrl} 
@@ -556,7 +556,7 @@ export default function LandingPage() {
                     className="object-contain"
                   />
                 </div>
-                <span className="text-2xl font-black font-headline tracking-tight text-primary">
+                <span className="text-2xl font-black font-headline tracking-tighter text-primary">
                   Farm <span className="text-secondary">Mart</span>
                 </span>
               </Link>
