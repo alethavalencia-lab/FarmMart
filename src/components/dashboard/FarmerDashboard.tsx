@@ -337,7 +337,7 @@ export function FarmerDashboard() {
 
   const deleteProject = (id: number) => {
     const updated = projects.filter(p => p.id !== id);
-    saveProjectsToStorage(updated);
+    saveProductsToStorage(updated);
     toast({ title: "Proyek Dihapus", description: "Proyek investasi telah dibatalkan." });
   };
 
@@ -791,6 +791,7 @@ export function FarmerDashboard() {
       {/* Market Opportunity Contact Modal */}
       <Dialog open={!!selectedMarketBuyer} onOpenChange={(open) => !open && setSelectedMarketBuyer(null)}>
         <DialogContent className="rounded-[2.5rem] sm:max-w-[550px] border-none glassmorphism p-0 overflow-hidden outline-none">
+          <DialogTitle className="sr-only">Hubungi Pembeli: {selectedMarketBuyer?.name}</DialogTitle>
           {selectedMarketBuyer && (
             <div className="flex flex-col">
               <div className="bg-primary p-8 text-white relative">
