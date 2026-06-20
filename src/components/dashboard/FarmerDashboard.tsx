@@ -797,6 +797,7 @@ export function FarmerDashboard() {
       {/* Investment Detail Modal */}
       <Dialog open={!!selectedProjectDetail} onOpenChange={(open) => !open && setSelectedProjectDetail(null)}>
         <DialogContent className="rounded-[3rem] sm:max-w-[700px] border-none glassmorphism p-0 overflow-hidden outline-none">
+           <DialogTitle className="sr-only">Detail Proyek: {selectedProjectDetail?.name || 'Investasi'}</DialogTitle>
            {selectedProjectDetail && (
              <div className="space-y-0">
                <div className="relative h-64">

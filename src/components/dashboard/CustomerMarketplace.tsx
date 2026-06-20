@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -65,7 +64,7 @@ export const mockProducts = [
   { id: 7, name: "Pisang Cavendish", category: "Buah-buahan", price: 25000, farmer: "Kelompok Tani Lampung", location: "Lampung, Sumatera", rating: 4.9, reviews: 156, status: "Tersedia", badges: ["Fresh"], image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781923926/OIP_3_hunjmr.webp", stock: "80 sisir", harvestDate: "2024-05-19", description: "Pisang Cavendish kualitas premium." },
   { id: 8, name: "Alpukat Mentega", category: "Buah-buahan", price: 35000, farmer: "Pak Jaka", location: "Probolinggo, Jawa Timur", rating: 4.7, reviews: 94, status: "Tersedia", badges: ["Organik"], image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781924191/istockphoto-1824689302-612x612_oyxubg.jpg", stock: "55 kg", harvestDate: "2024-05-15", description: "Alpukat mentega super creamy." },
   { id: 11, name: "Mangga Harum Manis", category: "Buah-buahan", price: 28000, farmer: "Ibu Ratna", location: "Indramayu, Jawa Barat", rating: 4.8, reviews: 72, status: "Tersedia", badges: ["Best Seller"], image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781926593/678e2a8d30c4c4998dc01be6725efbaf_cricny.jpg", stock: "100 kg", harvestDate: "2024-05-10", description: "Mangga manis harum asli Indramayu." },
-  { id: 12, name: "Jeruk Medan Super", category: "Buah-buahan", price: 22000, farmer: "Pak Ginting", location: "Berastagi, Sumatera", rating: 4.5, reviews: 45, status: "Tersedia", badges: [], image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781926914/OIP_7_w8tygb.webp", stock: "60 kg", harvestDate: "2024-05-12", description: "Jeruk manis segar dari tanah Karo." },
+  { id: 12, name: "Jeruk Medan Super", category: "Jeruk Medan Super", price: 22000, farmer: "Pak Ginting", location: "Berastagi, Sumatera", rating: 4.5, reviews: 45, status: "Tersedia", badges: [], image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781926914/OIP_7_w8tygb.webp", stock: "60 kg", harvestDate: "2024-05-12", description: "Jeruk manis segar dari tanah Karo." },
 
   // Biji-bijian
   { id: 3, name: "Beras Premium Cianjur", category: "Biji-bijian", price: 16500, farmer: "Pak Arif", location: "Cianjur, Jawa Barat", rating: 5.0, reviews: 245, status: "Tersedia", badges: ["Best Seller"], image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781923565/ir-64-parboiled-rice-5-broken-1000x1000_gibiwb.jpg", stock: "500 kg", harvestDate: "2024-04-15", description: "Beras Pandan Wangi asli Cianjur." },
@@ -450,6 +449,9 @@ export function CustomerMarketplace({ addToCart, toggleFavorite, favorites, star
       {/* Product Detail Modal */}
       <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
         <DialogContent className="rounded-[3rem] border-none glassmorphism sm:max-w-[800px] p-0 overflow-hidden outline-none">
+          <DialogTitle className="sr-only">
+            {selectedProduct ? `Detail Produk: ${selectedProduct.name}` : "Detail Produk"}
+          </DialogTitle>
           {selectedProduct && (
             <div className="grid md:grid-cols-2 h-full max-h-[90vh] overflow-y-auto">
               <div className="relative h-[300px] md:h-full min-h-[400px]">
@@ -474,9 +476,9 @@ export function CustomerMarketplace({ addToCart, toggleFavorite, favorites, star
                       <Badge variant="outline" className="border-secondary text-secondary mb-2 uppercase tracking-[0.2em] text-[10px] px-3 font-black">
                         {selectedProduct.category}
                       </Badge>
-                      <DialogTitle className="text-3xl font-black font-headline text-primary mb-2">
+                      <h2 className="text-3xl font-black font-headline text-primary mb-2">
                         {selectedProduct.name}
-                      </DialogTitle>
+                      </h2>
                     </div>
                     <button 
                       onClick={() => toggleFavorite(selectedProduct.id)}
