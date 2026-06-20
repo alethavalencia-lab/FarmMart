@@ -55,11 +55,12 @@ const b2bCategories = [
 
 interface PartnerMarketplaceProps {
   addToCart: (product: any) => void;
+  startCheckout: (items: any[]) => void;
   cartCount: number;
   setView: (v: string) => void;
 }
 
-export function PartnerMarketplace({ addToCart, cartCount, setView }: PartnerMarketplaceProps) {
+export function PartnerMarketplace({ addToCart, startCheckout, cartCount, setView }: PartnerMarketplaceProps) {
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -185,7 +186,7 @@ export function PartnerMarketplace({ addToCart, cartCount, setView }: PartnerMar
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {filteredProducts.map((p) => (
-            <Card key={p.id} className="group cursor-pointer rounded-[2.5rem] border-none shadow-sm hover:shadow-xl bg-white overflow-hidden transition-all duration-500">
+            <Card key={p.id} className="group cursor-pointer rounded-[2.5rem] border-none shadow-sm hover:shadow-2xl bg-white overflow-hidden transition-all duration-500">
               <div className="relative aspect-square overflow-hidden" onClick={() => handleOpenDetail(p)}>
                 <Image src={p.image} alt={p.name} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute top-4 left-4 flex flex-col gap-2">
@@ -346,14 +347,23 @@ export function PartnerMarketplace({ addToCart, cartCount, setView }: PartnerMar
                   <Button 
                     className="w-full h-14 rounded-2xl bg-primary text-white font-black text-lg shadow-xl"
                     onClick={() => {
-                      addToCart({ ...selectedProduct, qty: selectedProduct.moq });
+                      startCheckout([{ ...selectedProduct, qty: selectedProduct.moq }]);
                       setIsDetailOpen(false);
                     }}
                   >
-                    Tambah ke Keranjang Bisnis
+                    Beli Sekarang
                   </Button>
                   <div className="grid grid-cols-2 gap-3">
-                    <Button variant="outline" onClick={() => setView('rfq')} className="rounded-2xl h-12 border-primary/20 font-bold">Ajukan Penawaran</Button>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => {
+                        addToCart({ ...selectedProduct, qty: selectedProduct.moq });
+                        setIsDetailOpen(false);
+                      }} 
+                      className="rounded-2xl h-12 border-primary/20 font-bold"
+                    >
+                      Tambah ke Keranjang
+                    </Button>
                     <Button variant="outline" onClick={() => setView('chat')} className="rounded-2xl h-12 border-primary/20 font-bold flex items-center gap-2">
                       <MessageCircle className="h-4 w-4" /> Hubungi Petani
                     </Button>

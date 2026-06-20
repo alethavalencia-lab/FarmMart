@@ -62,17 +62,19 @@ import {
   AlertDialogHeader, 
   AlertDialogTitle 
 } from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { toast } = useToast();
   const role = searchParams.get("role") || "farmer";
   const viewParam = searchParams.get("view");
   
   const [activeView, setActiveView] = useState(viewParam || (role === "customer" || role === "partner" ? "marketplace" : "dashboard"));
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
-  // --- Consumer/Partner Local State ---
+  // --- Shared Local State ---
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [favoriteItems, setFavoriteItems] = useState<number[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
@@ -155,6 +157,10 @@ function DashboardContent() {
         return prev.map(item => item.id === product.id ? { ...item, qty: item.qty + (product.qty || 1) } : item);
       }
       return [...prev, { ...product, qty: product.qty || 1 }];
+    });
+    toast({
+      title: "Berhasil!",
+      description: `${product.name} telah ditambahkan ke keranjang.`,
     });
   };
 
@@ -270,6 +276,7 @@ function DashboardContent() {
         case "marketplace": 
           return <PartnerMarketplace 
             addToCart={addToCart} 
+            startCheckout={startCheckout}
             cartCount={cartItems.length}
             setView={setView}
           />;
@@ -280,6 +287,12 @@ function DashboardContent() {
             remove={removeFromCart} 
             checkout={startCheckout}
           />;
+        case "checkout":
+          return <CustomerCheckout 
+            items={checkoutData} 
+            complete={completeCheckout} 
+            cancel={() => setActiveView("cart")}
+          />;
         case "rfq": return <PartnerRFQ />;
         case "contracts": return <PartnerContracts />;
         case "orders": return <PartnerOrders orders={orders} />;
@@ -287,9 +300,10 @@ function DashboardContent() {
         case "chat": return <PartnerChat />;
         case "notifications": return <PartnerNotifications />;
         case "payment": return <CustomerPayment />;
-        case "address": return <PartnerProfile />; // Same profile view with address edit
+        case "address": return <PartnerProfile />; 
         default: return <PartnerMarketplace 
             addToCart={addToCart} 
+            startCheckout={startCheckout}
             cartCount={cartItems.length}
             setView={setView}
           />;

@@ -55,7 +55,7 @@ export function Navbar({ cartCount = 0 }: NavbarProps) {
     if (!searchQuery.trim()) return;
     
     setIsSearchOpen(false);
-    router.push(`/dashboard?role=customer&view=marketplace&q=${encodeURIComponent(searchQuery)}`);
+    router.push(`/dashboard?role=${role}&view=marketplace&q=${encodeURIComponent(searchQuery)}`);
     setSearchQuery("");
   };
 
@@ -137,11 +137,11 @@ export function Navbar({ cartCount = 0 }: NavbarProps) {
                     <MessageCircle className="h-5 w-5" />
                   </Button>
                 </Link>
-                {role === "customer" && (
+                {(role === "customer" || role === "partner") && (
                   <>
                     <Link href={`/dashboard?role=${role}&view=orders`} className="hidden md:flex items-center gap-2 px-3 h-10 rounded-full hover:bg-primary/5 text-primary font-bold text-xs transition-all">
                       <Package className="h-4 w-4" />
-                      <span>Pesanan Saya</span>
+                      <span>{role === "customer" ? "Pesanan Saya" : "Pengadaan B2B"}</span>
                     </Link>
                     <Link href={`/dashboard?role=${role}&view=cart`}>
                       <Button variant="ghost" size="icon" className="text-primary rounded-full relative hover:bg-primary/10">
@@ -157,7 +157,7 @@ export function Navbar({ cartCount = 0 }: NavbarProps) {
                 )}
                 <Link href={`/dashboard?role=${role}&view=profile`} className="flex items-center gap-2 px-3 h-10 rounded-full bg-primary/10 text-primary font-bold text-xs hover:bg-primary/20 transition-all ml-2">
                   <User className="h-4 w-4" />
-                  <span className="hidden lg:inline">Profil Saya</span>
+                  <span className="hidden lg:inline">Profil {role === 'partner' ? 'Bisnis' : 'Saya'}</span>
                 </Link>
                 <Link href="/live" className="ml-2">
                   <Button size="sm" className="bg-destructive hover:bg-destructive/90 text-white rounded-full px-4 h-9 font-bold flex items-center gap-2 shadow-lg shadow-destructive/20 animate-pulse">
