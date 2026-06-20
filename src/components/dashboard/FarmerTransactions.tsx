@@ -181,7 +181,7 @@ export function FarmerTransactions({ setView }: FarmerTransactionsProps) {
     : transactions.filter(t => t.status === filter);
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 animate-in fade-in duration-500 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
           <h1 className="text-3xl font-black font-headline text-primary">Manajemen Pesanan</h1>
@@ -416,6 +416,16 @@ export function FarmerTransactions({ setView }: FarmerTransactionsProps) {
                       <p className="text-3xl font-black text-primary">Rp {formatPrice(selectedOrder.total)}</p>
                     </div>
                   </div>
+                </div>
+
+                <div className="space-y-4">
+                   <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary flex items-center gap-2">
+                      <CreditCard className="h-4 w-4" /> Pembayaran
+                   </h4>
+                   <div className="text-sm font-bold bg-primary/5 p-4 rounded-xl text-primary flex justify-between">
+                      <span>Metode: {selectedOrder.payment}</span>
+                      <Badge className="bg-green-600 text-white border-none font-bold text-[10px]">VERIFIED</Badge>
+                   </div>
                 </div>
               </div>
 

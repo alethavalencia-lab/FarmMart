@@ -71,7 +71,7 @@ export function PartnerOrders({ orders: customOrders }: PartnerOrdersProps) {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 pb-20">
+    <div className="space-y-8 animate-in fade-in duration-500 pb-20 max-w-5xl mx-auto">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div className="space-y-2">
           <h1 className="text-3xl font-black font-headline text-primary">Pesanan & Pengadaan</h1>
@@ -217,10 +217,10 @@ export function PartnerOrders({ orders: customOrders }: PartnerOrdersProps) {
                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary flex items-center gap-2">
                       <CreditCard className="h-4 w-4" /> Pembayaran
                    </h4>
-                   <p className="text-sm font-bold bg-primary/5 p-4 rounded-xl text-primary flex justify-between">
+                   <div className="text-sm font-bold bg-primary/5 p-4 rounded-xl text-primary flex justify-between">
                       <span>Metode: {selectedOrder.paymentMethod}</span>
                       <Badge className="bg-green-600 text-white border-none font-bold text-[10px]">VERIFIED</Badge>
-                   </p>
+                   </div>
                 </div>
 
                 <div className="flex gap-4 pt-4">
