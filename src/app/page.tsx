@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Navbar } from "@/components/layout/Navbar";
@@ -58,6 +59,7 @@ export default function LandingPage() {
 
   const heroImageUrl = "https://res.cloudinary.com/dxsfqi45d/image/upload/f_auto,q_auto/nature_mo7kej";
   const roiChartImg = PlaceHolderImages.find(img => img.id === 'investasi-roi-chart');
+  const appMockupImg = PlaceHolderImages.find(img => img.id === 'app-mockup');
   
   const quickNav = [
     { id: 'quick-nav-farmers', label: "Petani Kami", icon: Users },
@@ -157,7 +159,7 @@ export default function LandingPage() {
                   <span className="text-secondary italic">Langsung ke Tangan Anda.</span>
                 </h1>
                 <p className="text-xl text-white/90 max-w-xl font-body leading-relaxed">
-                  Hubungkan petani, konsumen, investor, dan mitra bisnis dalam satu ekosistem pertanian digital modern yang transparan, segar, dan berkelanjutan.
+                  Hubungkan petani, konsumen, investor, dan mitra bisnis dalam satu ekosistem pertanian digital modern yang transparan, segar, and berkelanjutan.
                 </p>
               </div>
               
@@ -236,7 +238,7 @@ export default function LandingPage() {
               <CardContent className="p-4 flex flex-col items-center text-center space-y-3">
                 <div className="relative w-full aspect-video rounded-2xl overflow-hidden opacity-80 group-hover:opacity-100 transition-opacity">
                   {item.image?.imageUrl && (
-                    <Image src={item.image.imageUrl} alt={item.label} fill className="object-cover" />
+                    <Image src={item.image.imageUrl} alt={item.label} fill className="object-cover" data-ai-hint={item.image.imageHint} />
                   )}
                 </div>
                 <div className="bg-primary/10 p-2.5 rounded-xl group-hover:bg-primary group-hover:text-white transition-colors">
@@ -267,7 +269,7 @@ export default function LandingPage() {
             <div key={idx} onClick={handleScrollToRegistration} className="group cursor-pointer relative bg-white rounded-[2.5rem] p-4 shadow-sm hover:shadow-2xl transition-all duration-500 border border-primary/5">
               <div className="relative aspect-square rounded-[2rem] overflow-hidden mb-6">
                 {p.image?.imageUrl && (
-                  <Image src={p.image.imageUrl} alt={p.name} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <Image src={p.image.imageUrl} alt={p.name} fill className="object-cover group-hover:scale-110 transition-transform duration-700" data-ai-hint={p.image.imageHint} />
                 )}
                 <button onClick={(e) => { e.stopPropagation(); handleScrollToRegistration(); }} className="absolute top-4 right-4 p-2.5 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-secondary hover:text-white transition-all">
                   <Heart className="h-4 w-4" />
@@ -308,7 +310,9 @@ export default function LandingPage() {
               card.bg
             )}>
               <div className="absolute inset-0 opacity-20 mix-blend-overlay scale-125 group-hover:scale-100 transition-transform duration-1000">
-                <Image src="https://res.cloudinary.com/dhp46iviu/image/upload/v1780969444/ChatGPT_Image_Jun_9_2026_08_43_16_AM_nythaq.png" alt="BG" fill className="object-cover" />
+                {appMockupImg && (
+                  <Image src={appMockupImg.imageUrl} alt="BG" fill className="object-cover" data-ai-hint={appMockupImg.imageHint} />
+                )}
               </div>
               <CardContent className="relative z-10 h-full p-10 flex flex-col justify-end text-white">
                 <Badge className="bg-white/20 text-white w-fit mb-4 px-4 py-1 rounded-full text-xs font-bold border-none uppercase tracking-widest">{card.role}</Badge>
@@ -335,7 +339,7 @@ export default function LandingPage() {
           {stories.map((story, i) => (
             <div key={i} onClick={handleScrollToRegistration} className="group cursor-pointer relative h-[600px] rounded-[3rem] overflow-hidden shadow-2xl">
               {story.image?.imageUrl && (
-                <Image src={story.image.imageUrl} alt={story.name} fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
+                <Image src={story.image.imageUrl} alt={story.name} fill className="object-cover group-hover:scale-105 transition-transform duration-1000" data-ai-hint={story.image.imageHint} />
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
               <div className="absolute bottom-0 p-10 space-y-4 text-white">
@@ -509,7 +513,9 @@ export default function LandingPage() {
            <div className="lg:w-1/2 relative flex justify-center cursor-pointer" onClick={handleScrollToRegistration}>
               <div className="absolute -inset-10 bg-white/10 rounded-full blur-[100px]"></div>
               <div className="relative h-[600px] w-full max-w-[300px] rounded-[3.5rem] overflow-hidden border-8 border-white/20 shadow-[0_0_100px_rgba(255,255,255,0.1)] group">
-                 <Image src="https://res.cloudinary.com/dhp46iviu/image/upload/v1780969444/ChatGPT_Image_Jun_9_2026_08_43_16_AM_nythaq.png" alt="App Mockup" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                 {appMockupImg && (
+                   <Image src={appMockupImg.imageUrl} alt="App Mockup" fill className="object-cover group-hover:scale-105 transition-transform duration-500" data-ai-hint={appMockupImg.imageHint} />
+                 )}
               </div>
            </div>
         </div>
