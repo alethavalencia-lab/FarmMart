@@ -21,7 +21,10 @@ import {
   ShieldCheck,
   MessageSquare,
   Smartphone,
-  CheckCircle2
+  CheckCircle2,
+  Instagram,
+  Youtube,
+  Phone
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -158,9 +161,9 @@ export default function LandingPage() {
                   Dari Lahan Terbaik, <br />
                   <span className="text-secondary italic">Langsung ke Tangan Anda.</span>
                 </h1>
-                <p className="text-xl text-white/90 max-w-xl font-body leading-relaxed">
+                <h2 className="text-xl text-white/90 max-w-xl font-body leading-relaxed">
                   Hubungkan petani, konsumen, investor, dan mitra bisnis dalam satu ekosistem pertanian digital modern yang transparan, segar, and berkelanjutan.
-                </p>
+                </h2>
               </div>
               
               <div className="flex flex-wrap gap-5">
@@ -311,7 +314,7 @@ export default function LandingPage() {
             )}>
               <div className="absolute inset-0 opacity-20 mix-blend-overlay scale-125 group-hover:scale-100 transition-transform duration-1000">
                 {appMockupImg && (
-                  <Image src={appMockupImg.imageUrl} alt="BG" fill className="object-cover" data-ai-hint={appMockupImg.imageHint} />
+                  <Image src={appMockupImg.imageUrl} alt="BG" fill className="object-cover" data-ai-hint="phone" />
                 )}
               </div>
               <CardContent className="relative z-10 h-full p-10 flex flex-col justify-end text-white">
@@ -514,7 +517,7 @@ export default function LandingPage() {
               <div className="absolute -inset-10 bg-white/10 rounded-full blur-[100px]"></div>
               <div className="relative h-[600px] w-full max-w-[300px] rounded-[3.5rem] overflow-hidden border-8 border-white/20 shadow-[0_0_100px_rgba(255,255,255,0.1)] group">
                  {appMockupImg && (
-                   <Image src={appMockupImg.imageUrl} alt="App Mockup" fill className="object-cover group-hover:scale-105 transition-transform duration-500" data-ai-hint={appMockupImg.imageHint} />
+                   <Image src={appMockupImg.imageUrl} alt="App Mockup" fill className="object-cover group-hover:scale-105 transition-transform duration-500" data-ai-hint="phone" />
                  )}
               </div>
            </div>
@@ -569,10 +572,19 @@ export default function LandingPage() {
                 Digital ecosystem for farmers, customers, investors, and business partners. Built for premium agritech future.
               </p>
               <div className="flex gap-4">
-                 {['Twitter', 'Instagram', 'LinkedIn', 'YouTube'].map((social, i) => (
+                 {[
+                   { name: 'Contact', icon: <Phone className="h-5 w-5" /> },
+                   { name: 'Instagram', icon: <Instagram className="h-5 w-5" /> },
+                   { name: 'TikTok', icon: (
+                     <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                       <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+                     </svg>
+                   ) },
+                   { name: 'YouTube', icon: <Youtube className="h-5 w-5" /> },
+                 ].map((social, i) => (
                    <button key={i} onClick={handleScrollToRegistration} className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all">
-                      <span className="sr-only">{social}</span>
-                      <Globe className="h-5 w-5" />
+                      <span className="sr-only">{social.name}</span>
+                      {social.icon}
                    </button>
                  ))}
               </div>
