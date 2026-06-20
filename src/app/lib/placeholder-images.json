@@ -16,7 +16,7 @@
     {
       "id": "quick-nav-live",
       "description": "Video camera on farm",
-      "imageUrl": "https://res.cloudinary.com/dxsfqi45d/image/upload/v1779958695/Screenshot_2026-05-28_155251_rll9xs.png",
+      "imageUrl": "https://res.cloudinary.com/dhp46iviu/image/upload/v1780968259/ChatGPT_Image_Jun_9_2026_08_23_51_AM_hcarto.png",
       "imageHint": "live farm"
     },
     {
@@ -88,7 +88,7 @@
     {
       "id": "app-mockup",
       "description": "Farm Mart Mobile App Mockup",
-      "imageUrl": "https://picsum.photos/seed/app/600/1200",
+      "imageUrl": "https://res.cloudinary.com/dhp46iviu/image/upload/v1780969444/ChatGPT_Image_Jun_9_2026_08_43_16_AM_nythaq.png",
       "imageHint": "mobile app"
     },
     {
@@ -102,6 +102,12 @@
       "description": "Fresh organic cherry tomatoes",
       "imageUrl": "https://picsum.photos/seed/tomato/500/500",
       "imageHint": "cherry tomatoes"
+    },
+    {
+      "id": "investasi-roi-chart",
+      "description": "Investasi Tani ROI Chart",
+      "imageUrl": "https://res.cloudinary.com/dhp46iviu/image/upload/q_auto/f_auto/v1781919849/IMG_20260620_084008.png_n3po7u.png",
+      "imageHint": "roi chart"
     }
   ]
 }

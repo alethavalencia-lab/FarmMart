@@ -58,6 +58,7 @@ export default function LandingPage() {
   }, [toast]);
 
   const heroImageUrl = "https://res.cloudinary.com/dxsfqi45d/image/upload/f_auto,q_auto/nature_mo7kej";
+  const roiChartImg = PlaceHolderImages.find(img => img.id === 'investasi-roi-chart');
   
   const quickNav = [
     { id: 'quick-nav-farmers', label: "Petani Kami", icon: Users },
@@ -452,30 +453,17 @@ export default function LandingPage() {
 
           <div className="relative group cursor-pointer" onClick={handleScrollToRegistration}>
             <div className="absolute -inset-10 bg-accent/10 rounded-full blur-[100px] animate-pulse"></div>
-            <Card className="relative z-10 rounded-[3rem] border-none shadow-2xl overflow-hidden bg-white p-10 space-y-8 group-hover:scale-[1.02] transition-transform">
-               <div className="flex items-center justify-between">
-                  <h3 className="text-2xl font-bold">Investasi Tani ROI</h3>
-                  <Badge className="bg-primary/10 text-primary border-none">Annual Projection</Badge>
-               </div>
-               <div className="h-64 flex items-end gap-3 px-4">
-                  {[40, 60, 45, 80, 55, 90, 75].map((h, i) => (
-                    <div key={i} className="flex-1 bg-primary/20 rounded-t-xl relative group cursor-pointer">
-                       <div 
-                         style={{ height: `${h}%` }} 
-                         className="absolute bottom-0 left-0 right-0 bg-primary rounded-t-xl group-hover:bg-secondary transition-colors"
-                       ></div>
-                    </div>
-                  ))}
-               </div>
-               <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-primary/5 rounded-2xl">
-                     <p className="text-xs text-muted-foreground font-bold">AVG ROI</p>
-                     <p className="text-2xl font-black text-primary">18.4%</p>
-                  </div>
-                  <div className="p-4 bg-primary/5 rounded-2xl">
-                     <p className="text-xs text-muted-foreground font-bold">TOTAL ASSET</p>
-                     <p className="text-2xl font-black text-primary">1.25M</p>
-                  </div>
+            <Card className="relative z-10 rounded-[3rem] border-none shadow-2xl overflow-hidden bg-white p-10 flex items-center justify-center group-hover:scale-[1.02] transition-transform min-h-[480px]">
+               <div className="relative w-full h-full min-h-[400px]">
+                  {roiChartImg?.imageUrl && (
+                    <Image 
+                      src={roiChartImg.imageUrl} 
+                      alt="Investasi Tani ROI" 
+                      fill 
+                      className="object-contain" 
+                      data-ai-hint={roiChartImg.imageHint}
+                    />
+                  )}
                </div>
             </Card>
           </div>
