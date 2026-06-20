@@ -185,7 +185,7 @@ export function PartnerMarketplace({ addToCart, cartCount, setView }: PartnerMar
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {filteredProducts.map((p) => (
-            <Card key={p.id} className="group cursor-pointer rounded-[2.5rem] border-none shadow-sm hover:shadow-2xl bg-white overflow-hidden transition-all duration-500">
+            <Card key={p.id} className="group cursor-pointer rounded-[2.5rem] border-none shadow-sm hover:shadow-xl bg-white overflow-hidden transition-all duration-500">
               <div className="relative aspect-square overflow-hidden" onClick={() => handleOpenDetail(p)}>
                 <Image src={p.image} alt={p.name} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute top-4 left-4 flex flex-col gap-2">
@@ -242,9 +242,70 @@ export function PartnerMarketplace({ addToCart, cartCount, setView }: PartnerMar
         </div>
       </section>
 
+      {/* Filter Dialog */}
+      <Dialog open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+        <DialogContent className="rounded-[3rem] border-none glassmorphism sm:max-w-[500px] outline-none">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-black font-headline text-primary">Filter Bisnis</DialogTitle>
+            <DialogDescription>Sesuaikan pencarian produk grosir Anda.</DialogDescription>
+          </DialogHeader>
+          <div className="py-6 space-y-8">
+            <div className="space-y-4">
+              <label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Minimal Order (MOQ)</label>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { id: "all", label: "Semua MOQ" },
+                  { id: "50", label: "Maks. 50 Kg" },
+                  { id: "100", label: "Maks. 100 Kg" },
+                  { id: "500", label: "Maks. 500 Kg" }
+                ].map((range) => (
+                  <button
+                    key={range.id}
+                    onClick={() => setMoqFilter(range.id)}
+                    className={cn(
+                      "px-4 py-3 rounded-2xl text-xs font-bold border-2 transition-all",
+                      moqFilter === range.id 
+                        ? "bg-primary border-primary text-white shadow-lg" 
+                        : "border-primary/10 hover:border-primary/40 text-muted-foreground"
+                    )}
+                  >
+                    {range.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Lokasi Supplier</label>
+              <Select value={locationFilter} onValueChange={setLocationFilter}>
+                <SelectTrigger className="rounded-2xl h-14 border-primary/10 focus:ring-primary">
+                  <SelectValue placeholder="Pilih Lokasi" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Lokasi</SelectItem>
+                  <SelectItem value="Jawa Barat">Jawa Barat</SelectItem>
+                  <SelectItem value="Jawa Tengah">Jawa Tengah</SelectItem>
+                  <SelectItem value="Jawa Timur">Jawa Timur</SelectItem>
+                  <SelectItem value="Sumatera">Sumatera</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter className="flex-col sm:flex-row gap-3 pt-4">
+            <Button variant="ghost" onClick={() => { setMoqFilter("all"); setLocationFilter("all"); }} className="rounded-2xl h-14 px-8 font-bold">Reset</Button>
+            <Button onClick={() => setIsFilterOpen(false)} className="flex-1 rounded-2xl h-14 bg-primary text-white font-black text-lg shadow-xl">
+              Terapkan Filter
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Product Detail Modal (B2B Version) */}
       <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
         <DialogContent className="rounded-[3rem] border-none glassmorphism sm:max-w-[800px] p-0 overflow-hidden outline-none">
+          <DialogTitle className="sr-only">
+            {selectedProduct ? `Detail Produk: ${selectedProduct.name}` : "Detail Produk"}
+          </DialogTitle>
           {selectedProduct && (
             <div className="grid md:grid-cols-2 h-full max-h-[90vh] overflow-y-auto">
               <div className="relative h-[300px] md:h-full min-h-[400px]">
