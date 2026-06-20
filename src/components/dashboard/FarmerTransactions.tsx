@@ -124,7 +124,11 @@ const initialTransactionData = [
 
 const statusFlow = ["Menunggu Konfirmasi", "Diproses", "Dikemas", "Dikirim", "Selesai"];
 
-export function FarmerTransactions() {
+interface FarmerTransactionsProps {
+  setView?: (v: string) => void;
+}
+
+export function FarmerTransactions({ setView }: FarmerTransactionsProps) {
   const { toast } = useToast();
   const [filter, setFilter] = useState("Semua");
   const [mounted, setMounted] = useState(false);
@@ -431,7 +435,11 @@ export function FarmerTransactions() {
                     Pesanan Selesai
                   </Button>
                 )}
-                <Button variant="outline" className="h-14 px-8 rounded-2xl border-primary/20 text-primary font-bold flex items-center gap-2">
+                <Button 
+                  onClick={() => setView?.('chat')}
+                  variant="outline" 
+                  className="h-14 px-8 rounded-2xl border-primary/20 text-primary font-bold flex items-center gap-2"
+                >
                   <MessageCircle className="h-5 w-5" /> Hubungi Pembeli
                 </Button>
                 <Button 
@@ -451,16 +459,13 @@ export function FarmerTransactions() {
               <div className="flex justify-between items-start">
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <div className="relative h-12 w-12">
+                    <div className="relative h-16 w-32">
                       <img
-                        src="https://drive.google.com/uc?export=view&id=1iPX9w3Kum27Z858Vo-CV1mGQQPuvYv8a"
+                        src="https://res.cloudinary.com/dhp46iviu/image/upload/v1781936109/ChatGPT_Image_May_25__2026__11_02_33_PM-removebg-preview_ltslqt.png"
                         alt="Farm Mart Logo"
-                        className="object-contain"
+                        className="object-contain object-left h-full w-full"
                       />
                     </div>
-                    <span className="text-2xl font-black font-headline text-primary">
-                      Farm <span className="text-secondary">Mart</span>
-                    </span>
                   </div>
                   <div className="text-xs text-muted-foreground font-medium">
                     <p>Digital Ecosystem for Modern Farming</p>

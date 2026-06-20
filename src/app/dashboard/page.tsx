@@ -164,7 +164,7 @@ function DashboardContent() {
     if (role === "farmer") {
       switch (activeView) {
         case "dashboard": return <FarmerDashboard />;
-        case "transactions": return <FarmerTransactions />;
+        case "transactions": return <FarmerTransactions setView={setView} />;
         case "analytics": return <FarmerAnalytics />;
         case "community": return <FarmerCommunity />;
         case "profile": return <FarmerProfile />;
