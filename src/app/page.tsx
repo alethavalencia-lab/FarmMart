@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Navbar } from "@/components/layout/Navbar";
@@ -309,14 +308,14 @@ export default function LandingPage() {
               card.bg
             )}>
               <div className="absolute inset-0 opacity-20 mix-blend-overlay scale-125 group-hover:scale-100 transition-transform duration-1000">
-                <Image src={`https://picsum.photos/seed/eco${i}/800/1200`} alt="BG" fill className="object-cover" />
+                <Image src="https://res.cloudinary.com/dhp46iviu/image/upload/v1780969444/ChatGPT_Image_Jun_9_2026_08_43_16_AM_nythaq.png" alt="BG" fill className="object-cover" />
               </div>
               <CardContent className="relative z-10 h-full p-10 flex flex-col justify-end text-white">
                 <Badge className="bg-white/20 text-white w-fit mb-4 px-4 py-1 rounded-full text-xs font-bold border-none uppercase tracking-widest">{card.role}</Badge>
                 <h3 className="text-3xl font-black font-headline mb-4 leading-tight">{card.title}</h3>
                 <p className="text-sm opacity-80 mb-8 leading-relaxed">{card.desc}</p>
-                <Button onClick={(e) => { e.stopPropagation(); handleScrollToRegistration(); }} className="w-full h-14 rounded-full bg-white text-primary hover:bg-white/90 font-bold text-base shadow-xl group/btn">
-                  {card.cta} <ChevronRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                <Button onClick={(e) => { e.stopPropagation(); handleScrollToRegistration(); }} className="w-full h-14 rounded-full bg-white text-primary hover:bg-white/90 font-bold text-base shadow-xl group/btn flex items-center justify-center px-6">
+                  {card.cta} <ChevronRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform flex-shrink-0" />
                 </Button>
               </CardContent>
             </Card>
