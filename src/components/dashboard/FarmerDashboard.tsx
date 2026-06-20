@@ -72,35 +72,39 @@ export function FarmerDashboard() {
   const [lands, setLands] = useState<any[]>([]);
 
   const [orders, setOrders] = useState([
-    { id: "#ORD-9912", items: "5kg Tomat Cherry", total: "Rp 125.000", status: "Proses", buyer: "Resto Sedap (Andi)", time: "2 jam yang lalu", payment: "Lunas" },
+    { id: "#ORD-9912", items: "5kg Tomat Ceri", total: "Rp 125.000", status: "Proses", buyer: "Resto Sedap (Andi)", time: "2 jam yang lalu", payment: "Lunas" },
     { id: "#ORD-9910", items: "12kg Cabai Merah", total: "Rp 420.000", status: "Kirim", buyer: "Hotel Grand (Siti)", time: "5 jam yang lalu", payment: "Lunas" },
     { id: "#ORD-9899", items: "2kg Kunyit Segar", total: "Rp 24.000", status: "Selesai", buyer: "Ibu Siti Aminah", time: "1 hari yang lalu", payment: "Lunas" },
   ]);
 
   const [activities, setActivities] = useState([
-    { text: "Produk 'Tomat Cherry' terjual 5kg ke Resto Sedap", time: "10 menit yang lalu", type: "sale" },
+    { text: "Produk 'Tomat Ceri' terjual 5kg ke Resto Sedap", time: "10 menit yang lalu", type: "sale" },
     { text: "Investor baru 'Budi' mendanai Proyek Hidroponik", time: "1 jam yang lalu", type: "investment" },
     { text: "Pesanan #ORD-9910 telah dikirim via Kurir Tani", time: "3 jam yang lalu", type: "logistics" },
   ]);
 
+  const PRODUCT_STORAGE_KEY = "farmer_products_v4";
+  const PROJECT_STORAGE_KEY = "farmer_projects_v4";
+  const LAND_STORAGE_KEY = "farmer_lands_v5";
+
   useEffect(() => {
     setMounted(true);
     // Products
-    const savedProducts = localStorage.getItem("farmer_products_v2");
+    const savedProducts = localStorage.getItem(PRODUCT_STORAGE_KEY);
     if (savedProducts) {
       setProducts(JSON.parse(savedProducts));
     } else {
       const defaultProducts = [
-        { id: 1, name: "Tomat Cherry Organik", price: 25000, stock: 45, status: "Aktif", category: "Sayur", description: "Tomat cherry manis segar.", image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781930246/cherry-tomato-vegetables-photo_j1fksb.jpg" },
-        { id: 2, name: "Cabai Merah Keriting", price: 35000, stock: 120, status: "Aktif", category: "Rempah", description: "Pedas mantap.", image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781924019/OIP_4_xwysrb.webp" },
-        { id: 3, name: "Melon Cantaloupe Premium", price: 45000, stock: 30, status: "Stok Tipis", category: "Buah", description: "Manis aromatik.", image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1780966187/OIP_lstdbk.jpg" },
+        { id: 1, name: "Tomat Ceri", price: 25000, stock: 45, status: "Aktif", category: "Sayur", description: "Tomat cherry manis segar.", image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781930246/cherry-tomato-vegetables-photo_j1fksb.jpg" },
+        { id: 2, name: "Cabai Merah", price: 35000, stock: 120, status: "Aktif", category: "Rempah", description: "Pedas mantap.", image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781924019/OIP_4_xwysrb.webp" },
+        { id: 3, name: "Melon", price: 45000, stock: 30, status: "Stok Tipis", category: "Buah", description: "Manis aromatik.", image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1780966187/OIP_lstdbk.jpg" },
       ];
       setProducts(defaultProducts);
-      localStorage.setItem("farmer_products_v2", JSON.stringify(defaultProducts));
+      localStorage.setItem(PRODUCT_STORAGE_KEY, JSON.stringify(defaultProducts));
     }
 
     // Projects
-    const savedProjects = localStorage.getItem("farmer_projects_v2");
+    const savedProjects = localStorage.getItem(PROJECT_STORAGE_KEY);
     if (savedProjects) {
       setProjects(JSON.parse(savedProjects));
     } else {
@@ -109,20 +113,20 @@ export function FarmerDashboard() {
         { id: 2, name: "Sistem Irigasi Cerdas", target: "Rp 250.000.000", targetNum: 250000000, current: "Rp 100.000.000", funded: "40%", investors: 5, status: "Sedang Berjalan", description: "Pemasangan sensor irigasi IoT.", duration: "4 Bulan", return: "15%", image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781933873/file_000000001bb07209955b647d95e5704e_eibjvb.png" },
       ];
       setProjects(defaultProjects);
-      localStorage.setItem("farmer_projects_v2", JSON.stringify(defaultProjects));
+      localStorage.setItem(PROJECT_STORAGE_KEY, JSON.stringify(defaultProjects));
     }
 
     // Lands
-    const savedLands = localStorage.getItem("farmer_lands_v3");
+    const savedLands = localStorage.getItem(LAND_STORAGE_KEY);
     if (savedLands) {
       setLands(JSON.parse(savedLands));
     } else {
       const defaultLands = [
-        { id: 1, name: "Kebun Lembang A", location: "Bandung Barat", size: "1.2", crop: "Tomat Cherry", status: "Masa Tanam", irrigation: "Drip", soil: "Subur", harvest: "2024-06-12", image: "https://res.cloudinary.com/dhp46iviu/image/upload/q_auto/f_auto/v1781933067/OIP_9_wlrvjf.webp" },
+        { id: 1, name: "Kebun Lembang", location: "Bandung Barat", size: "1.2", crop: "Tomat Ceri", status: "Masa Tanam", irrigation: "Drip", soil: "Subur", harvest: "2024-06-12", image: "https://res.cloudinary.com/dhp46iviu/image/upload/q_auto/f_auto/v1781933067/OIP_9_wlrvjf.webp" },
         { id: 2, name: "Lahan Dieng B", location: "Wonosobo", size: "0.8", crop: "Kentang Granola", status: "Siap Panen", irrigation: "Rainfed", soil: "Vulkanik", harvest: "2024-05-20", image: "https://res.cloudinary.com/dhp46iviu/image/upload/q_auto/f_auto/v1781933116/kebon_is1xvs.jpg" },
       ];
       setLands(defaultLands);
-      localStorage.setItem("farmer_lands_v3", JSON.stringify(defaultLands));
+      localStorage.setItem(LAND_STORAGE_KEY, JSON.stringify(defaultLands));
     }
   }, []);
 
@@ -133,24 +137,24 @@ export function FarmerDashboard() {
 
   const saveProductsToStorage = (updated: any[]) => {
     setProducts(updated);
-    localStorage.setItem("farmer_products_v2", JSON.stringify(updated));
+    localStorage.setItem(PRODUCT_STORAGE_KEY, JSON.stringify(updated));
   };
 
   const saveProjectsToStorage = (updated: any[]) => {
     setProjects(updated);
-    localStorage.setItem("farmer_projects_v2", JSON.stringify(updated));
+    localStorage.setItem(PROJECT_STORAGE_KEY, JSON.stringify(updated));
   };
 
   const saveLandsToStorage = (updated: any[]) => {
     setLands(updated);
-    localStorage.setItem("farmer_lands_v3", JSON.stringify(updated));
+    localStorage.setItem(LAND_STORAGE_KEY, JSON.stringify(updated));
   };
 
   const handlePredict = async () => {
     setPredicting(true);
     try {
       const result = await predictHarvestWindow({
-        cropType: "Tomat Cherry",
+        cropType: "Tomat Ceri",
         plantingDate: "2024-01-15",
         historicalYieldData: "Tahun lalu rata-rata 1.2 ton per hektar.",
         currentWeatherTrends: "Musim hujan sedikit lebih lama.",
@@ -422,7 +426,7 @@ export function FarmerDashboard() {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="tomat">Tomat Cherry</SelectItem>
+                            <SelectItem value="tomat">Tomat Ceri</SelectItem>
                             <SelectItem value="cabai">Cabai Merah</SelectItem>
                           </SelectContent>
                         </Select>
@@ -724,11 +728,11 @@ export function FarmerDashboard() {
            <div className="space-y-6 py-4">
               <div className="space-y-2">
                  <Label className="font-bold">Judul Live</Label>
-                 <Input placeholder="Misal: Panen Raya Tomat Cherry Lembang" className="rounded-xl h-12" />
+                 <Input placeholder="Misal: Panen Raya Tomat Ceri Lembang" className="rounded-xl h-12" />
               </div>
               <div className="space-y-2">
                  <Label className="font-bold">Komoditas yang Dibahas</Label>
-                 <Input placeholder="Misal: Tomat Cherry" className="rounded-xl h-12" />
+                 <Input placeholder="Misal: Tomat Ceri" className="rounded-xl h-12" />
               </div>
               <div className="space-y-2">
                  <Label className="font-bold">Deskripsi Singkat</Label>
@@ -879,7 +883,7 @@ export function FarmerDashboard() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Nama Produk</Label>
-                <Input name="name" defaultValue={editingProduct?.name} required placeholder="Misal: Tomat Cherry Premium" className="rounded-xl h-12" />
+                <Input name="name" defaultValue={editingProduct?.name} required placeholder="Misal: Tomat Ceri Premium" className="rounded-xl h-12" />
               </div>
               <div className="space-y-2">
                 <Label>Kategori</Label>
@@ -957,7 +961,7 @@ export function FarmerDashboard() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Nama Proyek</Label>
-                <Input name="name" defaultValue={editingProject?.name} required placeholder="Misal: Ekspansi Melon Cantaloupe" className="rounded-xl h-12" />
+                <Input name="name" defaultValue={editingProject?.name} required placeholder="Misal: Ekspansi Melon" className="rounded-xl h-12" />
               </div>
               <div className="space-y-2">
                 <Label>Target Dana (Rp)</Label>
@@ -1007,7 +1011,7 @@ export function FarmerDashboard() {
 
       {/* Land Modal */}
       <Dialog open={isLandDialogOpen} onOpenChange={setIsLandDialogOpen}>
-        <DialogContent className="rounded-[2.5rem] sm:max-w-[700px] border-none glassmorphism max-h-[85vh] overflow-y-auto">
+        <DialogContent className="rounded-[2.5rem] sm:max-w-[600px] border-none glassmorphism max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold">{editingLand ? 'Edit Data Lahan' : 'Tambah Data Lahan Baru'}</DialogTitle>
             <DialogDescription>Daftarkan lahan baru Anda untuk memudahkan pelacakan operasional tani.</DialogDescription>
@@ -1016,7 +1020,7 @@ export function FarmerDashboard() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Nama Lahan</Label>
-                <Input name="name" defaultValue={editingLand?.name} required placeholder="Misal: Kebun Lembang A" className="rounded-xl h-12" />
+                <Input name="name" defaultValue={editingLand?.name} required placeholder="Misal: Kebun Lembang" className="rounded-xl h-12" />
               </div>
               <div className="space-y-2">
                 <Label>Lokasi</Label>
@@ -1030,7 +1034,7 @@ export function FarmerDashboard() {
               </div>
               <div className="space-y-2">
                 <Label>Jenis Tanaman</Label>
-                <Input name="crop" defaultValue={editingLand?.crop} required placeholder="Misal: Tomat Cherry" className="rounded-xl h-12" />
+                <Input name="crop" defaultValue={editingLand?.crop} required placeholder="Misal: Tomat Ceri" className="rounded-xl h-12" />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
