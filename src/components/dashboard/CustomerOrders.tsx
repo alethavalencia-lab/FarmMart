@@ -61,35 +61,35 @@ export function CustomerOrders({ orders, activeTab }: CustomerOrdersProps) {
     { id: "finished", label: "Selesai" }
   ];
 
-  // Enhanced mock data to ensure all tabs are populated for demo purposes
+  // Enhanced mock data with specific provided image URLs
   const initialMockOrders = [
     {
       id: "ORD-9912",
       date: "20 Mei 2024",
       status: "Dikemas",
       total: 125000,
-      items: [{ id: 1, name: "Cabai Merah Premium", qty: 2, price: 32000, farmer: "Pak Maman", image: "https://picsum.photos/seed/chili/100/100" }]
+      items: [{ id: 1, name: "Cabai Merah Premium", qty: 2, price: 32000, farmer: "Pak Maman", image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781924019/OIP_4_xwysrb.webp" }]
     },
     {
       id: "ORD-9920",
       date: "21 Mei 2024",
       status: "Belum Dibayar",
       total: 45000,
-      items: [{ id: 2, name: "Tomat Organik", qty: 3, price: 18500, farmer: "Ibu Siti", image: "https://picsum.photos/seed/tomato/100/100" }]
+      items: [{ id: 2, name: "Tomat Organik", qty: 3, price: 18500, farmer: "Ibu Siti", image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781924354/fresh-tomato-1000x1000_dej5yi.jpg" }]
     },
     {
       id: "ORD-9915",
       date: "19 Mei 2024",
       status: "Dikirim",
       total: 85000,
-      items: [{ id: 3, name: "Beras Premium Cianjur", qty: 5, price: 16500, farmer: "Pak Arif", image: "https://picsum.photos/seed/rice/100/100" }]
+      items: [{ id: 3, name: "Beras Premium Cianjur", qty: 5, price: 16500, farmer: "Pak Arif", image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781923565/ir-64-parboiled-rice-5-broken-1000x1000_gibiwb.jpg" }]
     },
     {
       id: "ORD-9899",
       date: "18 Mei 2024",
       status: "Selesai",
       total: 24000,
-      items: [{ id: 9, name: "Jahe Merah Super", qty: 1, price: 28000, farmer: "Pak Maman", image: "https://picsum.photos/seed/ginger/100/100" }]
+      items: [{ id: 9, name: "Jahe Merah Super", qty: 1, price: 28000, farmer: "Pak Maman", image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781927234/OIP_8_giltky.webp" }]
     }
   ];
 
