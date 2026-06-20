@@ -34,7 +34,9 @@ import {
   Utensils,
   Store,
   Factory,
-  ArrowRight
+  ArrowRight,
+  MessageCircle,
+  Send
 } from "lucide-react";
 import { predictHarvestWindow, PredictHarvestWindowOutput } from "@/ai/flows/predict-harvest-window";
 import { useToast } from "@/hooks/use-toast";
@@ -65,6 +67,7 @@ export function FarmerDashboard() {
   const [isLiveSetupOpen, setIsLiveSetupOpen] = useState(false);
   const [isLiveActive, setIsLiveSetupActive] = useState(false);
   const [selectedProjectDetail, setSelectedProjectDetail] = useState<any | null>(null);
+  const [selectedMarketBuyer, setSelectedMarketBuyer] = useState<any | null>(null);
 
   // Editing states
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
@@ -449,7 +452,10 @@ export function FarmerDashboard() {
                   </div>
                 </div>
 
-                <Button className="w-full h-11 rounded-2xl bg-primary hover:bg-secondary text-white font-bold text-xs shadow-lg shadow-primary/20 transition-all">
+                <Button 
+                  onClick={() => setSelectedMarketBuyer(op)}
+                  className="w-full h-11 rounded-2xl bg-primary hover:bg-secondary text-white font-bold text-xs shadow-lg shadow-primary/20 transition-all"
+                >
                   Hubungi Pembeli
                 </Button>
               </CardContent>
@@ -782,6 +788,85 @@ export function FarmerDashboard() {
         </TabsContent>
       </Tabs>
 
+      {/* Market Opportunity Contact Modal */}
+      <Dialog open={!!selectedMarketBuyer} onOpenChange={(open) => !open && setSelectedMarketBuyer(null)}>
+        <DialogContent className="rounded-[2.5rem] sm:max-w-[550px] border-none glassmorphism p-0 overflow-hidden outline-none">
+          {selectedMarketBuyer && (
+            <div className="flex flex-col">
+              <div className="bg-primary p-8 text-white relative">
+                <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -mr-24 -mt-24 blur-[60px]"></div>
+                <div className="flex items-center gap-4 relative z-10">
+                   <div className={cn("p-4 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30", selectedMarketBuyer.color.replace('text', 'text-white'))}>
+                      <selectedMarketBuyer.icon className="h-8 w-8" />
+                   </div>
+                   <div>
+                      <Badge className="bg-white/20 text-white border-none font-black text-[10px] mb-1 uppercase tracking-widest">{selectedMarketBuyer.type}</Badge>
+                      <h3 className="text-2xl font-black font-headline">{selectedMarketBuyer.name}</h3>
+                   </div>
+                </div>
+              </div>
+              
+              <div className="p-8 space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 bg-primary/5 rounded-2xl border border-primary/10">
+                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Kebutuhan</p>
+                    <p className="text-sm font-bold text-primary">{selectedMarketBuyer.product}</p>
+                  </div>
+                  <div className="p-4 bg-primary/5 rounded-2xl border border-primary/10">
+                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Volume</p>
+                    <p className="text-sm font-bold text-primary">{selectedMarketBuyer.qty}</p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                   <div className="flex items-center gap-3 text-muted-foreground">
+                      <MapPin className="h-5 w-5 text-secondary" />
+                      <span className="text-sm font-bold">{selectedMarketBuyer.location}</span>
+                   </div>
+                   <div className="p-4 bg-blue-50 rounded-2xl border border-blue-100 flex items-start gap-3">
+                      <Info className="h-5 w-5 text-blue-500 shrink-0 mt-0.5" />
+                      <p className="text-xs font-medium text-blue-700 leading-relaxed">
+                        Anda dapat langsung menghubungi pembeli ini untuk menanyakan ketersediaan produk dan peluang kemitraan suplai.
+                      </p>
+                   </div>
+                </div>
+
+                <div className="space-y-4 pt-2">
+                   <Label className="font-bold text-sm text-primary">Tinggalkan Pesan</Label>
+                   <Textarea 
+                     defaultValue={`Halo, saya berminat untuk mensuplai produk ${selectedMarketBuyer.product} yang Anda butuhkan.`}
+                     className="rounded-2xl min-h-[100px] border-primary/10 bg-gray-50 focus-visible:ring-primary"
+                   />
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                   <Button 
+                    onClick={() => {
+                      toast({ title: "Pesan Terkirim", description: `Ketertarikan Anda telah disampaikan ke ${selectedMarketBuyer.name}.` });
+                      setSelectedMarketBuyer(null);
+                    }}
+                    className="flex-1 h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-lg shadow-xl shadow-primary/20"
+                   >
+                     <Send className="mr-2 h-5 w-5" /> Kirim Pesan
+                   </Button>
+                   <Button 
+                    variant="outline"
+                    onClick={() => {
+                      toast({ title: "Membuka Chat", description: "Menghubungkan ke chat room pembeli..." });
+                      setSelectedMarketBuyer(null);
+                    }}
+                    className="h-14 px-6 rounded-2xl border-primary/20 text-primary font-bold"
+                   >
+                     <MessageCircle className="h-6 w-6" />
+                   </Button>
+                </div>
+                <Button variant="ghost" onClick={() => setSelectedMarketBuyer(null)} className="w-full text-muted-foreground font-bold">Tutup</Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
       {/* Live Broadcaster Experience Modal */}
       <Dialog open={isLiveSetupOpen} onOpenChange={setIsLiveSetupOpen}>
         <DialogContent className="rounded-[2.5rem] sm:max-w-[500px] border-none glassmorphism p-8">
@@ -890,7 +975,7 @@ export function FarmerDashboard() {
                         <p className="text-lg font-black text-secondary">{selectedProjectDetail.return}</p>
                      </div>
                      <div className="p-4 bg-blue-50 rounded-2xl text-center border border-blue-100">
-                        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Jumlah Investor</p>
+                        <p className="text-[10px] font-black uppercase tracking-widest mb-1">Jumlah Investor</p>
                         <p className="text-lg font-black text-blue-600">{selectedProjectDetail.investors} Mitra</p>
                      </div>
                   </div>
