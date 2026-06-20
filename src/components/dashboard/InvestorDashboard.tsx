@@ -122,6 +122,9 @@ const initialExploreProjects = [
     duration: "4 Months", 
     return: "15%", 
     risk: "Low",
+    minInvestment: 50000,
+    investorsCount: 84,
+    scheme: "Profit Sharing",
     image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781930246/cherry-tomato-vegetables-photo_j1fksb.jpg",
     description: "Ekspansi kapasitas produksi tomat ceri organik melalui pengembangan greenhouse dan peningkatan produksi bibit.",
     farmerInfo: {
@@ -156,6 +159,9 @@ const initialExploreProjects = [
     duration: "5 Months", 
     return: "16%", 
     risk: "Medium",
+    minInvestment: 100000,
+    investorsCount: 56,
+    scheme: "Profit Sharing",
     image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781924019/OIP_4_xwysrb.webp",
     description: "Implementasi teknologi irigasi cerdas berbasis IoT untuk meningkatkan efisiensi penggunaan air dan hasil panen cabai merah.",
     farmerInfo: {
@@ -188,6 +194,9 @@ const initialExploreProjects = [
     duration: "12 Months", 
     return: "20%", 
     risk: "Medium",
+    minInvestment: 500000,
+    investorsCount: 42,
+    scheme: "Profit Sharing",
     image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781924191/istockphoto-1824689302-612x612_oyxubg.jpg",
     description: "Perluasan lahan tanam alpukat mentega premium untuk pasar ekspor dan supermarket lokal.",
     farmerInfo: {
@@ -295,7 +304,8 @@ export function InvestorDashboard({ view = "dashboard", setView }: InvestorDashb
     setMounted(true);
   }, []);
 
-  const formatPrice = (val: number) => {
+  const formatPrice = (val: number | undefined | null) => {
+    if (val === undefined || val === null) return '0';
     if (!mounted) return val.toString();
     return val.toLocaleString('id-ID');
   };
