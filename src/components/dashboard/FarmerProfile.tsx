@@ -1,12 +1,12 @@
-
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import { 
   User, 
   Mail, 
@@ -17,7 +17,8 @@ import {
   Camera,
   Save,
   ChevronRight,
-  Smartphone
+  Smartphone,
+  Calendar
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -37,10 +38,10 @@ export function FarmerProfile() {
         </div>
         <div className="text-center md:text-left space-y-2">
           <h1 className="text-4xl font-black font-headline text-primary">Pak Tani Maman</h1>
-          <p className="text-muted-foreground font-bold flex items-center justify-center md:justify-start gap-2">
+          <div className="text-muted-foreground font-bold flex items-center justify-center md:justify-start gap-2">
             <Badge className="bg-primary/10 text-primary border-none">Verified Farmer</Badge>
             <span className="text-xs uppercase tracking-widest">ID: FM-2024001</span>
-          </p>
+          </div>
           <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-2">
              <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground"><MapPin className="h-3 w-3 text-primary" /> Lembang, Jawa Barat</div>
              <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground"><Calendar className="h-3 w-3 text-primary" /> Member sejak 2022</div>
