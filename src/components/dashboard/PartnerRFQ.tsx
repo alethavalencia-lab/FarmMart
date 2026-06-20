@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { FileText, Plus, Calendar, MapPin, Package, Clock, CheckCircle2 } from "lucide-react";
+import { FileText, Plus, Calendar, MapPin, Package, Clock, CheckCircle2, ChevronRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
