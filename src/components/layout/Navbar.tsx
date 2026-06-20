@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -6,14 +5,16 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Menu, Search, Bell, MessageCircle, PlayCircle } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const isDashboard = pathname?.includes("/dashboard");
+  const role = searchParams.get("role") || "customer";
   const { toast } = useToast();
 
   useEffect(() => {
@@ -101,13 +102,17 @@ export function Navbar() {
           
           {isDashboard ? (
             <div className="flex items-center gap-2 sm:gap-4">
-              <Button variant="ghost" size="icon" className="text-primary rounded-full relative hover:bg-primary/10">
-                <Bell className="h-5 w-5" />
-                <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full border-2 border-white"></span>
-              </Button>
-              <Button variant="ghost" size="icon" className="text-primary rounded-full hover:bg-primary/10">
-                <MessageCircle className="h-5 w-5" />
-              </Button>
+              <Link href={`/dashboard?role=${role}&view=notifications`}>
+                <Button variant="ghost" size="icon" className="text-primary rounded-full relative hover:bg-primary/10">
+                  <Bell className="h-5 w-5" />
+                  <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full border-2 border-white"></span>
+                </Button>
+              </Link>
+              <Link href={`/dashboard?role=${role}&view=chat`}>
+                <Button variant="ghost" size="icon" className="text-primary rounded-full hover:bg-primary/10">
+                  <MessageCircle className="h-5 w-5" />
+                </Button>
+              </Link>
               <Link href="/live">
                 <Button size="sm" className="bg-destructive hover:bg-destructive/90 text-white rounded-full px-4 h-9 font-bold flex items-center gap-2 shadow-lg shadow-destructive/20 animate-pulse">
                   <PlayCircle className="h-4 w-4" />

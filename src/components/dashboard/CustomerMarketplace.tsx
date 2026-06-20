@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -9,14 +8,12 @@ import {
   ShoppingCart, 
   MapPin, 
   Star, 
-  Leaf, 
   Clock, 
   Heart, 
   ChevronRight,
   User,
   Store,
   Navigation,
-  CheckCircle2,
   ArrowUpDown
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -84,6 +81,13 @@ const mockProducts = [
   { id: 20, name: "Kacang Mete Mentah", category: "Kacang-kacangan", price: 145000, farmer: "Pak Wayan", location: "Karangasem, Bali", rating: 5.0, reviews: 112, status: "Tersedia", badges: ["Premium"], image: "https://picsum.photos/seed/nut3/600/400", stock: "20 kg", harvestDate: "2024-04-20", description: "Kacang mete pilihan dari Bali." },
   { id: 21, name: "Kacang Hijau Organik", category: "Kacang-kacangan", price: 19000, farmer: "Pak Mansur", location: "Demak, Jawa Tengah", rating: 4.6, reviews: 33, status: "Tersedia", badges: ["Organik"], image: "https://picsum.photos/seed/nut4/600/400", stock: "150 kg", harvestDate: "2024-05-10", description: "Kacang hijau berkualitas tinggi." },
   { id: 22, name: "Kacang Merah", category: "Kacang-kacangan", price: 38000, farmer: "Ibu Tini", location: "Manado, Sulawesi Utara", rating: 4.8, reviews: 24, status: "Tersedia", badges: [], image: "https://picsum.photos/seed/nut5/600/400", stock: "50 kg", harvestDate: "2024-05-05", description: "Kacang merah besar untuk sup." },
+
+  // Umbi-umbian
+  { id: 23, name: "Kentang Dieng Super", category: "Umbi-umbian", price: 15000, farmer: "Pak Budi", location: "Wonosobo, Jawa Tengah", rating: 4.8, reviews: 110, status: "Tersedia", badges: ["Best Seller"], image: "https://picsum.photos/seed/potato-dieng/600/400", stock: "200 kg", harvestDate: "2024-05-15", description: "Kentang Dieng kualitas super, cocok untuk segala masakan." },
+  { id: 24, name: "Ubi Jalar Ungu", category: "Umbi-umbian", price: 12000, farmer: "Ibu Siti", location: "Cianjur, Jawa Barat", rating: 4.7, reviews: 45, status: "Tersedia", badges: ["Organik"], image: "https://picsum.photos/seed/purple-yam/600/400", stock: "150 kg", harvestDate: "2024-05-18", description: "Ubi ungu manis kaya antosianin." },
+  { id: 25, name: "Singkong Mentega", category: "Umbi-umbian", price: 8000, farmer: "Pak Jaka", location: "Sukabumi, Jawa Barat", rating: 4.6, reviews: 89, status: "Tersedia", badges: ["Fresh"], image: "https://picsum.photos/seed/cassava/600/400", stock: "300 kg", harvestDate: "2024-05-20", description: "Singkong empuk dan legit, langsung dari kebun." },
+  { id: 26, name: "Talas Bogor", category: "Umbi-umbian", price: 18000, farmer: "Pak Arif", location: "Bogor, Jawa Barat", rating: 4.9, reviews: 67, status: "Tersedia", badges: ["Khas"], image: "https://picsum.photos/seed/talas-bogor/600/400", stock: "50 kg", harvestDate: "2024-05-12", description: "Talas Bogor asli, pulen dan wangi." },
+  { id: 27, name: "Ubi Cilembu Madu", category: "Umbi-umbian", price: 20000, farmer: "Ibu Ratna", location: "Sumedang, Jawa Barat", rating: 5.0, reviews: 230, status: "Tersedia", badges: ["Best Seller", "Manis"], image: "https://picsum.photos/seed/ubi-cilembu/600/400", stock: "100 kg", harvestDate: "2024-05-10", description: "Ubi Cilembu asli Sumedang, manis seperti madu saat dipanggang." },
 ];
 
 export function CustomerMarketplace() {
@@ -182,7 +186,7 @@ export function CustomerMarketplace() {
               <Input 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari hasil pertanian segar (tomat, cabai, beras...)" 
+                placeholder="Cari hasil pertanian segar (tomat, cabai, ubi...)" 
                 className="pl-12 h-14 rounded-2xl border-none bg-white text-foreground text-lg shadow-xl"
               />
             </div>
@@ -317,7 +321,7 @@ export function CustomerMarketplace() {
                <Search className="h-12 w-12 text-primary/30" />
             </div>
             <div className="space-y-2">
-              <p className="text-2xl font-black font-headline text-primary">Tidak ada hasil ditemukan</p>
+              <p className="text-2xl font-black font-headline text-primary">Produk yang Anda cari belum tersedia.</p>
               <p className="text-muted-foreground">Maaf, kami tidak dapat menemukan produk yang sesuai dengan kriteria Anda.</p>
             </div>
             <Button onClick={resetFilters} variant="outline" className="rounded-2xl h-12 px-8 font-bold border-primary/20">Hapus Semua Filter</Button>

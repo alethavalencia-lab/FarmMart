@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
@@ -9,6 +8,7 @@ import { FarmerDashboard } from "@/components/dashboard/FarmerDashboard";
 import { InvestorDashboard } from "@/components/dashboard/InvestorDashboard";
 import { CustomerMarketplace } from "@/components/dashboard/CustomerMarketplace";
 import { CustomerNotifications } from "@/components/dashboard/CustomerNotifications";
+import { CustomerChat } from "@/components/dashboard/CustomerChat";
 import { FarmerTransactions } from "@/components/dashboard/FarmerTransactions";
 import { FarmerAnalytics } from "@/components/dashboard/FarmerAnalytics";
 import { FarmerCommunity } from "@/components/dashboard/FarmerCommunity";
@@ -27,7 +27,8 @@ import {
   Bell,
   MapPin,
   CreditCard,
-  Star
+  Star,
+  MessageCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -45,17 +46,17 @@ function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const role = searchParams.get("role") || "farmer";
-  const [activeView, setActiveView] = useState("dashboard");
+  const viewParam = searchParams.get("view");
+  
+  const [activeView, setActiveView] = useState(viewParam || (role === "customer" ? "marketplace" : "dashboard"));
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
-  // Sync role-based view if needed
+  // Sync state with search params
   useEffect(() => {
-    if (role === "customer") {
-      setActiveView("marketplace");
-    } else {
-      setActiveView("dashboard");
+    if (viewParam) {
+      setActiveView(viewParam);
     }
-  }, [role]);
+  }, [viewParam]);
 
   const handleLogout = () => {
     localStorage.removeItem("userRole");
@@ -80,6 +81,7 @@ function DashboardContent() {
       { id: "orders", label: "Pesanan Saya", icon: Package },
       { id: "favorites", label: "Produk Favorit", icon: Heart },
       { id: "cart", label: "Keranjang", icon: ShoppingCart },
+      { id: "chat", label: "Chat", icon: MessageCircle },
       { id: "notifications", label: "Notifikasi", icon: Bell },
     ]},
     { group: "Aktivitas Pesanan", items: [
@@ -117,6 +119,7 @@ function DashboardContent() {
       switch (activeView) {
         case "marketplace": return <CustomerMarketplace />;
         case "notifications": return <CustomerNotifications />;
+        case "chat": return <CustomerChat />;
         case "profile": return <FarmerProfile />; // Reusing profile for now
         case "orders": 
         case "unpaid":
@@ -188,7 +191,11 @@ function DashboardContent() {
                   {group.items.map((item) => (
                     <button
                       key={item.id}
-                      onClick={() => setActiveView(item.id)}
+                      onClick={() => {
+                        setActiveView(item.id);
+                        // Update URL silently
+                        router.push(`/dashboard?role=${role}&view=${item.id}`, { scroll: false });
+                      }}
                       className={cn(
                         "flex items-center gap-3 w-full px-4 py-3 rounded-2xl transition-all duration-300 font-medium group",
                         activeView === item.id 
