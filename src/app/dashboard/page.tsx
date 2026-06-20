@@ -19,6 +19,8 @@ import { FarmerTransactions } from "@/components/dashboard/FarmerTransactions";
 import { FarmerAnalytics } from "@/components/dashboard/FarmerAnalytics";
 import { FarmerCommunity } from "@/components/dashboard/FarmerCommunity";
 import { FarmerProfile } from "@/components/dashboard/FarmerProfile";
+import { FarmerNotifications } from "@/components/dashboard/FarmerNotifications";
+import { FarmerChat } from "@/components/dashboard/FarmerChat";
 import { 
   LayoutDashboard, 
   ShoppingCart, 
@@ -83,6 +85,8 @@ function DashboardContent() {
       { id: "transactions", label: "Transaksi", icon: ShoppingCart },
       { id: "analytics", label: "Analitik", icon: BarChart3 },
       { id: "community", label: "Komunitas", icon: Users },
+      { id: "notifications", label: "Notifikasi", icon: Bell },
+      { id: "chat", label: "Pesan", icon: MessageCircle },
     ]},
     { group: "Pengaturan", items: [
       { id: "profile", label: "Setting Profil", icon: Settings },
@@ -164,6 +168,8 @@ function DashboardContent() {
         case "analytics": return <FarmerAnalytics />;
         case "community": return <FarmerCommunity />;
         case "profile": return <FarmerProfile />;
+        case "notifications": return <FarmerNotifications />;
+        case "chat": return <FarmerChat />;
         default: return <FarmerDashboard />;
       }
     }

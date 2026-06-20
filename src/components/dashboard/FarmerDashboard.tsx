@@ -24,8 +24,12 @@ import {
   Edit2,
   Maximize2,
   Droplets,
-  Thermometer,
-  Calendar
+  Calendar,
+  Users,
+  Timer,
+  ChevronRight,
+  Info,
+  DollarSign
 } from "lucide-react";
 import { predictHarvestWindow, PredictHarvestWindowOutput } from "@/ai/flows/predict-harvest-window";
 import { useToast } from "@/hooks/use-toast";
@@ -45,6 +49,9 @@ export function FarmerDashboard() {
   const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
   const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
   const [isLandDialogOpen, setIsLandDialogOpen] = useState(false);
+  const [isLiveSetupOpen, setIsLiveSetupOpen] = useState(false);
+  const [isLiveActive, setIsLiveSetupActive] = useState(false);
+  const [selectedProjectDetail, setSelectedProjectDetail] = useState<any | null>(null);
 
   // Editing states
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
@@ -98,8 +105,8 @@ export function FarmerDashboard() {
       setProjects(JSON.parse(savedProjects));
     } else {
       const defaultProjects = [
-        { id: 1, name: "Ekspansi Hidroponik 2024", target: "Rp 500.000.000", funded: "75%", investors: 12, status: "Open", description: "Peningkatan kapasitas produksi hidroponik." },
-        { id: 2, name: "Irigasi Cerdas Lembang", target: "Rp 250.000.000", funded: "40%", investors: 5, status: "Open", description: "Pemasangan sensor irigasi IoT." },
+        { id: 1, name: "Ekspansi Hidroponik 2024", target: "Rp 500.000.000", targetNum: 500000000, current: "Rp 375.000.000", funded: "75%", investors: 12, status: "Sedang Berjalan", description: "Peningkatan kapasitas produksi hidroponik.", duration: "6 Bulan", return: "12%" },
+        { id: 2, name: "Irigasi Cerdas Lembang", target: "Rp 250.000.000", targetNum: 250000000, current: "Rp 100.000.000", funded: "40%", investors: 5, status: "Sedang Berjalan", description: "Pemasangan sensor irigasi IoT.", duration: "4 Bulan", return: "15%" },
       ];
       setProjects(defaultProjects);
       localStorage.setItem("farmer_projects_v2", JSON.stringify(defaultProjects));
@@ -228,9 +235,11 @@ export function FarmerDashboard() {
         target: `Rp ${Number(formData.get("target")).toLocaleString('id-ID')}`,
         funded: "0%",
         investors: 0,
-        status: "Open",
+        status: "Sedang Berjalan",
         description: formData.get("description") as string,
-        image: projectImage
+        image: projectImage,
+        duration: "6 Bulan",
+        return: "12%"
       };
       saveProjectsToStorage([...projects, newProject]);
       toast({ title: "Proyek Investasi Diajukan", description: "Proyek Anda telah terdaftar." });
@@ -318,6 +327,17 @@ export function FarmerDashboard() {
     toast({ title: "Data Lahan Dihapus", description: "Data lahan telah dihapus dari sistem." });
   };
 
+  const startLive = () => {
+    setIsLiveSetupOpen(false);
+    setIsLiveSetupActive(true);
+    toast({ title: "Live Dimulai!", description: "Anda sedang siaran langsung ke konsumen." });
+  };
+
+  const stopLive = () => {
+    setIsLiveSetupActive(false);
+    toast({ title: "Live Berakhir", description: "Siaran langsung Anda telah dihentikan." });
+  };
+
   return (
     <div className="space-y-8 animate-in fade-in duration-500 max-w-7xl mx-auto">
       {/* Header */}
@@ -327,7 +347,11 @@ export function FarmerDashboard() {
           <p className="text-muted-foreground text-lg">Pantau performa tani & kelola ekosistem produksi Anda.</p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <Button variant="outline" className="rounded-2xl h-14 px-8 font-bold border-destructive text-destructive hover:bg-destructive/5 group">
+          <Button 
+            onClick={() => setIsLiveSetupOpen(true)}
+            variant="outline" 
+            className="rounded-2xl h-14 px-8 font-bold border-destructive text-destructive hover:bg-destructive/5 group"
+          >
             <PlayCircle className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" /> 
             Mulai Live Tani
           </Button>
@@ -349,7 +373,7 @@ export function FarmerDashboard() {
         {[
           { label: "Total Penjualan", value: "Rp 154.2M", icon: TrendingUp, color: "text-secondary", bg: "bg-secondary/10" },
           { label: "Produk Aktif", value: `${products.length} Jenis`, icon: Package, color: "text-primary", bg: "bg-primary/10" },
-          { label: "Investor Aktif", value: "8 Mitra", icon: Package, color: "text-accent", bg: "bg-accent/10" }, // Note: Using Package as Users icon fix
+          { label: "Investor Aktif", value: "8 Mitra", icon: Users, color: "text-accent", bg: "bg-accent/10" },
           { label: "Lahan Kelola", value: `${lands.length} Lokasi`, icon: MapPin, color: "text-blue-600", bg: "bg-blue-50" },
         ].map((stat, i) => (
           <Card key={i} className="rounded-3xl border-none shadow-xl glassmorphism">
@@ -676,7 +700,7 @@ export function FarmerDashboard() {
                       <Progress value={parseInt(proj.funded)} className="h-2 bg-primary/5" />
                     </div>
                     <div className="flex gap-2">
-                       <Button className="flex-1 h-10 rounded-xl bg-primary text-white font-bold text-xs">Detail</Button>
+                       <Button onClick={() => setSelectedProjectDetail(proj)} className="flex-1 h-10 rounded-xl bg-primary text-white font-bold text-xs">Detail</Button>
                        <Button variant="outline" className="flex-1 h-10 rounded-xl font-bold text-xs">Update</Button>
                     </div>
                   </div>
@@ -689,6 +713,159 @@ export function FarmerDashboard() {
            </div>
         </TabsContent>
       </Tabs>
+
+      {/* Live Broadcaster Experience Modal */}
+      <Dialog open={isLiveSetupOpen} onOpenChange={setIsLiveSetupOpen}>
+        <DialogContent className="rounded-[2.5rem] sm:max-w-[500px] border-none glassmorphism p-8">
+           <DialogHeader>
+              <DialogTitle className="text-2xl font-black font-headline text-primary">Mulai Siaran Live</DialogTitle>
+              <DialogDescription>Siapkan konten siaran untuk menarik minat konsumen and investor.</DialogDescription>
+           </DialogHeader>
+           <div className="space-y-6 py-4">
+              <div className="space-y-2">
+                 <Label className="font-bold">Judul Live</Label>
+                 <Input placeholder="Misal: Panen Raya Tomat Cherry Lembang" className="rounded-xl h-12" />
+              </div>
+              <div className="space-y-2">
+                 <Label className="font-bold">Komoditas yang Dibahas</Label>
+                 <Input placeholder="Misal: Tomat Cherry" className="rounded-xl h-12" />
+              </div>
+              <div className="space-y-2">
+                 <Label className="font-bold">Deskripsi Singkat</Label>
+                 <Textarea placeholder="Ceritakan apa yang akan Anda bagikan di live kali ini..." className="rounded-xl min-h-[80px]" />
+              </div>
+           </div>
+           <DialogFooter className="gap-3">
+              <Button variant="ghost" onClick={() => setIsLiveSetupOpen(false)} className="rounded-xl">Batalkan</Button>
+              <Button onClick={startLive} className="flex-1 h-12 rounded-xl bg-destructive text-white font-bold shadow-lg shadow-destructive/20">Mulai Live Sekarang</Button>
+           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Live Broadcast View */}
+      {isLiveActive && (
+        <div className="fixed inset-0 z-[200] bg-black flex items-center justify-center p-4">
+           <div className="relative w-full max-w-4xl aspect-video bg-gray-900 rounded-[3rem] overflow-hidden border-4 border-white/10 shadow-2xl">
+              {/* Mock Camera Preview */}
+              <div className="absolute inset-0 flex items-center justify-center bg-[url('https://picsum.photos/seed/live/1280/720')] bg-cover bg-center opacity-60">
+                 <div className="text-white text-center space-y-4">
+                    <PlayCircle className="h-20 w-20 mx-auto opacity-40" />
+                    <p className="font-bold text-xl uppercase tracking-[0.2em]">Kamera Aktif</p>
+                 </div>
+              </div>
+              
+              {/* Overlay UI */}
+              <div className="absolute inset-0 p-8 flex flex-col justify-between pointer-events-none">
+                 <div className="flex justify-between items-start">
+                    <div className="flex items-center gap-3">
+                       <Badge className="bg-destructive text-white border-none px-4 py-1.5 font-black animate-pulse">LIVE</Badge>
+                       <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-xl text-white">
+                          <Timer className="h-4 w-4" />
+                          <span className="text-xs font-bold font-mono">00:12:45</span>
+                       </div>
+                    </div>
+                    <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-xl text-white">
+                       <Users className="h-4 w-4" />
+                       <span className="text-xs font-bold">1.2k Menonton</span>
+                    </div>
+                 </div>
+
+                 <div className="flex justify-between items-end gap-8">
+                    <div className="flex-1 max-w-sm space-y-4">
+                       <div className="space-y-2 pointer-events-auto">
+                          {[
+                            { user: "Andi", msg: "Tomatnya segar sekali pak!" },
+                            { user: "Siti", msg: "Bisa kirim ke Jakarta pak?" },
+                            { user: "Budi", msg: "Saya mau pesan 10kg!" },
+                          ].map((chat, i) => (
+                            <div key={i} className="bg-black/40 backdrop-blur-md p-2 px-4 rounded-2xl text-white text-xs animate-in slide-in-from-left-2">
+                               <span className="font-black text-secondary mr-2">{chat.user}:</span> {chat.msg}
+                            </div>
+                          ))}
+                       </div>
+                       <div className="flex gap-2 pointer-events-auto">
+                          <Input className="h-10 bg-white/20 border-white/20 text-white rounded-xl placeholder:text-white/40" placeholder="Komentari..." />
+                       </div>
+                    </div>
+                    <Button onClick={stopLive} className="pointer-events-auto h-14 px-8 rounded-2xl bg-destructive hover:bg-destructive/90 text-white font-black shadow-xl">Akhiri Live</Button>
+                 </div>
+              </div>
+           </div>
+        </div>
+      )}
+
+      {/* Investment Detail Modal */}
+      <Dialog open={!!selectedProjectDetail} onOpenChange={(open) => !open && setSelectedProjectDetail(null)}>
+        <DialogContent className="rounded-[3rem] sm:max-w-[700px] border-none glassmorphism p-0 overflow-hidden outline-none">
+           {selectedProjectDetail && (
+             <div className="space-y-0">
+               <div className="relative h-64">
+                 <Image src={selectedProjectDetail.image || `https://picsum.photos/seed/proj${selectedProjectDetail.id}/800/400`} alt={selectedProjectDetail.name} fill className="object-cover" />
+                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                 <div className="absolute bottom-6 left-8 right-8 text-white">
+                    <Badge className="bg-primary text-white border-none font-black mb-2">{selectedProjectDetail.status}</Badge>
+                    <h2 className="text-3xl font-black font-headline">{selectedProjectDetail.name}</h2>
+                 </div>
+                 <button onClick={() => setSelectedProjectDetail(null)} className="absolute top-6 right-6 h-10 w-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/40 transition-all">
+                    <X className="h-5 w-5" />
+                 </button>
+               </div>
+               <div className="p-10 space-y-8">
+                  <div className="grid grid-cols-3 gap-4">
+                     <div className="p-4 bg-primary/5 rounded-2xl text-center border border-primary/10">
+                        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Durasi Proyek</p>
+                        <p className="text-lg font-black text-primary">{selectedProjectDetail.duration}</p>
+                     </div>
+                     <div className="p-4 bg-secondary/5 rounded-2xl text-center border border-secondary/10">
+                        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Estimasi Return</p>
+                        <p className="text-lg font-black text-secondary">{selectedProjectDetail.return}</p>
+                     </div>
+                     <div className="p-4 bg-blue-50 rounded-2xl text-center border border-blue-100">
+                        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Jumlah Investor</p>
+                        <p className="text-lg font-black text-blue-600">{selectedProjectDetail.investors} Mitra</p>
+                     </div>
+                  </div>
+
+                  <div className="space-y-4">
+                     <div className="flex justify-between items-end">
+                        <div>
+                           <p className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-1">Pendanaan Terkumpul</p>
+                           <p className="text-3xl font-black text-primary">{selectedProjectDetail.current || 'Rp 0'}</p>
+                        </div>
+                        <p className="text-sm font-bold text-muted-foreground">Target: {selectedProjectDetail.target}</p>
+                     </div>
+                     <div className="space-y-2">
+                        <div className="flex justify-between text-xs font-black">
+                           <span className="text-primary">{selectedProjectDetail.funded} Progres</span>
+                           <span className="text-muted-foreground">Sisa: Rp 125.000.000</span>
+                        </div>
+                        <Progress value={parseInt(selectedProjectDetail.funded)} className="h-3" />
+                     </div>
+                  </div>
+
+                  <div className="space-y-3">
+                     <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">Pemanfaatan Dana</p>
+                     <div className="grid grid-cols-2 gap-3">
+                        {["Bibit Unggul", "Pupuk Organik", "Sistem Irigasi IoT", "Distribusi & Logistik"].map((item, i) => (
+                           <div key={i} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                              <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                 <Plus className="h-3 w-3" />
+                              </div>
+                              <span className="text-xs font-bold">{item}</span>
+                           </div>
+                        ))}
+                     </div>
+                  </div>
+
+                  <div className="flex gap-4 pt-4">
+                     <Button className="flex-1 h-14 rounded-2xl bg-primary text-white font-black shadow-xl shadow-primary/20">Edit Detail Proyek</Button>
+                     <Button variant="outline" className="flex-1 h-14 rounded-2xl font-black border-primary/20">Lihat Daftar Investor</Button>
+                  </div>
+               </div>
+             </div>
+           )}
+        </DialogContent>
+      </Dialog>
 
       {/* Product Modal */}
       <Dialog open={isProductDialogOpen} onOpenChange={setIsProductDialogOpen}>
