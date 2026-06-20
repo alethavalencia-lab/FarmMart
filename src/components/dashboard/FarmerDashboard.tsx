@@ -29,7 +29,12 @@ import {
   Timer,
   ChevronRight,
   Info,
-  DollarSign
+  DollarSign,
+  Building2,
+  Utensils,
+  Store,
+  Factory,
+  ArrowRight
 } from "lucide-react";
 import { predictHarvestWindow, PredictHarvestWindowOutput } from "@/ai/flows/predict-harvest-window";
 import { useToast } from "@/hooks/use-toast";
@@ -38,6 +43,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+const marketOpportunities = [
+  { id: 1, name: "Green Leaf Restaurant", type: "Restaurant", product: "Tomat Ceri", qty: "200 Kg", location: "Jakarta", icon: Utensils, color: "text-orange-500", bg: "bg-orange-50" },
+  { id: 2, name: "Sunrise Hotel", type: "Hotel", product: "Sayur & Buah Premium", qty: "50 Kg/hari", location: "Bandung", icon: Building2, color: "text-blue-500", bg: "bg-blue-50" },
+  { id: 3, name: "UMKM Dapur Nusantara", type: "SME (UMKM)", product: "Cabai Merah", qty: "100 Kg", location: "Tangerang", icon: Store, color: "text-primary", bg: "bg-primary/5" },
+  { id: 4, name: "FreshMart Supermarket", type: "Retail", product: "Jeruk & Pisang", qty: "500 Kg", location: "Bogor", icon: ShoppingBag, color: "text-purple-500", bg: "bg-purple-50" },
+  { id: 5, name: "Food Processing Industry", type: "Industri", product: "Singkong & Jagung", qty: "2 Ton", location: "Bekasi", icon: Factory, color: "text-green-600", bg: "bg-green-50" },
+];
 
 export function FarmerDashboard() {
   const { toast } = useToast();
@@ -393,6 +406,57 @@ export function FarmerDashboard() {
           </Card>
         ))}
       </div>
+
+      {/* Market Opportunities */}
+      <section className="space-y-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2">
+          <div className="space-y-1">
+            <h2 className="text-2xl font-black font-headline text-primary">Market Opportunities</h2>
+            <p className="text-muted-foreground text-sm max-w-2xl">Discover businesses and organizations currently seeking agricultural products and raw materials for their operational and production needs.</p>
+          </div>
+          <Button variant="ghost" className="text-secondary font-bold group p-0 h-auto hover:bg-transparent">
+            View All Demands <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+          </Button>
+        </div>
+        <div className="flex gap-6 overflow-x-auto pb-6 -mx-2 px-2 scrollbar-hide">
+          {marketOpportunities.map((op) => (
+            <Card key={op.id} className="min-w-[300px] rounded-[2.5rem] border-none shadow-lg bg-white group hover:shadow-xl transition-all">
+              <CardContent className="p-6 space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className={cn("p-3 rounded-2xl shrink-0", op.bg)}>
+                    <op.icon className={cn("h-6 w-6", op.color)} />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-base leading-tight line-clamp-1">{op.name}</h4>
+                    <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">{op.type}</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-3 pt-2 border-t border-primary/5">
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Kebutuhan</p>
+                    <p className="font-bold text-primary flex items-center gap-1.5"><Sprout className="h-4 w-4" /> {op.product}</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1">
+                      <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Jumlah</p>
+                      <p className="text-xs font-bold">{op.qty}</p>
+                    </div>
+                    <div className="space-y-1 text-right">
+                      <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Lokasi</p>
+                      <p className="text-xs font-bold flex items-center justify-end gap-1"><MapPin className="h-3 w-3 text-secondary" /> {op.location}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <Button className="w-full h-11 rounded-2xl bg-primary hover:bg-secondary text-white font-bold text-xs shadow-lg shadow-primary/20 transition-all">
+                  Hubungi Pembeli
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
 
       <Tabs defaultValue="overview" className="space-y-8">
         <TabsList className="bg-primary/5 p-1.5 rounded-full h-14 border border-primary/10 flex-wrap sm:flex-nowrap overflow-x-auto">
