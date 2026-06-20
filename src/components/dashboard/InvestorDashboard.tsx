@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -59,7 +58,7 @@ const initialExploreProjects = [
     image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781930246/cherry-tomato-vegetables-photo_j1fksb.jpg",
     description: "This project aims to expand organic cherry tomato production capacity through greenhouse development, irrigation improvements, and increased seed production.",
     farmerInfo: {
-      name: "Pak Maman",
+      name: "Pak Tani Maman",
       experience: "8 Years",
       successRate: "95%",
       totalLand: "2.5 Ha",
@@ -155,12 +154,6 @@ const earningsHistory = [
   { id: 202, name: "Chili Project 2025", investment: 3000000, profit: 450000, status: "Completed", date: "12 Dec 2025" },
 ];
 
-const b2bNotifications = [
-  { id: 1, title: "Investment Accepted", desc: "Your investment in 'Vanilla Premium' has been confirmed.", time: "2 hours ago", type: "success" },
-  { id: 2, title: "Funding Milestone", desc: "Cherry Tomato Project has reached 80% funding.", time: "1 day ago", type: "info" },
-  { id: 3, title: "Profit Distributed", desc: "Profit for Chili Project is now available in your wallet.", time: "3 days ago", type: "success" },
-];
-
 export function InvestorDashboard() {
   const { toast } = useToast();
   const [mounted, setMounted] = useState(false);
@@ -250,7 +243,6 @@ export function InvestorDashboard() {
 
   return (
     <div className="space-y-12 animate-in fade-in duration-700 pb-20">
-      {/* 1. Dashboard Summary */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
           <h1 className="text-4xl font-black font-headline text-primary tracking-tight">Investment Dashboard</h1>
@@ -272,7 +264,7 @@ export function InvestorDashboard() {
              My Portfolio
            </Button>
         </div>
- section>
+      </section>
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
         {[
@@ -519,7 +511,7 @@ export function InvestorDashboard() {
                           </div>
                           <div>
                              <h5 className="font-black text-lg text-primary">{selectedProject.farmerInfo.name}</h5>
-                             <p className="text-xs font-bold text-muted-foreground flex items-center gap-1"><MapPin className="h-3 w-3" /> {selectedProject.location.split(',')[0]}</p>
+                             <p className="text-xs font-bold text-muted-foreground flex items-center gap-1"><MapPin className="h-3 w-3 text-primary" /> {selectedProject.location.split(',')[0]}</p>
                           </div>
                        </div>
                        
