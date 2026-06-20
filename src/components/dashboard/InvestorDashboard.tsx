@@ -357,7 +357,6 @@ export function InvestorDashboard({ view = "dashboard", setView }: InvestorDashb
 
   const renderDashboard = () => (
     <div className="space-y-12 animate-in fade-in duration-700">
-      {/* Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
         {[
           { label: "Total Investment", value: `Rp ${formatPrice(investorProfile.totalInvested)}`, icon: Wallet, color: "text-primary", bg: "bg-primary/10" },
@@ -380,7 +379,6 @@ export function InvestorDashboard({ view = "dashboard", setView }: InvestorDashb
       </div>
 
       <div className="grid lg:grid-cols-4 gap-8">
-        {/* Marketplace Section */}
         <div className="lg:col-span-3 space-y-8">
           <div className="flex justify-between items-end">
             <div className="space-y-1">
@@ -433,7 +431,6 @@ export function InvestorDashboard({ view = "dashboard", setView }: InvestorDashb
           </div>
         </div>
 
-        {/* Sidebar Trends */}
         <div className="space-y-8">
            <Card className="rounded-[2.5rem] border-none shadow-xl bg-white p-8">
              <CardTitle className="text-xl font-black font-headline text-primary mb-6 flex items-center gap-2">
@@ -498,7 +495,7 @@ export function InvestorDashboard({ view = "dashboard", setView }: InvestorDashb
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={portfolioGrowthData}>
                 <defs>
-                  <linearGradient id="colorGrowth" x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient id="colorGrowth" x1="0" x2="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.2}/>
                     <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
                   </linearGradient>
@@ -717,15 +714,15 @@ export function InvestorDashboard({ view = "dashboard", setView }: InvestorDashb
            </div>
            <div className="space-y-3">
               <Label className="font-bold text-xs uppercase tracking-widest text-muted-foreground ml-1">Email Address</Label>
-              <Input value={investorProfile.email} className="h-14 rounded-2xl bg-primary/5 border-none font-bold px-6 text-lg" />
+              <Input value={investorProfile.email} onChange={(e) => setInvestorProfile({...investorProfile, email: e.target.value})} className="h-14 rounded-2xl bg-primary/5 border-none font-bold px-6 text-lg focus-visible:ring-primary" />
            </div>
            <div className="space-y-3">
               <Label className="font-bold text-xs uppercase tracking-widest text-muted-foreground ml-1">WhatsApp Number</Label>
-              <Input value={investorProfile.phone} className="h-14 rounded-2xl bg-primary/5 border-none font-bold px-6 text-lg" />
+              <Input value={investorProfile.phone} onChange={(e) => setInvestorProfile({...investorProfile, phone: e.target.value})} className="h-14 rounded-2xl bg-primary/5 border-none font-bold px-6 text-lg focus-visible:ring-primary" />
            </div>
            <div className="space-y-3">
               <Label className="font-bold text-xs uppercase tracking-widest text-muted-foreground ml-1">Verified Investor ID</Label>
-              <Input value={investorProfile.investorId} disabled className="h-14 rounded-2xl bg-gray-100 border-none font-black px-6 text-lg" />
+              <Input value={investorProfile.investorId} readOnly disabled className="h-14 rounded-2xl bg-gray-100 border-none font-black px-6 text-lg" />
            </div>
         </div>
         
@@ -767,7 +764,7 @@ export function InvestorDashboard({ view = "dashboard", setView }: InvestorDashb
           { title: "Investasi Berhasil Dilakukan", desc: "Investasi Anda di Greenhouse Melon Lembang telah dikonfirmasi.", time: "10m ago", icon: CheckCircle2, color: "bg-green-100 text-green-700" },
           { title: "80% Funding Reached", desc: "Organic Tomato Project is almost fully funded. Last chance to join!", time: "2h ago", icon: TrendingUp, color: "bg-orange-100 text-orange-700" },
           { title: "Profit Distribution", desc: "Your payout for Chili Project 2025 is now available in your wallet.", time: "Yesterday", icon: Wallet, color: "bg-blue-100 text-blue-700" },
-          { title: "Project Update", desc: "Farmer Ahmad Surya uploaded a new photo update for Melon Project.", time: "2 days ago", icon: Camera, color: "bg-primary/10 text-primary" },
+          { title: "Project Update", desc: "Farmer Pak Arif uploaded a new photo update for Modern Rice Cultivation.", time: "2 days ago", icon: Camera, color: "bg-primary/10 text-primary" },
           { title: "New Opportunity", desc: "A new Hydroponic Lettuce project matches your interest in High-Yield ventures.", time: "3 days ago", icon: Sparkles, color: "bg-accent/10 text-primary" },
         ].map((n, i) => (
           <Card key={i} className="p-8 rounded-[3rem] border-none shadow-sm bg-white hover:shadow-xl transition-all cursor-pointer group flex items-center gap-8">
@@ -876,7 +873,6 @@ export function InvestorDashboard({ view = "dashboard", setView }: InvestorDashb
           <DialogTitle className="sr-only">{selectedProject?.name || "Project Details"}</DialogTitle>
           {selectedProject && (
             <div className="grid md:grid-cols-5 h-full max-h-[92vh] overflow-y-auto">
-              {/* Left Column: Project Info & Updates */}
               <div className="md:col-span-3 p-12 space-y-12 border-r border-primary/5 bg-white">
                 <div className="space-y-6">
                   <div className="flex justify-between items-start">
@@ -932,7 +928,6 @@ export function InvestorDashboard({ view = "dashboard", setView }: InvestorDashb
                 </div>
               </div>
 
-              {/* Right Column: Farmer Profile & Invest CTA */}
               <div className="md:col-span-2 bg-gray-50/50 p-12 flex flex-col justify-between space-y-12">
                  <div className="space-y-12">
                     <div className="space-y-8">
@@ -1008,7 +1003,6 @@ export function InvestorDashboard({ view = "dashboard", setView }: InvestorDashb
         </DialogContent>
       </Dialog>
 
-      {/* Investment Flow Dialog */}
       <Dialog open={isInvestOpen} onOpenChange={setIsInvestOpen}>
          <DialogContent className="rounded-[3rem] border-none glassmorphism sm:max-w-[480px] p-10 outline-none shadow-2xl">
             <DialogHeader>
@@ -1083,7 +1077,6 @@ export function InvestorDashboard({ view = "dashboard", setView }: InvestorDashb
          </DialogContent>
       </Dialog>
 
-      {/* Navigation & Sidebar Context Logic */}
       <Dialog open={isChatOpen} onOpenChange={setIsChatOpen}>
          <DialogContent className="rounded-[3.5rem] border-none glassmorphism sm:max-w-[500px] p-0 overflow-hidden outline-none shadow-2xl">
             <DialogTitle className="sr-only">Chat with Farmer</DialogTitle>
