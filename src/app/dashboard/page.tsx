@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Navbar } from "@/components/layout/Navbar";
@@ -9,6 +10,10 @@ import { InvestorDashboard } from "@/components/dashboard/InvestorDashboard";
 import { CustomerMarketplace } from "@/components/dashboard/CustomerMarketplace";
 import { CustomerNotifications } from "@/components/dashboard/CustomerNotifications";
 import { CustomerChat } from "@/components/dashboard/CustomerChat";
+import { CustomerCart } from "@/components/dashboard/CustomerCart";
+import { CustomerOrders } from "@/components/dashboard/CustomerOrders";
+import { CustomerFavorites } from "@/components/dashboard/CustomerFavorites";
+import { CustomerCheckout } from "@/components/dashboard/CustomerCheckout";
 import { FarmerTransactions } from "@/components/dashboard/FarmerTransactions";
 import { FarmerAnalytics } from "@/components/dashboard/FarmerAnalytics";
 import { FarmerCommunity } from "@/components/dashboard/FarmerCommunity";
@@ -50,6 +55,12 @@ function DashboardContent() {
   
   const [activeView, setActiveView] = useState(viewParam || (role === "customer" ? "marketplace" : "dashboard"));
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+
+  // --- Consumer Local State ---
+  const [cartItems, setCartItems] = useState<any[]>([]);
+  const [favoriteItems, setFavoriteItems] = useState<number[]>([]);
+  const [orders, setOrders] = useState<any[]>([]);
+  const [checkoutData, setCheckoutData] = useState<any>(null);
 
   // Sync state with search params
   useEffect(() => {
@@ -99,6 +110,44 @@ function DashboardContent() {
 
   const currentMenu = role === "customer" ? customerMenu : farmerMenu;
 
+  // --- Consumer Actions ---
+  const addToCart = (product: any) => {
+    setCartItems(prev => {
+      const existing = prev.find(item => item.id === product.id);
+      if (existing) {
+        return prev.map(item => item.id === product.id ? { ...item, qty: item.qty + 1 } : item);
+      }
+      return [...prev, { ...product, qty: 1 }];
+    });
+  };
+
+  const removeFromCart = (productId: number) => {
+    setCartItems(prev => prev.filter(item => item.id !== productId));
+  };
+
+  const updateCartQty = (productId: number, delta: number) => {
+    setCartItems(prev => prev.map(item => 
+      item.id === productId ? { ...item, qty: Math.max(1, item.qty + delta) } : item
+    ));
+  };
+
+  const toggleFavorite = (productId: number) => {
+    setFavoriteItems(prev => 
+      prev.includes(productId) ? prev.filter(id => id !== productId) : [...prev, productId]
+    );
+  };
+
+  const startCheckout = (items: any[]) => {
+    setCheckoutData(items);
+    setActiveView("checkout");
+  };
+
+  const completeCheckout = (newOrder: any) => {
+    setOrders(prev => [newOrder, ...prev]);
+    setCartItems(prev => prev.filter(item => !newOrder.items.find((oi: any) => oi.id === item.id)));
+    setActiveView("orders");
+  };
+
   const renderContent = () => {
     if (role === "farmer") {
       switch (activeView) {
@@ -117,39 +166,50 @@ function DashboardContent() {
     
     if (role === "customer") {
       switch (activeView) {
-        case "marketplace": return <CustomerMarketplace />;
-        case "notifications": return <CustomerNotifications />;
-        case "chat": return <CustomerChat />;
-        case "profile": return <FarmerProfile />; // Reusing profile for now
+        case "marketplace": 
+          return <CustomerMarketplace 
+            addToCart={addToCart} 
+            toggleFavorite={toggleFavorite} 
+            favorites={favoriteItems}
+            startCheckout={startCheckout}
+          />;
+        case "cart": 
+          return <CustomerCart 
+            items={cartItems} 
+            updateQty={updateCartQty} 
+            remove={removeFromCart} 
+            checkout={startCheckout}
+          />;
+        case "checkout":
+          return <CustomerCheckout 
+            items={checkoutData} 
+            complete={completeCheckout} 
+            cancel={() => setActiveView("cart")}
+          />;
         case "orders": 
         case "unpaid":
         case "packed":
         case "shipped":
         case "finished":
-          return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-4 glassmorphism rounded-[3rem] p-12 animate-in fade-in duration-500">
-              <Package className="h-16 w-16 text-primary animate-bounce" />
-              <h1 className="text-3xl font-black font-headline text-primary">Riwayat Pesanan</h1>
-              <p className="text-muted-foreground max-w-md">Data pesanan Anda sedang dimuat. Halaman ini akan menampilkan status transaksi {activeView} Anda.</p>
-            </div>
-          );
+          return <CustomerOrders 
+            orders={orders} 
+            activeTab={activeView}
+          />;
         case "favorites":
-          return (
-             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-4 glassmorphism rounded-[3rem] p-12 animate-in fade-in duration-500">
-              <Heart className="h-16 w-16 text-destructive animate-pulse" />
-              <h1 className="text-3xl font-black font-headline text-primary">Produk Favorit</h1>
-              <p className="text-muted-foreground max-w-md">Belum ada produk favorit. Mulai jelajahi marketplace dan simpan produk yang Anda sukai.</p>
-            </div>
-          );
-        case "cart":
-          return (
-             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-4 glassmorphism rounded-[3rem] p-12 animate-in fade-in duration-500">
-              <ShoppingCart className="h-16 w-16 text-secondary" />
-              <h1 className="text-3xl font-black font-headline text-primary">Keranjang Belanja</h1>
-              <p className="text-muted-foreground max-w-md">Keranjang Anda masih kosong. Yuk, masukkan produk segar dari petani ke keranjang!</p>
-            </div>
-          );
-        default: return <CustomerMarketplace />;
+          return <CustomerFavorites 
+            favorites={favoriteItems} 
+            toggleFavorite={toggleFavorite}
+            addToCart={addToCart}
+          />;
+        case "chat": return <CustomerChat />;
+        case "notifications": return <CustomerNotifications />;
+        case "profile": return <FarmerProfile />; 
+        default: return <CustomerMarketplace 
+            addToCart={addToCart} 
+            toggleFavorite={toggleFavorite} 
+            favorites={favoriteItems}
+            startCheckout={startCheckout}
+          />;
       }
     }
 
@@ -166,7 +226,7 @@ function DashboardContent() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <Navbar cartCount={cartItems.length} />
       <div className="flex pt-20">
         <aside className="hidden lg:block w-72 h-[calc(100vh-80px)] fixed left-0 top-20 border-r bg-white/50 backdrop-blur-sm p-6 space-y-8 z-40 overflow-y-auto">
           <div className="flex items-center gap-3 px-4 mb-8">
@@ -193,7 +253,6 @@ function DashboardContent() {
                       key={item.id}
                       onClick={() => {
                         setActiveView(item.id);
-                        // Update URL silently
                         router.push(`/dashboard?role=${role}&view=${item.id}`, { scroll: false });
                       }}
                       className={cn(

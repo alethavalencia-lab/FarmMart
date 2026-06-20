@@ -1,18 +1,24 @@
+
 "use client";
 
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Menu, Search, Bell, MessageCircle, PlayCircle } from "lucide-react";
+import { Menu, Search, Bell, MessageCircle, PlayCircle, ShoppingCart } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 
-export function Navbar() {
+interface NavbarProps {
+  cartCount?: number;
+}
+
+export function Navbar({ cartCount = 0 }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const isDashboard = pathname?.includes("/dashboard");
   const role = searchParams.get("role") || "customer";
   const { toast } = useToast();
@@ -113,6 +119,18 @@ export function Navbar() {
                   <MessageCircle className="h-5 w-5" />
                 </Button>
               </Link>
+              {role === "customer" && (
+                <Link href={`/dashboard?role=${role}&view=cart`}>
+                  <Button variant="ghost" size="icon" className="text-primary rounded-full relative hover:bg-primary/10">
+                    <ShoppingCart className="h-5 w-5" />
+                    {cartCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-secondary text-white text-[8px] font-black h-4 w-4 rounded-full flex items-center justify-center border-2 border-white">
+                        {cartCount}
+                      </span>
+                    )}
+                  </Button>
+                </Link>
+              )}
               <Link href="/live">
                 <Button size="sm" className="bg-destructive hover:bg-destructive/90 text-white rounded-full px-4 h-9 font-bold flex items-center gap-2 shadow-lg shadow-destructive/20 animate-pulse">
                   <PlayCircle className="h-4 w-4" />

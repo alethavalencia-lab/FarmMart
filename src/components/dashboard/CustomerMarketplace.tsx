@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -14,7 +15,9 @@ import {
   User,
   Store,
   Navigation,
-  ArrowUpDown
+  ArrowUpDown,
+  MessageCircle,
+  X
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -48,7 +51,7 @@ const categories = [
   { id: "Produk Organik", name: "Produk Organik", count: 65 },
 ];
 
-const mockProducts = [
+export const mockProducts = [
   // Sayuran
   { id: 1, name: "Cabai Merah Premium", category: "Sayuran", price: 32000, farmer: "Pak Maman", location: "Lembang, Jawa Barat", rating: 4.8, reviews: 124, status: "Tersedia", badges: ["Best Seller", "Panen Hari Ini"], image: "https://picsum.photos/seed/chili/600/400", stock: "85 kg", harvestDate: "2024-05-20", description: "Cabai merah segar pilihan langsung dari kebun Lembang." },
   { id: 2, name: "Tomat Organik", category: "Sayuran", price: 18500, farmer: "Ibu Siti", location: "Cianjur, Jawa Barat", rating: 4.9, reviews: 86, status: "Tersedia", badges: ["Organik"], image: "https://picsum.photos/seed/tomato/600/400", stock: "42 kg", harvestDate: "2024-05-18", description: "Tomat organik tanpa pestisida kimia." },
@@ -90,7 +93,14 @@ const mockProducts = [
   { id: 27, name: "Ubi Cilembu Madu", category: "Umbi-umbian", price: 20000, farmer: "Ibu Ratna", location: "Sumedang, Jawa Barat", rating: 5.0, reviews: 230, status: "Tersedia", badges: ["Best Seller", "Manis"], image: "https://picsum.photos/seed/ubi-cilembu/600/400", stock: "100 kg", harvestDate: "2024-05-10", description: "Ubi Cilembu asli Sumedang, manis seperti madu saat dipanggang." },
 ];
 
-export function CustomerMarketplace() {
+interface MarketplaceProps {
+  addToCart: (product: any) => void;
+  toggleFavorite: (productId: number) => void;
+  favorites: number[];
+  startCheckout: (items: any[]) => void;
+}
+
+export function CustomerMarketplace({ addToCart, toggleFavorite, favorites, startCheckout }: MarketplaceProps) {
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -266,16 +276,22 @@ export function CustomerMarketplace() {
         {filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {filteredProducts.map((p) => (
-              <Card key={p.id} onClick={() => handleOpenDetail(p)} className="group cursor-pointer rounded-[2.5rem] border-none shadow-sm hover:shadow-2xl bg-white overflow-hidden transition-all duration-500">
-                <div className="relative aspect-square overflow-hidden">
+              <Card key={p.id} className="group cursor-pointer rounded-[2.5rem] border-none shadow-sm hover:shadow-2xl bg-white overflow-hidden transition-all duration-500">
+                <div className="relative aspect-square overflow-hidden" onClick={() => handleOpenDetail(p)}>
                   <Image 
                     src={p.image} 
                     alt={p.name} 
                     fill 
                     className="object-cover group-hover:scale-110 transition-transform duration-700"
                   />
-                  <button className="absolute top-4 right-4 h-10 w-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:scale-110 transition-all shadow-lg">
-                    <Heart className="h-5 w-5" />
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); toggleFavorite(p.id); }}
+                    className={cn(
+                      "absolute top-4 right-4 h-10 w-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center transition-all shadow-lg",
+                      favorites.includes(p.id) ? "text-destructive" : "text-muted-foreground hover:text-destructive hover:scale-110"
+                    )}
+                  >
+                    <Heart className={cn("h-5 w-5", favorites.includes(p.id) && "fill-current")} />
                   </button>
                   <div className="absolute top-4 left-4 flex flex-col gap-2">
                     {p.badges.map((badge, i) => (
@@ -286,7 +302,7 @@ export function CustomerMarketplace() {
                   </div>
                 </div>
                 <CardContent className="p-6 space-y-4">
-                  <div className="space-y-1">
+                  <div className="space-y-1" onClick={() => handleOpenDetail(p)}>
                     <p className="text-[10px] font-black text-secondary uppercase tracking-[0.2em]">{p.category}</p>
                     <h3 className="text-xl font-bold leading-tight group-hover:text-primary transition-colors">{p.name}</h3>
                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
@@ -308,7 +324,10 @@ export function CustomerMarketplace() {
                     </div>
                   </div>
                   
-                  <Button className="w-full h-11 rounded-2xl bg-primary hover:bg-secondary text-white font-bold transition-all group-hover:shadow-lg">
+                  <Button 
+                    onClick={(e) => { e.stopPropagation(); addToCart(p); }}
+                    className="w-full h-11 rounded-2xl bg-primary hover:bg-secondary text-white font-bold transition-all group-hover:shadow-lg"
+                  >
                     <ShoppingCart className="mr-2 h-4 w-4" /> Tambah Keranjang
                   </Button>
                 </CardContent>
@@ -411,18 +430,30 @@ export function CustomerMarketplace() {
               </div>
               <div className="p-10 space-y-8">
                 <div className="space-y-4">
-                  <div>
-                    <Badge variant="outline" className="border-secondary text-secondary mb-2 uppercase tracking-[0.2em] text-[10px] px-3 font-black">
-                      {selectedProduct.category}
-                    </Badge>
-                    <DialogTitle className="text-3xl font-black font-headline text-primary mb-2">
-                      {selectedProduct.name}
-                    </DialogTitle>
-                    <div className="flex items-center gap-4 text-sm font-medium text-muted-foreground">
-                       <div className="flex items-center gap-1.5"><Star className="h-4 w-4 text-yellow-500 fill-yellow-500" /> {selectedProduct.rating} ({selectedProduct.reviews} Ulasan)</div>
-                       <div className="h-1 w-1 rounded-full bg-muted-foreground"></div>
-                       <div className="flex items-center gap-1.5"><Clock className="h-4 w-4 text-primary" /> Terakhir Panen: {selectedProduct.harvestDate}</div>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <Badge variant="outline" className="border-secondary text-secondary mb-2 uppercase tracking-[0.2em] text-[10px] px-3 font-black">
+                        {selectedProduct.category}
+                      </Badge>
+                      <DialogTitle className="text-3xl font-black font-headline text-primary mb-2">
+                        {selectedProduct.name}
+                      </DialogTitle>
                     </div>
+                    <button 
+                      onClick={() => toggleFavorite(selectedProduct.id)}
+                      className={cn(
+                        "h-10 w-10 rounded-full flex items-center justify-center transition-all",
+                        favorites.includes(selectedProduct.id) ? "text-destructive" : "text-muted-foreground hover:bg-destructive/10"
+                      )}
+                    >
+                      <Heart className={cn("h-6 w-6", favorites.includes(selectedProduct.id) && "fill-current")} />
+                    </button>
+                  </div>
+                  
+                  <div className="flex items-center gap-4 text-sm font-medium text-muted-foreground">
+                     <div className="flex items-center gap-1.5"><Star className="h-4 w-4 text-yellow-500 fill-yellow-500" /> {selectedProduct.rating} ({selectedProduct.reviews} Ulasan)</div>
+                     <div className="h-1 w-1 rounded-full bg-muted-foreground"></div>
+                     <div className="flex items-center gap-1.5"><Clock className="h-4 w-4 text-primary" /> Terakhir Panen: {selectedProduct.harvestDate}</div>
                   </div>
                   
                   <div className="flex items-baseline gap-2">
@@ -450,7 +481,7 @@ export function CustomerMarketplace() {
                         <p className="text-[10px] text-muted-foreground flex items-center gap-1"><MapPin className="h-3 w-3" /> {selectedProduct.location}</p>
                       </div>
                     </div>
-                    <Button variant="ghost" size="icon" className="rounded-full"><ChevronRight className="h-5 w-5" /></Button>
+                    <Button variant="ghost" size="icon" className="rounded-full"><MessageCircle className="h-5 w-5" /></Button>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
@@ -472,10 +503,23 @@ export function CustomerMarketplace() {
                 </div>
 
                 <div className="flex gap-4">
-                  <Button className="flex-1 h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-lg shadow-xl shadow-primary/20">
+                  <Button 
+                    onClick={() => {
+                      startCheckout([{ ...selectedProduct, qty: 1 }]);
+                      setIsDetailOpen(false);
+                    }}
+                    className="flex-1 h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-lg shadow-xl shadow-primary/20"
+                  >
                     Beli Sekarang
                   </Button>
-                  <Button variant="outline" className="h-14 w-14 rounded-2xl border-primary/20 hover:bg-primary/5 text-primary p-0">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => {
+                      addToCart(selectedProduct);
+                      setIsDetailOpen(false);
+                    }}
+                    className="h-14 w-14 rounded-2xl border-primary/20 hover:bg-primary/5 text-primary p-0"
+                  >
                     <ShoppingCart className="h-6 w-6" />
                   </Button>
                 </div>
