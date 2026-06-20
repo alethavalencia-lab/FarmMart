@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -40,6 +39,7 @@ export function FarmerDashboard() {
   const { toast } = useToast();
   const [predicting, setPredicting] = useState(false);
   const [prediction, setPrediction] = useState<PredictHarvestWindowOutput | null>(null);
+  const [mounted, setMounted] = useState(false);
   
   // Dialog visibility states
   const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
@@ -76,8 +76,8 @@ export function FarmerDashboard() {
     { text: "Pesanan #ORD-9910 telah dikirim via Kurir Tani", time: "3 jam yang lalu", type: "logistics" },
   ]);
 
-  // Persistence
   useEffect(() => {
+    setMounted(true);
     // Products
     const savedProducts = localStorage.getItem("farmer_products_v2");
     if (savedProducts) {
@@ -118,6 +118,11 @@ export function FarmerDashboard() {
       localStorage.setItem("farmer_lands_v3", JSON.stringify(defaultLands));
     }
   }, []);
+
+  const formatPrice = (price: number) => {
+    if (!mounted) return price.toString();
+    return price.toLocaleString();
+  };
 
   const saveProductsToStorage = (updated: any[]) => {
     setProducts(updated);
@@ -497,7 +502,7 @@ export function FarmerDashboard() {
                   <div className="flex justify-between items-end border-t border-primary/10 pt-4">
                     <div>
                       <p className="text-[10px] text-muted-foreground font-bold uppercase">Harga per Kg</p>
-                      <p className="text-xl font-black text-primary">Rp {p.price.toLocaleString()}</p>
+                      <p className="text-xl font-black text-primary">Rp {formatPrice(p.price)}</p>
                     </div>
                     <p className="text-sm font-bold">{p.stock} Kg</p>
                   </div>

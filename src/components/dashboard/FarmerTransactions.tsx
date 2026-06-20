@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -28,6 +27,16 @@ const transactionData = [
 
 export function FarmerTransactions() {
   const [filter, setFilter] = useState("Semua");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const formatPrice = (price: number) => {
+    if (!mounted) return price.toString();
+    return price.toLocaleString();
+  };
 
   const filteredData = filter === "Semua" 
     ? transactionData 
@@ -124,7 +133,7 @@ export function FarmerTransactions() {
                       <div className="text-sm font-medium">{t.product}</div>
                       <div className="text-[10px] text-muted-foreground font-bold">{t.qty}</div>
                     </td>
-                    <td className="px-8 py-5 font-black text-sm">Rp {t.total.toLocaleString()}</td>
+                    <td className="px-8 py-5 font-black text-sm">Rp {formatPrice(t.total)}</td>
                     <td className="px-8 py-5">
                       <Badge className={cn(
                         "rounded-lg px-3 py-1 font-bold text-[10px] border-none",

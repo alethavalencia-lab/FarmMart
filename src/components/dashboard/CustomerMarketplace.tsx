@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { 
   Search, 
@@ -176,10 +176,20 @@ const mockProducts = [
 export function CustomerMarketplace() {
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleOpenDetail = (product: any) => {
     setSelectedProduct(product);
     setIsDetailOpen(true);
+  };
+
+  const formatPrice = (price: number) => {
+    if (!mounted) return price.toString();
+    return price.toLocaleString();
   };
 
   return (
@@ -285,7 +295,7 @@ export function CustomerMarketplace() {
                 <div className="flex items-center justify-between pt-4 border-t border-primary/5">
                   <div>
                     <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest leading-none mb-1">Harga / Kg</p>
-                    <p className="text-xl font-black text-primary">Rp {p.price.toLocaleString()}</p>
+                    <p className="text-xl font-black text-primary">Rp {formatPrice(p.price)}</p>
                   </div>
                   <div className="flex items-center gap-1 bg-yellow-400/10 px-2 py-1 rounded-lg">
                     <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
@@ -399,7 +409,7 @@ export function CustomerMarketplace() {
                   </div>
                   
                   <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-black text-primary">Rp {selectedProduct.price.toLocaleString()}</span>
+                    <span className="text-4xl font-black text-primary">Rp {formatPrice(selectedProduct.price)}</span>
                     <span className="text-muted-foreground font-bold">/ Kg</span>
                   </div>
                   
