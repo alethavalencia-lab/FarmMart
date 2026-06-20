@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import Image from "next/image";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -254,7 +254,8 @@ interface InvestorDashboardProps {
   setView?: (v: string) => void;
 }
 
-export function InvestorDashboard({ view = "dashboard", setView }: InvestorDashboardProps) {
+ function InvestorDashboardContent({ view = "dashboard", setView }: InvestorDashboardProps) {
+
   const { toast } = useToast();
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("q") || "";
@@ -1143,3 +1144,11 @@ export function InvestorDashboard({ view = "dashboard", setView }: InvestorDashb
     </div>
   );
 }
+
+export function InvestorDashboard(props: InvestorDashboardProps) {
+    return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <InvestorDashboardContent {...props} />
+      </Suspense>
+    );
+  }

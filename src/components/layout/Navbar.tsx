@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Menu, Search, Bell, MessageCircle, PlayCircle, ShoppingCart, Package, User, X } from "lucide-react";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
@@ -15,7 +15,7 @@ interface NavbarProps {
   cartCount?: number;
 }
 
-export function Navbar({ cartCount = 0 }: NavbarProps) {
+function NavbarContent({ cartCount = 0 }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -210,5 +210,13 @@ export function Navbar({ cartCount = 0 }: NavbarProps) {
         </DialogContent>
       </Dialog>
     </>
+  );
+}
+
+export function Navbar({ cartCount = 0 }: NavbarProps) {
+  return (
+    <Suspense fallback={<div className="fixed top-0 left-0 right-0 z-[100] h-20 glassmorphism" />}>
+      <NavbarContent cartCount={cartCount} />
+    </Suspense>
   );
 }
