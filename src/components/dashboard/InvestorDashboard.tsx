@@ -506,7 +506,7 @@ interface InvestorDashboardProps {
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={portfolioGrowthData}>
                 <defs>
-                  <linearGradient id="colorGrowth" x1="0" x2="0" x2="0" y2="1">
+                  <linearGradient id="colorGrowth" x1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.2}/>
                     <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
                   </linearGradient>
