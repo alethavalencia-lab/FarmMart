@@ -4,7 +4,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Menu, Search, Bell, MessageCircle, PlayCircle, ShoppingCart } from "lucide-react";
+import { Menu, Search, Bell, MessageCircle, PlayCircle, ShoppingCart, Package, User } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -98,7 +98,7 @@ export function Navbar({ cartCount = 0 }: NavbarProps) {
           </div>
         )}
 
-        <div className="flex items-center gap-3 sm:gap-5">
+        <div className="flex items-center gap-3 sm:gap-4">
           <Button onClick={handleActionClick} variant="ghost" size="icon" className={cn(
             "rounded-full transition-colors",
             scrolled || isDashboard ? "text-primary hover:bg-primary/10" : "text-white hover:bg-white/10"
@@ -107,34 +107,44 @@ export function Navbar({ cartCount = 0 }: NavbarProps) {
           </Button>
           
           {isDashboard ? (
-            <div className="flex items-center gap-2 sm:gap-4">
-              <Link href={`/dashboard?role=${role}&view=notifications`}>
+            <div className="flex items-center gap-1 sm:gap-2">
+              <Link href={`/dashboard?role=${role}&view=notifications`} className="hidden sm:block">
                 <Button variant="ghost" size="icon" className="text-primary rounded-full relative hover:bg-primary/10">
                   <Bell className="h-5 w-5" />
                   <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full border-2 border-white"></span>
                 </Button>
               </Link>
-              <Link href={`/dashboard?role=${role}&view=chat`}>
+              <Link href={`/dashboard?role=${role}&view=chat`} className="hidden sm:block">
                 <Button variant="ghost" size="icon" className="text-primary rounded-full hover:bg-primary/10">
                   <MessageCircle className="h-5 w-5" />
                 </Button>
               </Link>
               {role === "customer" && (
-                <Link href={`/dashboard?role=${role}&view=cart`}>
-                  <Button variant="ghost" size="icon" className="text-primary rounded-full relative hover:bg-primary/10">
-                    <ShoppingCart className="h-5 w-5" />
-                    {cartCount > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-secondary text-white text-[8px] font-black h-4 w-4 rounded-full flex items-center justify-center border-2 border-white">
-                        {cartCount}
-                      </span>
-                    )}
-                  </Button>
-                </Link>
+                <>
+                  <Link href={`/dashboard?role=${role}&view=orders`} className="hidden md:flex items-center gap-2 px-3 h-10 rounded-full hover:bg-primary/5 text-primary font-bold text-xs transition-all">
+                    <Package className="h-4 w-4" />
+                    <span>Pesanan Saya</span>
+                  </Link>
+                  <Link href={`/dashboard?role=${role}&view=cart`}>
+                    <Button variant="ghost" size="icon" className="text-primary rounded-full relative hover:bg-primary/10">
+                      <ShoppingCart className="h-5 w-5" />
+                      {cartCount > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-secondary text-white text-[8px] font-black h-4 w-4 rounded-full flex items-center justify-center border-2 border-white">
+                          {cartCount}
+                        </span>
+                      )}
+                    </Button>
+                  </Link>
+                </>
               )}
-              <Link href="/live">
+              <Link href={`/dashboard?role=${role}&view=profile`} className="flex items-center gap-2 px-3 h-10 rounded-full bg-primary/10 text-primary font-bold text-xs hover:bg-primary/20 transition-all ml-2">
+                <User className="h-4 w-4" />
+                <span className="hidden lg:inline">Profil Saya</span>
+              </Link>
+              <Link href="/live" className="ml-2">
                 <Button size="sm" className="bg-destructive hover:bg-destructive/90 text-white rounded-full px-4 h-9 font-bold flex items-center gap-2 shadow-lg shadow-destructive/20 animate-pulse">
                   <PlayCircle className="h-4 w-4" />
-                  <span className="hidden sm:inline">LIVE TANI</span>
+                  <span className="hidden sm:inline">LIVE</span>
                 </Button>
               </Link>
             </div>

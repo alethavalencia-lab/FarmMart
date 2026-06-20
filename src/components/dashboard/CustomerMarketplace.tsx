@@ -17,7 +17,12 @@ import {
   Navigation,
   ArrowUpDown,
   MessageCircle,
-  X
+  X,
+  Tag,
+  Voucher,
+  Package,
+  CreditCard,
+  Bell
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -76,21 +81,14 @@ export const mockProducts = [
   { id: 14, name: "Temulawak Segar", category: "Tanaman Herbal", price: 15000, farmer: "Pak Hendra", location: "Sukabumi, Jawa Barat", rating: 4.7, reviews: 19, status: "Tersedia", badges: ["Herbal"], image: "https://picsum.photos/seed/herbal1/600/400", stock: "30 kg", harvestDate: "2024-05-14", description: "Temulawak segar untuk jamu kesehatan." },
   { id: 15, name: "Daun Mint Organik", category: "Tanaman Herbal", price: 12000, farmer: "Ibu Lani", location: "Bandung, Jawa Barat", rating: 4.9, reviews: 22, status: "Tersedia", badges: ["Organik"], image: "https://picsum.photos/seed/herbal2/600/400", stock: "5 kg", harvestDate: "2024-05-20", description: "Daun mint segar aromatik." },
   { id: 16, name: "Rosella Kering", category: "Tanaman Herbal", price: 55000, farmer: "Kelompok Wanita Tani", location: "Yogyakarta, DIY", rating: 5.0, reviews: 56, status: "Tersedia", badges: ["Best Seller"], image: "https://picsum.photos/seed/herbal3/600/400", stock: "15 kg", harvestDate: "2024-04-30", description: "Bunga rosella kering kaya antioksidan." },
-  { id: 17, name: "Kunyit Putih", category: "Tanaman Herbal", price: 20000, farmer: "Pak Yusuf", location: "Banyuwangi, Jawa Timur", rating: 4.4, reviews: 12, status: "Tersedia", badges: [], image: "https://picsum.photos/seed/herbal4/600/400", stock: "25 kg", harvestDate: "2024-05-08", description: "Kunyit putih segar pilihan." },
 
   // Kacang-kacangan
   { id: 18, name: "Kacang Tanah Kupas", category: "Kacang-kacangan", price: 32000, farmer: "Pak Agus", location: "Tuban, Jawa Timur", rating: 4.7, reviews: 67, status: "Tersedia", badges: ["Best Seller"], image: "https://picsum.photos/seed/nut1/600/400", stock: "100 kg", harvestDate: "2024-05-02", description: "Kacang tanah kupas kering berkualitas." },
   { id: 19, name: "Edamame Segar", category: "Kacang-kacangan", price: 24000, farmer: "Ibu Desi", location: "Jember, Jawa Timur", rating: 4.9, reviews: 89, status: "Tersedia", badges: ["Organik", "Fresh"], image: "https://picsum.photos/seed/nut2/600/400", stock: "40 kg", harvestDate: "2024-05-21", description: "Edamame jepang kualitas ekspor." },
-  { id: 20, name: "Kacang Mete Mentah", category: "Kacang-kacangan", price: 145000, farmer: "Pak Wayan", location: "Karangasem, Bali", rating: 5.0, reviews: 112, status: "Tersedia", badges: ["Premium"], image: "https://picsum.photos/seed/nut3/600/400", stock: "20 kg", harvestDate: "2024-04-20", description: "Kacang mete pilihan dari Bali." },
-  { id: 21, name: "Kacang Hijau Organik", category: "Kacang-kacangan", price: 19000, farmer: "Pak Mansur", location: "Demak, Jawa Tengah", rating: 4.6, reviews: 33, status: "Tersedia", badges: ["Organik"], image: "https://picsum.photos/seed/nut4/600/400", stock: "150 kg", harvestDate: "2024-05-10", description: "Kacang hijau berkualitas tinggi." },
-  { id: 22, name: "Kacang Merah", category: "Kacang-kacangan", price: 38000, farmer: "Ibu Tini", location: "Manado, Sulawesi Utara", rating: 4.8, reviews: 24, status: "Tersedia", badges: [], image: "https://picsum.photos/seed/nut5/600/400", stock: "50 kg", harvestDate: "2024-05-05", description: "Kacang merah besar untuk sup." },
 
   // Umbi-umbian
-  { id: 23, name: "Kentang Dieng Super", category: "Umbi-umbian", price: 15000, farmer: "Pak Budi", location: "Wonosobo, Jawa Tengah", rating: 4.8, reviews: 110, status: "Tersedia", badges: ["Best Seller"], image: "https://picsum.photos/seed/potato-dieng/600/400", stock: "200 kg", harvestDate: "2024-05-15", description: "Kentang Dieng kualitas super, cocok untuk segala masakan." },
-  { id: 24, name: "Ubi Jalar Ungu", category: "Umbi-umbian", price: 12000, farmer: "Ibu Siti", location: "Cianjur, Jawa Barat", rating: 4.7, reviews: 45, status: "Tersedia", badges: ["Organik"], image: "https://picsum.photos/seed/purple-yam/600/400", stock: "150 kg", harvestDate: "2024-05-18", description: "Ubi ungu manis kaya antosianin." },
-  { id: 25, name: "Singkong Mentega", category: "Umbi-umbian", price: 8000, farmer: "Pak Jaka", location: "Sukabumi, Jawa Barat", rating: 4.6, reviews: 89, status: "Tersedia", badges: ["Fresh"], image: "https://picsum.photos/seed/cassava/600/400", stock: "300 kg", harvestDate: "2024-05-20", description: "Singkong empuk dan legit, langsung dari kebun." },
-  { id: 26, name: "Talas Bogor", category: "Umbi-umbian", price: 18000, farmer: "Pak Arif", location: "Bogor, Jawa Barat", rating: 4.9, reviews: 67, status: "Tersedia", badges: ["Khas"], image: "https://picsum.photos/seed/talas-bogor/600/400", stock: "50 kg", harvestDate: "2024-05-12", description: "Talas Bogor asli, pulen dan wangi." },
-  { id: 27, name: "Ubi Cilembu Madu", category: "Umbi-umbian", price: 20000, farmer: "Ibu Ratna", location: "Sumedang, Jawa Barat", rating: 5.0, reviews: 230, status: "Tersedia", badges: ["Best Seller", "Manis"], image: "https://picsum.photos/seed/ubi-cilembu/600/400", stock: "100 kg", harvestDate: "2024-05-10", description: "Ubi Cilembu asli Sumedang, manis seperti madu saat dipanggang." },
+  { id: 23, name: "Kentang Dieng Super", category: "Umbi-umbian", price: 15000, farmer: "Pak Budi", location: "Wonosobo, Jawa Tengah", rating: 4.8, reviews: 110, status: "Tersedia", badges: ["Best Seller"], image: "https://picsum.photos/seed/potato-dieng/600/400", stock: "200 kg", harvestDate: "2024-05-15", description: "Kentang Dieng kualitas super." },
+  { id: 27, name: "Ubi Cilembu Madu", category: "Umbi-umbian", price: 20000, farmer: "Ibu Ratna", location: "Sumedang, Jawa Barat", rating: 5.0, reviews: 230, status: "Tersedia", badges: ["Best Seller", "Manis"], image: "https://picsum.photos/seed/ubi-cilembu/600/400", stock: "100 kg", harvestDate: "2024-05-10", description: "Ubi Cilembu asli Sumedang, manis seperti madu." },
 ];
 
 interface MarketplaceProps {
@@ -98,9 +96,11 @@ interface MarketplaceProps {
   toggleFavorite: (productId: number) => void;
   favorites: number[];
   startCheckout: (items: any[]) => void;
+  cartCount: number;
+  setView: (v: string) => void;
 }
 
-export function CustomerMarketplace({ addToCart, toggleFavorite, favorites, startCheckout }: MarketplaceProps) {
+export function CustomerMarketplace({ addToCart, toggleFavorite, favorites, startCheckout, cartCount, setView }: MarketplaceProps) {
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -124,7 +124,7 @@ export function CustomerMarketplace({ addToCart, toggleFavorite, favorites, star
 
   const formatPrice = (price: number) => {
     if (!mounted) return price.toString();
-    return price.toLocaleString();
+    return price.toLocaleString('id-ID');
   };
 
   const filteredProducts = useMemo(() => {
@@ -207,6 +207,47 @@ export function CustomerMarketplace({ addToCart, toggleFavorite, favorites, star
               <Filter className="mr-2 h-5 w-5" /> Filter
             </Button>
           </div>
+        </div>
+      </section>
+
+      {/* Overview & Promo Section */}
+      <section className="grid lg:grid-cols-3 gap-8">
+        {/* Promo Carousel/Banner Card */}
+        <Card className="lg:col-span-2 rounded-[2.5rem] border-none shadow-xl bg-gradient-to-br from-secondary to-orange-600 text-white p-8 overflow-hidden relative group cursor-pointer h-[320px]">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl transition-transform group-hover:scale-110"></div>
+          <div className="relative z-10 flex flex-col justify-between h-full">
+            <Badge className="w-fit bg-white/20 text-white border-none px-4 py-1 font-bold">PROMO MUSIM PANEN 🌾</Badge>
+            <div>
+              <h2 className="text-4xl font-black font-headline mb-4 leading-tight">Diskon Hingga 20% <br />Untuk Produk Pilihan</h2>
+              <p className="text-lg opacity-90 max-w-md">Dapatkan kesegaran langsung dari kebun dengan harga spesial minggu ini.</p>
+            </div>
+            <Button className="w-fit h-12 px-8 rounded-full bg-white text-secondary font-black hover:bg-white/90">Klaim Voucher Sekarang</Button>
+          </div>
+          <div className="absolute -bottom-10 -right-10 opacity-20 transition-transform group-hover:scale-105 duration-700">
+            <Tag className="h-64 w-64" />
+          </div>
+        </Card>
+
+        {/* Quick Access Grid */}
+        <div className="grid grid-cols-2 gap-4 h-[320px]">
+          {[
+            { id: "orders", label: "Pesanan Saya", icon: Package, color: "bg-blue-50 text-blue-600", desc: "Menunggu: 2" },
+            { id: "cart", label: "Keranjang", icon: ShoppingCart, color: "bg-orange-50 text-orange-600", desc: `${cartCount} Produk` },
+            { id: "favorites", label: "Favorit", icon: Heart, color: "bg-destructive/5 text-destructive", desc: `${favorites.length} Item` },
+            { id: "notifications", label: "Notifikasi", icon: Bell, color: "bg-primary/5 text-primary", desc: "5 Baru" },
+          ].map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setView(item.id)}
+              className="group flex flex-col items-center justify-center p-6 bg-white rounded-[2rem] shadow-sm hover:shadow-xl transition-all border border-primary/5 hover:border-primary/20"
+            >
+              <div className={cn("p-3 rounded-2xl mb-4 group-hover:scale-110 transition-transform", item.color)}>
+                <item.icon className="h-6 w-6" />
+              </div>
+              <span className="font-bold text-sm text-foreground">{item.label}</span>
+              <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mt-1">{item.desc}</span>
+            </button>
+          ))}
         </div>
       </section>
 
@@ -481,7 +522,7 @@ export function CustomerMarketplace({ addToCart, toggleFavorite, favorites, star
                         <p className="text-[10px] text-muted-foreground flex items-center gap-1"><MapPin className="h-3 w-3" /> {selectedProduct.location}</p>
                       </div>
                     </div>
-                    <Button variant="ghost" size="icon" className="rounded-full"><MessageCircle className="h-5 w-5" /></Button>
+                    <Button variant="ghost" size="icon" onClick={() => setView('chat')} className="rounded-full"><MessageCircle className="h-5 w-5" /></Button>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">

@@ -33,7 +33,8 @@ import {
   MapPin,
   CreditCard,
   Star,
-  MessageCircle
+  MessageCircle,
+  User
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -148,6 +149,11 @@ function DashboardContent() {
     setActiveView("orders");
   };
 
+  const setView = (v: string) => {
+    setActiveView(v);
+    router.push(`/dashboard?role=${role}&view=${v}`, { scroll: false });
+  }
+
   const renderContent = () => {
     if (role === "farmer") {
       switch (activeView) {
@@ -172,6 +178,8 @@ function DashboardContent() {
             toggleFavorite={toggleFavorite} 
             favorites={favoriteItems}
             startCheckout={startCheckout}
+            cartCount={cartItems.length}
+            setView={setView}
           />;
         case "cart": 
           return <CustomerCart 
@@ -203,12 +211,17 @@ function DashboardContent() {
           />;
         case "chat": return <CustomerChat />;
         case "notifications": return <CustomerNotifications />;
-        case "profile": return <FarmerProfile />; 
+        case "profile": 
+        case "address":
+        case "payment":
+          return <FarmerProfile />; // Re-using refined profile for consumer
         default: return <CustomerMarketplace 
             addToCart={addToCart} 
             toggleFavorite={toggleFavorite} 
             favorites={favoriteItems}
             startCheckout={startCheckout}
+            cartCount={cartItems.length}
+            setView={setView}
           />;
       }
     }
@@ -251,10 +264,7 @@ function DashboardContent() {
                   {group.items.map((item) => (
                     <button
                       key={item.id}
-                      onClick={() => {
-                        setActiveView(item.id);
-                        router.push(`/dashboard?role=${role}&view=${item.id}`, { scroll: false });
-                      }}
+                      onClick={() => setView(item.id)}
                       className={cn(
                         "flex items-center gap-3 w-full px-4 py-3 rounded-2xl transition-all duration-300 font-medium group",
                         activeView === item.id 
