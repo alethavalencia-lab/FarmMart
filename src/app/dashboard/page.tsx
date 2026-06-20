@@ -49,7 +49,10 @@ import {
   Star,
   MessageCircle,
   FileText,
-  ClipboardList
+  ClipboardList,
+  Briefcase,
+  History,
+  User
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -106,6 +109,20 @@ function DashboardContent() {
     ]}
   ];
 
+  const investorMenu = [
+    { group: "Investment", items: [
+      { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+      { id: "analytics", label: "Analytics", icon: BarChart3 },
+      { id: "portfolio", label: "My Investments", icon: Briefcase },
+      { id: "history", label: "Earnings History", icon: History },
+      { id: "chat", label: "Chat Farmer", icon: MessageCircle },
+      { id: "notifications", label: "Notifications", icon: Bell },
+    ]},
+    { group: "Settings", items: [
+      { id: "profile", label: "My Profile", icon: User },
+    ]}
+  ];
+
   const customerMenu = [
     { group: "Menu Utama", items: [
       { id: "marketplace", label: "Marketplace", icon: LayoutDashboard },
@@ -147,7 +164,7 @@ function DashboardContent() {
     ]}
   ];
 
-  const currentMenu = role === "partner" ? partnerMenu : (role === "customer" ? customerMenu : farmerMenu);
+  const currentMenu = role === "investor" ? investorMenu : (role === "partner" ? partnerMenu : (role === "customer" ? customerMenu : farmerMenu));
 
   // --- Actions ---
   const addToCart = (product: any) => {
@@ -211,7 +228,7 @@ function DashboardContent() {
     }
     
     if (role === "investor") {
-      return <InvestorDashboard />;
+      return <InvestorDashboard view={activeView} setView={setView} />;
     }
     
     if (role === "customer") {

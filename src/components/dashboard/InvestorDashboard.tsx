@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -26,7 +26,13 @@ import {
   Info,
   Calendar,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Briefcase,
+  User,
+  ArrowRight,
+  Search,
+  Zap,
+  Flame
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -40,6 +46,21 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { 
+  ResponsiveContainer, 
+  AreaChart, 
+  Area, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  PieChart, 
+  Pie, 
+  Cell,
+  BarChart,
+  Bar
+} from "recharts";
+import { useSearchParams } from "next/navigation";
 
 // --- Mock Data ---
 
@@ -145,26 +166,61 @@ const initialExploreProjects = [
   }
 ];
 
-const initialPortfolio = [
-  { id: 101, name: "Vanilla Premium NTT", farmer: "Koperasi Tani Flores", investment: 5000000, progress: 45, estReturn: 750000, status: "Active", date: "15 May 2026" },
-  { id: 102, name: "Organic Chili Scale-up", farmer: "Pak Budi Jaya", investment: 3000000, progress: 85, estReturn: 450000, status: "Active", date: "02 Apr 2026" },
+const trendingProjects = [
+  { name: "Smart Irrigation System", progress: 85, color: "text-blue-600" },
+  { name: "Organic Chili Expansion", progress: 78, color: "text-orange-600" },
+  { name: "Hydroponic Greenhouse", progress: 72, color: "text-green-600" },
 ];
 
-const earningsHistory = [
-  { id: 201, name: "Cherry Tomato Project", investment: 5000000, profit: 750000, status: "Completed", date: "20 Jan 2026" },
-  { id: 202, name: "Chili Project 2025", investment: 3000000, profit: 450000, status: "Completed", date: "12 Dec 2025" },
+const portfolioGrowthData = [
+  { name: "Jan", value: 15.2 },
+  { name: "Feb", value: 18.5 },
+  { name: "Mar", value: 22.1 },
+  { name: "Apr", value: 28.4 },
+  { name: "Mei", value: 31.8 },
+  { name: "Jun", value: 35.5 },
 ];
 
-export function InvestorDashboard() {
+const commodityDistribution = [
+  { name: "Tomatoes", value: 35, color: "#2E7D32" },
+  { name: "Chili", value: 25, color: "#F57C00" },
+  { name: "Rice", value: 20, color: "#F4B400" },
+  { name: "Hydroponics", value: 20, color: "#2563eb" },
+];
+
+interface InvestorDashboardProps {
+  view?: string;
+  setView?: (v: string) => void;
+}
+
+export function InvestorDashboard({ view = "dashboard", setView }: InvestorDashboardProps) {
   const { toast } = useToast();
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get("q") || "";
+  
   const [mounted, setMounted] = useState(false);
   
   // State
-  const [portfolio, setPortfolio] = useState(initialPortfolio);
-  const [exploreProjects] = useState(initialExploreProjects);
-  const [history] = useState(earningsHistory);
-  const [activeTab, setActiveTab] = useState("explore");
+  const [portfolio, setPortfolio] = useState([
+    { id: 101, name: "Vanilla Premium NTT", farmer: "Koperasi Tani Flores", investment: 5000000, progress: 45, estReturn: 750000, status: "Active", date: "15 May 2026" },
+    { id: 102, name: "Organic Chili Scale-up", farmer: "Pak Budi Jaya", investment: 3000000, progress: 85, estReturn: 450000, status: "Active", date: "02 Apr 2026" },
+  ]);
+  const [history] = useState([
+    { id: 201, name: "Cherry Tomato Project", investment: 5000000, profit: 750000, status: "Completed", date: "20 Jan 2026", roi: "15%" },
+    { id: 202, name: "Chili Project 2025", investment: 3000000, profit: 450000, status: "Completed", date: "12 Dec 2025", roi: "15%" },
+  ]);
   
+  const [investorProfile, setInvestorProfile] = useState({
+    name: "Andi Saputra",
+    email: "andi.invest@email.com",
+    phone: "+62 812 3456 7890",
+    investorId: "INV-99210-AS",
+    memberSince: "Jan 2026",
+    totalInvested: 35500000,
+    totalProfit: 5800000,
+    projectsInvested: 8
+  });
+
   // Dialogs
   const [selectedProject, setSelectedProject] = useState<any | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
@@ -187,16 +243,15 @@ export function InvestorDashboard() {
     return val.toLocaleString('id-ID');
   };
 
-  const handleOpenDetail = (project: any) => {
-    setSelectedProject(project);
-    setIsDetailOpen(true);
-  };
-
-  const handleInvestNow = (project: any) => {
-    setSelectedProject(project);
-    setInvestStep(1);
-    setIsInvestOpen(true);
-  };
+  const filteredProjects = useMemo(() => {
+    if (!searchQuery) return initialExploreProjects;
+    return initialExploreProjects.filter(p => 
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.farmer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.commodity.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.location.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery]);
 
   const handleConfirmInvestment = () => {
     const newInvestment = {
@@ -211,12 +266,18 @@ export function InvestorDashboard() {
     };
 
     setPortfolio([newInvestment, ...portfolio]);
+    setInvestorProfile(prev => ({
+      ...prev,
+      totalInvested: prev.totalInvested + investAmount,
+      projectsInvested: prev.projectsInvested + 1
+    }));
+    
     setIsInvestOpen(false);
     toast({
       title: "Investment Successful!",
       description: `You have invested Rp ${formatPrice(investAmount)} in ${selectedProject.name}.`,
     });
-    setActiveTab("portfolio");
+    if (setView) setView("portfolio");
   };
 
   const handleSendMessage = () => {
@@ -230,7 +291,6 @@ export function InvestorDashboard() {
     setChatHistory([...chatHistory, newMsg]);
     setChatMessage("");
     
-    // Auto response
     setTimeout(() => {
       const response = {
         id: Date.now() + 1,
@@ -242,40 +302,18 @@ export function InvestorDashboard() {
     }, 1500);
   };
 
-  return (
-    <div className="space-y-12 animate-in fade-in duration-700 pb-20">
-      <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div>
-          <h1 className="text-4xl font-black font-headline text-primary tracking-tight">Investment Dashboard</h1>
-          <p className="text-muted-foreground text-lg">Support local farmers and grow your agricultural portfolio.</p>
-        </div>
-        <div className="flex gap-2 bg-white/50 backdrop-blur-md p-1.5 rounded-2xl border border-white/20 shadow-sm">
-           <Button 
-            variant={activeTab === 'explore' ? 'default' : 'ghost'} 
-            onClick={() => setActiveTab('explore')}
-            className={cn("rounded-xl font-bold h-11 px-6", activeTab === 'explore' ? "bg-primary text-white" : "text-muted-foreground")}
-           >
-             Explore
-           </Button>
-           <Button 
-            variant={activeTab === 'portfolio' ? 'default' : 'ghost'} 
-            onClick={() => setActiveTab('portfolio')}
-            className={cn("rounded-xl font-bold h-11 px-6", activeTab === 'portfolio' ? "bg-primary text-white" : "text-muted-foreground")}
-           >
-             My Portfolio
-           </Button>
-        </div>
-      </section>
+  if (!mounted) return null;
 
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+  const renderDashboard = () => (
+    <div className="space-y-12 animate-in fade-in duration-500">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         {[
-          { label: "Portfolio Value", value: "Rp 35.5M", icon: Wallet, color: "text-primary", bg: "bg-primary/10" },
-          { label: "Total Projects", value: "8 Projects", icon: BarChart3, color: "text-blue-600", bg: "bg-blue-50" },
-          { label: "Est. Return", value: "Rp 5.8M", icon: TrendingUp, color: "text-secondary", bg: "bg-secondary/10" },
-          { label: "Active", value: "5 Projects", icon: Clock, color: "text-orange-600", bg: "bg-orange-50" },
+          { label: "Portfolio Value", value: `Rp ${formatPrice(investorProfile.totalInvested / 1000000)}M`, icon: Wallet, color: "text-primary", bg: "bg-primary/10" },
+          { label: "Active Projects", value: "5 Projects", icon: Clock, color: "text-orange-600", bg: "bg-orange-50" },
+          { label: "Estimated Returns", value: `Rp ${formatPrice(investorProfile.totalProfit / 1000000)}M`, icon: TrendingUp, color: "text-secondary", bg: "bg-secondary/10" },
           { label: "Completed", value: "3 Projects", icon: CheckCircle2, color: "text-green-600", bg: "bg-green-50" },
         ].map((stat, idx) => (
-          <Card key={idx} className="rounded-3xl border-none shadow-xl glassmorphism hover:scale-[1.02] transition-transform cursor-default">
+          <Card key={idx} className="rounded-3xl border-none shadow-xl glassmorphism">
             <CardContent className="p-6 flex flex-col items-center text-center space-y-2">
               <div className={cn("p-4 rounded-2xl mb-2", stat.bg)}>
                 <stat.icon className={cn("h-6 w-6", stat.color)} />
@@ -287,161 +325,473 @@ export function InvestorDashboard() {
         ))}
       </div>
 
-      <Separator className="bg-primary/5" />
-
-      {activeTab === "explore" && (
-        <Tabs defaultValue="all" className="space-y-8">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6">
+      <div className="grid lg:grid-cols-4 gap-8">
+        <div className="lg:col-span-3 space-y-8">
+          <div className="flex justify-between items-end">
             <div className="space-y-1">
-              <h2 className="text-3xl font-black font-headline text-primary">Explore Opportunities</h2>
-              <p className="text-muted-foreground">Select high-impact agricultural projects to support.</p>
+              <h2 className="text-3xl font-black font-headline text-primary">Investment Opportunities</h2>
+              <p className="text-muted-foreground">High-impact agricultural projects ready for support.</p>
             </div>
-            <TabsList className="bg-primary/5 p-1 rounded-full h-11">
-              <TabsTrigger value="all" className="rounded-full px-6 font-bold text-xs h-full">All Categories</TabsTrigger>
-              <TabsTrigger value="veg" className="rounded-full px-6 font-bold text-xs h-full">Vegetables</TabsTrigger>
-              <TabsTrigger value="fruits" className="rounded-full px-6 font-bold text-xs h-full">Fruits</TabsTrigger>
-              <TabsTrigger value="grains" className="rounded-full px-6 font-bold text-xs h-full">Grains</TabsTrigger>
-            </TabsList>
+            {searchQuery && (
+              <Badge className="bg-primary/10 text-primary border-none px-4 py-1">
+                Showing results for: "{searchQuery}"
+              </Badge>
+            )}
           </div>
 
-          <TabsContent value="all" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-in fade-in duration-500">
-            {exploreProjects.map((p) => (
-              <Card key={p.id} className="group overflow-hidden rounded-[2.5rem] border-none shadow-xl bg-white hover:shadow-2xl transition-all duration-500">
-                <div className="relative aspect-[16/10]">
-                  <Image src={p.image} alt={p.name} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <Badge className="absolute top-6 left-6 bg-white/90 backdrop-blur-sm text-primary border-none font-black px-4 py-1">
-                    {p.return} Return
-                  </Badge>
-                  <div className="absolute bottom-6 left-6 right-6 text-white">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-white/80 mb-1">{p.commodity}</p>
-                    <h3 className="text-xl font-bold leading-tight line-clamp-1">{p.name}</h3>
+          {filteredProjects.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {filteredProjects.map((p) => (
+                <Card key={p.id} className="group overflow-hidden rounded-[2.5rem] border-none shadow-xl bg-white hover:shadow-2xl transition-all duration-500">
+                  <div className="relative aspect-[16/10]">
+                    <Image src={p.image} alt={p.name} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <Badge className="absolute top-6 left-6 bg-white/90 backdrop-blur-sm text-primary border-none font-black px-4 py-1">
+                      {p.return} Return
+                    </Badge>
                   </div>
-                </div>
-                <CardContent className="p-8 space-y-6">
-                  <div className="flex items-center justify-between text-sm font-bold text-muted-foreground">
-                    <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" /> {p.location}</div>
-                    <div className="flex items-center gap-2"><Clock className="h-4 w-4 text-primary" /> {p.duration}</div>
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-end text-sm font-black">
-                      <p className="text-primary">Rp {formatPrice(p.collected)}</p>
-                      <p className="text-muted-foreground">Target: {formatPrice(p.target)}</p>
+                  <CardContent className="p-8 space-y-6">
+                    <div>
+                       <p className="text-[10px] font-black uppercase tracking-widest text-secondary mb-1">{p.commodity}</p>
+                       <h3 className="text-xl font-bold leading-tight line-clamp-1">{p.name}</h3>
+                       <p className="text-xs text-muted-foreground font-bold flex items-center gap-1 mt-1"><Users className="h-3 w-3" /> {p.farmer}</p>
                     </div>
-                    <Progress value={p.progress} className="h-3" />
-                    <div className="flex justify-between text-[10px] font-black text-muted-foreground uppercase tracking-widest">
-                       <span>{p.progress}% Funded</span>
-                       <span className={cn(p.risk === 'Low' ? "text-green-600" : "text-orange-600")}>Risk: {p.risk}</span>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3 pt-2">
-                    <Button onClick={() => handleOpenDetail(p)} variant="outline" className="rounded-2xl h-12 font-bold border-primary/20 hover:bg-primary/5">Details</Button>
-                    <Button onClick={() => handleInvestNow(p)} className="rounded-2xl h-12 bg-primary hover:bg-secondary text-white font-black shadow-lg shadow-primary/20">Invest Now</Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </TabsContent>
-        </Tabs>
-      )}
-
-      {activeTab === "portfolio" && (
-        <div className="space-y-12 animate-in fade-in duration-500">
-          <div className="grid lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-8">
-              <h2 className="text-3xl font-black font-headline text-primary">My Portfolio</h2>
-              <div className="grid gap-6">
-                {portfolio.map((p) => (
-                  <Card key={p.id} className="rounded-[2.5rem] border-none shadow-lg bg-white overflow-hidden p-8 hover:shadow-xl transition-all group">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-                      <div className="flex-1 space-y-4">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <Badge className="bg-primary/10 text-primary border-none font-black text-[10px] mb-2 px-3 py-1">PROJECT ID: FM-INV-{p.id}</Badge>
-                            <h3 className="text-2xl font-black font-headline text-primary leading-tight group-hover:text-secondary transition-colors">{p.name}</h3>
-                            <div className="flex items-center gap-2 text-sm font-bold text-muted-foreground mt-1">
-                              <Users className="h-4 w-4 text-primary" /> {p.farmer}
-                            </div>
-                          </div>
-                          <Badge className="bg-green-100 text-green-700 border-none font-black uppercase tracking-widest text-[10px] px-3 py-1.5">{p.status}</Badge>
-                        </div>
-                        
-                        <div className="grid grid-cols-3 gap-6 border-y border-primary/5 py-4">
-                          <div>
-                            <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-1">Invested</p>
-                            <p className="text-lg font-black text-primary">Rp {formatPrice(p.investment)}</p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-1">Est. Return</p>
-                            <p className="text-lg font-black text-secondary">+Rp {formatPrice(p.estReturn)}</p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-1">Invested Date</p>
-                            <p className="text-sm font-bold mt-1">{p.date}</p>
-                          </div>
-                        </div>
-                        
-                        <div className="space-y-2">
-                           <div className="flex justify-between text-[10px] font-black text-muted-foreground uppercase">
-                              <span>Project Progress</span>
-                              <span>{p.progress}% Complete</span>
-                           </div>
-                           <Progress value={p.progress} className="h-2" />
-                        </div>
+                    
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-end text-sm font-black">
+                        <p className="text-primary">Rp {formatPrice(p.collected)}</p>
+                        <p className="text-muted-foreground">Target: {formatPrice(p.target)}</p>
                       </div>
-                      <div className="flex flex-col gap-2 w-full md:w-auto">
-                        <Button variant="outline" className="h-12 rounded-xl border-primary/10 text-primary font-bold">Project Timeline</Button>
-                        <Button onClick={() => setIsChatOpen(true)} variant="outline" className="h-12 rounded-xl border-primary/10 text-primary font-bold flex items-center gap-2">
-                           <MessageCircle className="h-4 w-4" /> Chat Farmer
-                        </Button>
+                      <Progress value={p.progress} className="h-3" />
+                      <div className="flex justify-between text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                         <span>{p.progress}% Funded</span>
+                         <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {p.duration}</span>
                       </div>
                     </div>
-                  </Card>
-                ))}
-              </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <Button onClick={() => { setSelectedProject(p); setIsDetailOpen(true); }} variant="outline" className="rounded-2xl h-12 font-bold">Details</Button>
+                      <Button onClick={() => { setSelectedProject(p); setIsInvestOpen(true); setInvestStep(1); }} className="rounded-2xl h-12 bg-primary text-white font-black">Invest Now</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
+          ) : (
+            <div className="py-20 text-center glassmorphism rounded-[3rem]">
+               <Search className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
+               <h3 className="text-2xl font-black text-primary mb-2">No projects found</h3>
+               <p className="text-muted-foreground">Try searching with different keywords.</p>
+            </div>
+          )}
+        </div>
 
-            <div className="space-y-8">
-              <h2 className="text-3xl font-black font-headline text-primary">Earnings History</h2>
-              <div className="grid gap-4">
-                {history.map((h) => (
-                  <Card key={h.id} className="rounded-3xl border-none shadow-sm bg-white p-6 hover:shadow-md transition-all">
-                    <div className="flex justify-between items-center mb-4">
-                       <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{h.date}</p>
-                       <Badge className="bg-primary/5 text-primary border-none text-[10px] font-black">COMPLETED</Badge>
-                    </div>
-                    <h4 className="font-bold text-primary mb-4">{h.name}</h4>
-                    <div className="flex justify-between items-end">
-                       <div>
-                          <p className="text-[10px] font-black text-muted-foreground uppercase">Principal</p>
-                          <p className="font-bold">Rp {formatPrice(h.investment)}</p>
-                       </div>
-                       <div className="text-right">
-                          <p className="text-[10px] font-black text-muted-foreground uppercase">Profit</p>
-                          <p className="text-xl font-black text-green-600">+Rp {formatPrice(h.profit)}</p>
-                       </div>
-                    </div>
-                  </Card>
+        <div className="space-y-8">
+           <Card className="rounded-[2.5rem] border-none shadow-xl bg-white p-8">
+             <CardTitle className="text-xl font-black font-headline text-primary mb-6 flex items-center gap-2">
+                <Flame className="h-5 w-5 text-orange-500" /> Trending Now
+             </CardTitle>
+             <div className="space-y-6">
+                {trendingProjects.map((tp, i) => (
+                  <div key={i} className="space-y-2">
+                     <div className="flex justify-between items-center">
+                        <h4 className="text-sm font-bold leading-tight">{tp.name}</h4>
+                        <Badge className="bg-primary/5 text-primary border-none text-[10px] font-black">{tp.progress}%</Badge>
+                     </div>
+                     <Progress value={tp.progress} className="h-1.5" />
+                  </div>
                 ))}
-              </div>
+             </div>
+             <Button variant="link" className="text-secondary font-black p-0 mt-6 group">
+                View All Trends <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
+             </Button>
+           </Card>
 
-              <Card className="rounded-[2.5rem] border-none bg-primary text-white p-8 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
-                <div className="relative z-10 space-y-4">
-                   <div className="flex items-center gap-3">
-                      <div className="p-2 bg-white/20 rounded-xl"><Sparkles className="h-5 w-5 text-accent" /></div>
-                      <h4 className="font-black text-lg">Next Disbursement</h4>
+           <Card className="rounded-[2.5rem] border-none bg-primary text-white p-8 overflow-hidden relative">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+              <div className="relative z-10 space-y-4">
+                 <div className="p-3 bg-white/20 rounded-2xl w-fit"><Sparkles className="h-6 w-6 text-accent" /></div>
+                 <h3 className="text-2xl font-black font-headline">Premium Perks</h3>
+                 <p className="text-sm opacity-80 leading-relaxed">Get early access to high-yield hydroponic projects with Platinum Investor status.</p>
+                 <Button className="w-full rounded-2xl bg-white text-primary font-black h-12 shadow-xl">Upgrade Now</Button>
+              </div>
+           </Card>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderAnalytics = () => (
+    <div className="space-y-10 animate-in fade-in duration-500">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[
+          { label: "Total Invested", value: `Rp ${formatPrice(investorProfile.totalInvested)}`, change: "+12%", up: true },
+          { label: "Current Value", value: `Rp ${formatPrice(40800000)}`, change: "+16.5%", up: true },
+          { label: "Estimated Profit", value: `Rp ${formatPrice(5800000)}`, change: "Stable", up: true },
+          { label: "Overall ROI", value: "16.5%", change: "+2.1%", up: true },
+        ].map((stat, i) => (
+          <Card key={i} className="rounded-3xl border-none shadow-lg p-6 space-y-2 bg-white">
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{stat.label}</p>
+            <h3 className="text-2xl font-black text-primary">{stat.value}</h3>
+            <p className={cn("text-xs font-bold", stat.up ? "text-green-600" : "text-destructive")}>{stat.change} vs last month</p>
+          </Card>
+        ))}
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-8">
+        <Card className="lg:col-span-2 rounded-[3rem] border-none shadow-xl bg-white p-8">
+          <CardTitle className="text-xl font-bold font-headline text-primary mb-8">Portfolio Growth (Million Rp)</CardTitle>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={portfolioGrowthData}>
+                <defs>
+                  <linearGradient id="colorGrowth" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.1}/>
+                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fontWeight: 600 }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fontWeight: 600 }} />
+                <Tooltip />
+                <Area type="monotone" dataKey="value" stroke="hsl(var(--primary))" fillOpacity={1} fill="url(#colorGrowth)" strokeWidth={3} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+
+        <Card className="rounded-[3rem] border-none shadow-xl bg-white p-8">
+          <CardTitle className="text-xl font-bold font-headline text-primary mb-8">Commodity Mix</CardTitle>
+          <div className="h-[250px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={commodityDistribution}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={80}
+                  paddingAngle={5}
+                  dataKey="value"
+                >
+                  {commodityDistribution.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="space-y-3 mt-4">
+             {commodityDistribution.map((item, i) => (
+               <div key={i} className="flex justify-between items-center text-sm font-bold">
+                  <div className="flex items-center gap-2">
+                     <div className="h-3 w-3 rounded-full" style={{ backgroundColor: item.color }}></div>
+                     <span className="text-muted-foreground">{item.name}</span>
+                  </div>
+                  <span>{item.value}%</span>
+               </div>
+             ))}
+          </div>
+        </Card>
+      </div>
+
+      <div className="space-y-6">
+        <h2 className="text-2xl font-black font-headline text-primary">Popular Projects</h2>
+        <div className="grid md:grid-cols-3 gap-6">
+           {[
+             { name: "Tomato Expansion", investors: 126, progress: 90, icon: TrendingUp },
+             { name: "Hydroponic Development", investors: 98, progress: 82, icon: Zap },
+             { name: "Smart Irrigation", investors: 75, progress: 78, icon: Briefcase },
+           ].map((item, i) => (
+             <Card key={i} className="p-6 rounded-3xl border-none shadow-md bg-white flex flex-col justify-between group hover:shadow-xl transition-all">
+                <div className="flex justify-between items-start mb-4">
+                   <div className="p-3 bg-primary/5 rounded-2xl group-hover:bg-primary group-hover:text-white transition-colors">
+                      <item.icon className="h-6 w-6" />
                    </div>
-                   <p className="text-sm opacity-80">You have a profit distribution coming up on 30 June 2026.</p>
-                   <Button className="w-full rounded-2xl bg-white text-primary font-black h-12 shadow-xl">View Details</Button>
+                   <Badge className="bg-green-100 text-green-700 border-none font-black text-[10px]">{item.progress}% Funded</Badge>
                 </div>
-              </Card>
+                <h4 className="font-bold text-lg mb-1">{item.name}</h4>
+                <p className="text-xs text-muted-foreground font-bold mb-4">{item.investors} Active Investors</p>
+                <Button variant="outline" className="w-full rounded-xl border-primary/10 font-bold group-hover:bg-primary group-hover:text-white">View Details</Button>
+             </Card>
+           ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderPortfolio = () => (
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+        <div className="space-y-1">
+          <h2 className="text-3xl font-black font-headline text-primary">My Investments</h2>
+          <p className="text-muted-foreground">Managing {portfolio.length} active agricultural projects.</p>
+        </div>
+      </div>
+      <div className="grid gap-6">
+        {portfolio.map((p) => (
+          <Card key={p.id} className="rounded-[2.5rem] border-none shadow-lg bg-white overflow-hidden p-8 hover:shadow-xl transition-all group">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+              <div className="flex-1 space-y-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <Badge className="bg-primary/10 text-primary border-none font-black text-[10px] mb-2 px-3 py-1 uppercase tracking-widest">ID: FM-INV-{p.id}</Badge>
+                    <h3 className="text-2xl font-black font-headline text-primary leading-tight group-hover:text-secondary transition-colors">{p.name}</h3>
+                    <div className="flex items-center gap-2 text-sm font-bold text-muted-foreground mt-1">
+                      <Users className="h-4 w-4 text-primary" /> {p.farmer}
+                    </div>
+                  </div>
+                  <Badge className="bg-green-100 text-green-700 border-none font-black uppercase tracking-widest text-[10px] px-3 py-1.5">{p.status}</Badge>
+                </div>
+                
+                <div className="grid grid-cols-3 gap-6 border-y border-primary/5 py-4">
+                  <div>
+                    <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-1">Invested</p>
+                    <p className="text-lg font-black text-primary">Rp {formatPrice(p.investment)}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-1">Est. Return</p>
+                    <p className="text-lg font-black text-secondary">+Rp {formatPrice(p.estReturn)}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-1">Invested Date</p>
+                    <p className="text-sm font-bold mt-1">{p.date}</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                   <div className="flex justify-between text-[10px] font-black text-muted-foreground uppercase">
+                      <span>Project Progress</span>
+                      <span>{p.progress}% Complete</span>
+                   </div>
+                   <Progress value={p.progress} className="h-2" />
+                </div>
+              </div>
+              <div className="flex flex-col gap-2 w-full md:w-auto">
+                <Button variant="outline" className="h-12 rounded-xl border-primary/10 text-primary font-bold">Timeline</Button>
+                <Button onClick={() => setIsChatOpen(true)} variant="outline" className="h-12 rounded-xl border-primary/10 text-primary font-bold flex items-center gap-2">
+                   <MessageCircle className="h-4 w-4" /> Chat Farmer
+                </Button>
+              </div>
             </div>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderHistory = () => (
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="grid md:grid-cols-3 gap-8">
+         <Card className="p-8 rounded-[2.5rem] border-none bg-primary text-white space-y-2">
+            <p className="text-xs font-bold opacity-80 uppercase tracking-widest">Total Profit Received</p>
+            <h3 className="text-4xl font-black">Rp {formatPrice(1200000)}</h3>
+         </Card>
+         <Card className="p-8 rounded-[2.5rem] border-none bg-secondary text-white space-y-2">
+            <p className="text-xs font-bold opacity-80 uppercase tracking-widest">Average ROI</p>
+            <h3 className="text-4xl font-black">15.2%</h3>
+         </Card>
+         <Card className="p-8 rounded-[2.5rem] border-none bg-accent text-primary space-y-2">
+            <p className="text-xs font-bold opacity-70 uppercase tracking-widest">Completed Projects</p>
+            <h3 className="text-4xl font-black">3</h3>
+         </Card>
+      </div>
+
+      <div className="space-y-4">
+        {history.map((h) => (
+          <Card key={h.id} className="rounded-3xl border-none shadow-sm bg-white p-8 hover:shadow-md transition-all">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+              <div className="flex items-center gap-6">
+                 <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                    <CheckCircle2 className="h-8 w-8" />
+                 </div>
+                 <div>
+                    <h4 className="font-bold text-xl text-primary">{h.name}</h4>
+                    <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">{h.date} • ID: {h.id}</p>
+                 </div>
+              </div>
+              <div className="flex gap-12 text-right">
+                 <div>
+                    <p className="text-[10px] font-black text-muted-foreground uppercase mb-1">Principal</p>
+                    <p className="font-bold">Rp {formatPrice(h.investment)}</p>
+                 </div>
+                 <div>
+                    <p className="text-[10px] font-black text-muted-foreground uppercase mb-1">Profit (ROI: {h.roi})</p>
+                    <p className="text-2xl font-black text-green-600">+Rp {formatPrice(h.profit)}</p>
+                 </div>
+              </div>
+              <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground"><ChevronRight className="h-6 w-6" /></Button>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderProfile = () => (
+    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
+      <div className="flex flex-col md:flex-row items-center gap-8 bg-white/50 p-10 rounded-[4rem] border border-white/20 glassmorphism relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full -mr-32 -mt-32 blur-[80px]"></div>
+        <div className="relative">
+          <div className="h-32 w-32 rounded-full border-4 border-white shadow-2xl overflow-hidden relative">
+            <Image src="https://picsum.photos/seed/investor/200/200" alt="Avatar" fill className="object-cover" />
           </div>
         </div>
-      )}
+        <div className="text-center md:text-left space-y-2">
+          <h1 className="text-4xl font-black font-headline text-primary">{investorProfile.name}</h1>
+          <div className="flex items-center justify-center md:justify-start gap-2">
+            <Badge className="bg-primary/10 text-primary border-none font-bold uppercase text-[10px]">Verified Investor</Badge>
+            <span className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">ID: {investorProfile.investorId}</span>
+          </div>
+          <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-2">
+             <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground"><MapPin className="h-3 w-3 text-primary" /> Jakarta, Indonesia</div>
+             <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground"><Calendar className="h-3 w-3 text-primary" /> Member Since {investorProfile.memberSince}</div>
+          </div>
+        </div>
+      </div>
+
+      <Card className="rounded-[3rem] border-none shadow-xl bg-white p-10 space-y-8">
+        <CardTitle className="text-2xl font-black font-headline text-primary">Personal Information</CardTitle>
+        <div className="grid md:grid-cols-2 gap-8">
+           <div className="space-y-2">
+              <Label className="font-bold text-xs uppercase text-muted-foreground">Full Name</Label>
+              <Input value={investorProfile.name} onChange={(e) => setInvestorProfile({...investorProfile, name: e.target.value})} className="h-12 rounded-xl bg-gray-50 border-none font-bold" />
+           </div>
+           <div className="space-y-2">
+              <Label className="font-bold text-xs uppercase text-muted-foreground">Email Address</Label>
+              <Input value={investorProfile.email} className="h-12 rounded-xl bg-gray-50 border-none font-bold" />
+           </div>
+           <div className="space-y-2">
+              <Label className="font-bold text-xs uppercase text-muted-foreground">Phone Number</Label>
+              <Input value={investorProfile.phone} className="h-12 rounded-xl bg-gray-50 border-none font-bold" />
+           </div>
+           <div className="space-y-2">
+              <Label className="font-bold text-xs uppercase text-muted-foreground">Investor ID</Label>
+              <Input value={investorProfile.investorId} disabled className="h-12 rounded-xl bg-gray-100 border-none font-bold" />
+           </div>
+        </div>
+        
+        <div className="pt-8 border-t border-primary/5 grid grid-cols-3 gap-6">
+           <div className="text-center p-6 bg-primary/5 rounded-3xl">
+              <p className="text-[10px] font-black uppercase text-muted-foreground mb-1">Total Investment</p>
+              <p className="text-lg font-black text-primary">Rp {formatPrice(investorProfile.totalInvested)}</p>
+           </div>
+           <div className="text-center p-6 bg-primary/5 rounded-3xl">
+              <p className="text-[10px] font-black uppercase text-muted-foreground mb-1">Profit Earned</p>
+              <p className="text-lg font-black text-secondary">Rp {formatPrice(investorProfile.totalProfit)}</p>
+           </div>
+           <div className="text-center p-6 bg-primary/5 rounded-3xl">
+              <p className="text-[10px] font-black uppercase text-muted-foreground mb-1">Active Projects</p>
+              <p className="text-lg font-black text-blue-600">{investorProfile.projectsInvested}</p>
+           </div>
+        </div>
+
+        <div className="flex gap-4">
+           <Button onClick={() => toast({ title: "Profile Saved", description: "Your changes have been successfully updated."})} className="flex-1 h-14 rounded-2xl bg-primary text-white font-black text-lg">Save Changes</Button>
+           <Button variant="outline" className="flex-1 h-14 rounded-2xl border-primary/10 font-bold">Cancel</Button>
+        </div>
+      </Card>
+    </div>
+  );
+
+  const renderNotifications = () => (
+    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
+      <h2 className="text-3xl font-black font-headline text-primary">Notifications</h2>
+      <div className="space-y-4">
+        {[
+          { title: "Investment Confirmed", desc: "Your investment in Vanilla Premium NTT has been confirmed.", time: "10m ago", icon: CheckCircle2, color: "bg-green-100 text-green-700" },
+          { title: "80% Funding Reached", desc: "Organic Tomato Project is almost fully funded. Last chance to join!", time: "2h ago", icon: TrendingUp, color: "bg-orange-100 text-orange-700" },
+          { title: "Profit Distribution", desc: "Your payout for Chili Project 2025 is now available in your wallet.", time: "Yesterday", icon: Wallet, color: "bg-blue-100 text-blue-700" },
+          { title: "Project Update", desc: "Farmer Pak Arif uploaded a new photo update for Modern Rice Cultivation.", time: "2 days ago", icon: Camera, color: "bg-primary/10 text-primary" },
+          { title: "New Opportunity", desc: "A new Hydroponic Lettuce project matches your interest in High-Yield ventures.", time: "3 days ago", icon: Sparkles, color: "bg-accent/10 text-primary" },
+        ].map((n, i) => (
+          <Card key={i} className="p-6 rounded-[2.5rem] border-none shadow-sm bg-white hover:shadow-xl transition-all cursor-pointer group flex items-center gap-6">
+            <div className={cn("h-14 w-14 rounded-2xl flex items-center justify-center shrink-0", n.color)}>
+              <n.icon className="h-7 w-7" />
+            </div>
+            <div className="flex-1 space-y-1">
+               <div className="flex justify-between items-start">
+                  <h4 className="font-bold text-lg group-hover:text-primary transition-colors">{n.title}</h4>
+                  <span className="text-[10px] font-bold text-muted-foreground uppercase">{n.time}</span>
+               </div>
+               <p className="text-sm text-muted-foreground leading-relaxed">{n.desc}</p>
+            </div>
+            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderChat = () => (
+    <div className="flex h-[calc(100vh-160px)] bg-white rounded-[3rem] shadow-xl overflow-hidden border border-primary/5 animate-in fade-in duration-500">
+      <aside className="w-80 border-r flex flex-col bg-gray-50/50">
+        <div className="p-6 space-y-4">
+          <h2 className="text-2xl font-black font-headline text-primary">Chat Farmer</h2>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input placeholder="Search farmers..." className="pl-10 rounded-xl bg-white h-11" />
+          </div>
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          {[
+            { id: 1, name: "Pak Tani Maman", lastMsg: "We just finished planting!", time: "10:30", avatar: "https://picsum.photos/seed/farmer1/100/100" },
+            { id: 2, name: "Arif Hidayat", lastMsg: "The irrigation system is live.", time: "09:15", avatar: "https://picsum.photos/seed/farmer2/100/100" },
+          ].map((chat) => (
+            <div key={chat.id} className={cn("p-6 flex items-center gap-4 cursor-pointer transition-all hover:bg-primary/5", chat.id === 1 && "bg-white border-r-4 border-primary")}>
+              <div className="h-12 w-12 rounded-full overflow-hidden relative border-2 border-white shadow-sm">
+                <Image src={chat.avatar} alt="Avatar" fill className="object-cover" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="font-bold text-sm truncate">{chat.name}</h4>
+                <p className="text-xs text-muted-foreground truncate">{chat.lastMsg}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </aside>
+      <main className="flex-1 flex flex-col">
+        <header className="p-6 border-b flex items-center justify-between">
+           <div className="flex items-center gap-4">
+              <div className="h-10 w-10 rounded-full overflow-hidden relative border shadow-sm">
+                 <Image src="https://picsum.photos/seed/farmer1/100/100" alt="Farmer" fill className="object-cover" />
+              </div>
+              <div>
+                 <h3 className="font-bold">Pak Tani Maman</h3>
+                 <p className="text-[10px] text-primary font-black uppercase tracking-widest">Active Now</p>
+              </div>
+           </div>
+        </header>
+        <div className="flex-1 overflow-y-auto p-8 space-y-6 bg-primary/5">
+           {chatHistory.map((msg) => (
+             <div key={msg.id} className={cn("flex flex-col", msg.isMe ? "items-end" : "items-start")}>
+               <div className={cn("max-w-[70%] p-5 rounded-[2rem] text-sm font-medium shadow-sm", msg.isMe ? "bg-primary text-white rounded-tr-none" : "bg-white text-primary rounded-tl-none")}>
+                 {msg.text}
+               </div>
+               <span className="text-[10px] text-muted-foreground mt-2 px-2 font-bold">{msg.time}</span>
+             </div>
+           ))}
+        </div>
+        <footer className="p-6 border-t bg-white">
+          <div className="flex gap-4 items-center bg-gray-50 p-2 rounded-2xl border">
+             <Input value={chatMessage} onChange={(e) => setChatMessage(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()} placeholder="Type a message..." className="border-none focus-visible:ring-0 bg-transparent flex-1 font-medium" />
+             <Button onClick={handleSendMessage} size="icon" className="h-11 w-11 rounded-xl bg-primary text-white shadow-lg"><ArrowRight className="h-5 w-5" /></Button>
+          </div>
+        </footer>
+      </main>
+    </div>
+  );
+
+  return (
+    <div className="space-y-0">
+      {view === "dashboard" && renderDashboard()}
+      {view === "analytics" && renderAnalytics()}
+      {view === "portfolio" && renderPortfolio()}
+      {view === "history" && renderHistory()}
+      {view === "profile" && renderProfile()}
+      {view === "notifications" && renderNotifications()}
+      {view === "chat" && renderChat()}
 
       {/* 4. Project Detail Modal */}
       <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
@@ -614,7 +964,7 @@ export function InvestorDashboard() {
                   <Card className="rounded-3xl border-none shadow-inner bg-primary/5 p-6 space-y-4">
                      <div className="flex justify-between items-center text-sm">
                         <span className="text-muted-foreground font-bold">Project Name</span>
-                        <span className="font-black text-primary text-right">{selectedProject.name}</span>
+                        <span className="font-black text-primary text-right">{selectedProject?.name}</span>
                      </div>
                      <div className="flex justify-between items-center text-sm">
                         <span className="text-muted-foreground font-bold">Principal Amount</span>
@@ -622,15 +972,15 @@ export function InvestorDashboard() {
                      </div>
                      <div className="flex justify-between items-center text-sm">
                         <span className="text-muted-foreground font-bold">Duration</span>
-                        <span className="font-black text-primary text-right">{selectedProject.duration}</span>
+                        <span className="font-black text-primary text-right">{selectedProject?.duration}</span>
                      </div>
                      <Separator className="bg-primary/10" />
                      <div className="flex justify-between items-end">
                         <div>
                            <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-1">Estimated Return</p>
-                           <p className="text-2xl font-black text-secondary">+Rp {formatPrice(investAmount * (parseInt(selectedProject.return) / 100))}</p>
+                           <p className="text-2xl font-black text-secondary">+Rp {formatPrice(investAmount * (parseInt(selectedProject?.return || "0") / 100))}</p>
                         </div>
-                        <Badge className="bg-secondary text-white border-none font-black">{selectedProject.return}</Badge>
+                        <Badge className="bg-secondary text-white border-none font-black">{selectedProject?.return}</Badge>
                      </div>
                   </Card>
                   
@@ -643,7 +993,7 @@ export function InvestorDashboard() {
          </DialogContent>
       </Dialog>
 
-      {/* 6. Chat Dialog */}
+      {/* 6. Chat Dialog (Farmer Context) */}
       <Dialog open={isChatOpen} onOpenChange={setIsChatOpen}>
          <DialogContent className="rounded-[3rem] border-none glassmorphism sm:max-w-[450px] p-0 overflow-hidden outline-none">
             <DialogTitle className="sr-only">Chat with Farmer</DialogTitle>
