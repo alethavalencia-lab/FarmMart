@@ -21,6 +21,17 @@ import { FarmerCommunity } from "@/components/dashboard/FarmerCommunity";
 import { FarmerProfile } from "@/components/dashboard/FarmerProfile";
 import { FarmerNotifications } from "@/components/dashboard/FarmerNotifications";
 import { FarmerChat } from "@/components/dashboard/FarmerChat";
+
+// Mitra Bisnis (Partner) Components
+import { PartnerMarketplace } from "@/components/dashboard/PartnerMarketplace";
+import { PartnerCart } from "@/components/dashboard/PartnerCart";
+import { PartnerOrders } from "@/components/dashboard/PartnerOrders";
+import { PartnerRFQ } from "@/components/dashboard/PartnerRFQ";
+import { PartnerContracts } from "@/components/dashboard/PartnerContracts";
+import { PartnerProfile } from "@/components/dashboard/PartnerProfile";
+import { PartnerChat } from "@/components/dashboard/PartnerChat";
+import { PartnerNotifications } from "@/components/dashboard/PartnerNotifications";
+
 import { 
   LayoutDashboard, 
   ShoppingCart, 
@@ -37,7 +48,8 @@ import {
   CreditCard,
   Star,
   MessageCircle,
-  User
+  FileText,
+  ClipboardList
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -56,12 +68,11 @@ function DashboardContent() {
   const searchParams = useSearchParams();
   const role = searchParams.get("role") || "farmer";
   const viewParam = searchParams.get("view");
-  const searchQueryParam = searchParams.get("q");
   
-  const [activeView, setActiveView] = useState(viewParam || (role === "customer" ? "marketplace" : "dashboard"));
+  const [activeView, setActiveView] = useState(viewParam || (role === "customer" || role === "partner" ? "marketplace" : "dashboard"));
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
-  // --- Consumer Local State ---
+  // --- Consumer/Partner Local State ---
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [favoriteItems, setFavoriteItems] = useState<number[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
@@ -115,16 +126,35 @@ function DashboardContent() {
     ]}
   ];
 
-  const currentMenu = role === "customer" ? customerMenu : farmerMenu;
+  const partnerMenu = [
+    { group: "B2B Procurement", items: [
+      { id: "marketplace", label: "Pasar B2B", icon: LayoutDashboard },
+      { id: "rfq", label: "Permintaan Penawaran", icon: FileText },
+      { id: "contracts", label: "Kontrak Pengadaan", icon: ClipboardList },
+      { id: "orders", label: "Pesanan B2B", icon: Package },
+      { id: "cart", label: "Keranjang Bisnis", icon: ShoppingCart },
+    ]},
+    { group: "Communication", items: [
+      { id: "chat", label: "Chat Petani", icon: MessageCircle },
+      { id: "notifications", label: "Notifikasi", icon: Bell },
+    ]},
+    { group: "Business Settings", items: [
+      { id: "profile", label: "Profil Bisnis", icon: Settings },
+      { id: "address", label: "Titik Pengiriman", icon: MapPin },
+      { id: "payment", label: "Metode Pembayaran", icon: CreditCard },
+    ]}
+  ];
 
-  // --- Consumer Actions ---
+  const currentMenu = role === "partner" ? partnerMenu : (role === "customer" ? customerMenu : farmerMenu);
+
+  // --- Actions ---
   const addToCart = (product: any) => {
     setCartItems(prev => {
       const existing = prev.find(item => item.id === product.id);
       if (existing) {
-        return prev.map(item => item.id === product.id ? { ...item, qty: item.qty + 1 } : item);
+        return prev.map(item => item.id === product.id ? { ...item, qty: item.qty + (product.qty || 1) } : item);
       }
-      return [...prev, { ...product, qty: 1 }];
+      return [...prev, { ...product, qty: product.qty || 1 }];
     });
   };
 
@@ -229,6 +259,37 @@ function DashboardContent() {
             toggleFavorite={toggleFavorite} 
             favorites={favoriteItems}
             startCheckout={startCheckout}
+            cartCount={cartItems.length}
+            setView={setView}
+          />;
+      }
+    }
+
+    if (role === "partner") {
+      switch (activeView) {
+        case "marketplace": 
+          return <PartnerMarketplace 
+            addToCart={addToCart} 
+            cartCount={cartItems.length}
+            setView={setView}
+          />;
+        case "cart": 
+          return <PartnerCart 
+            items={cartItems} 
+            updateQty={updateCartQty} 
+            remove={removeFromCart} 
+            checkout={startCheckout}
+          />;
+        case "rfq": return <PartnerRFQ />;
+        case "contracts": return <PartnerContracts />;
+        case "orders": return <PartnerOrders orders={orders} />;
+        case "profile": return <PartnerProfile />;
+        case "chat": return <PartnerChat />;
+        case "notifications": return <PartnerNotifications />;
+        case "payment": return <CustomerPayment />;
+        case "address": return <PartnerProfile />; // Same profile view with address edit
+        default: return <PartnerMarketplace 
+            addToCart={addToCart} 
             cartCount={cartItems.length}
             setView={setView}
           />;
