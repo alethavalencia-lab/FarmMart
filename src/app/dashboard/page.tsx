@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -7,6 +6,7 @@ import Image from "next/image";
 import { Navbar } from "@/components/layout/Navbar";
 import { FarmerDashboard } from "@/components/dashboard/FarmerDashboard";
 import { InvestorDashboard } from "@/components/dashboard/InvestorDashboard";
+import { CustomerMarketplace } from "@/components/dashboard/CustomerMarketplace";
 import { FarmerTransactions } from "@/components/dashboard/FarmerTransactions";
 import { FarmerAnalytics } from "@/components/dashboard/FarmerAnalytics";
 import { FarmerCommunity } from "@/components/dashboard/FarmerCommunity";
@@ -54,7 +54,7 @@ export default function DashboardPage() {
   };
 
   const menuItems = [
-    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { id: "dashboard", label: role === "customer" ? "Marketplace" : "Dashboard", icon: LayoutDashboard },
     { id: "transactions", label: "Transaksi", icon: ShoppingCart },
     { id: "analytics", label: "Analitik", icon: BarChart3 },
     { id: "community", label: "Komunitas", icon: Users },
@@ -78,13 +78,16 @@ export default function DashboardPage() {
     if (role === "investor") {
       return <InvestorDashboard />;
     }
+    if (role === "customer") {
+      return <CustomerMarketplace />;
+    }
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-4">
         <div className="bg-primary/10 p-8 rounded-full">
           <LayoutDashboard className="h-12 w-12 text-primary" />
         </div>
-        <h1 className="text-2xl font-bold font-headline">Customer Dashboard Coming Soon</h1>
-        <p className="text-muted-foreground">Silakan kunjungi marketplace untuk belanja produk segar.</p>
+        <h1 className="text-2xl font-bold font-headline">Dashboard Coming Soon</h1>
+        <p className="text-muted-foreground">Fitur untuk peran {role} sedang dalam pengembangan.</p>
       </div>
     );
   };
