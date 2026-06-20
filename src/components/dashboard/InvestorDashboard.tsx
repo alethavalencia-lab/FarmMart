@@ -32,7 +32,8 @@ import {
   ArrowRight,
   Search,
   Zap,
-  Flame
+  Flame,
+  Camera
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
