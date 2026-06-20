@@ -91,9 +91,9 @@ export function FarmerDashboard() {
       setProducts(JSON.parse(savedProducts));
     } else {
       const defaultProducts = [
-        { id: 1, name: "Tomat Cherry Organik", price: 25000, stock: 45, status: "Aktif", category: "Sayur", description: "Tomat cherry manis segar." },
-        { id: 2, name: "Cabai Merah Keriting", price: 35000, stock: 120, status: "Aktif", category: "Rempah", description: "Pedas mantap." },
-        { id: 3, name: "Melon Cantaloupe Premium", price: 45000, stock: 30, status: "Stok Tipis", category: "Buah", description: "Manis aromatik." },
+        { id: 1, name: "Tomat Cherry Organik", price: 25000, stock: 45, status: "Aktif", category: "Sayur", description: "Tomat cherry manis segar.", image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781930246/cherry-tomato-vegetables-photo_j1fksb.jpg" },
+        { id: 2, name: "Cabai Merah Keriting", price: 35000, stock: 120, status: "Aktif", category: "Rempah", description: "Pedas mantap.", image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781924019/OIP_4_xwysrb.webp" },
+        { id: 3, name: "Melon Cantaloupe Premium", price: 45000, stock: 30, status: "Stok Tipis", category: "Buah", description: "Manis aromatik.", image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1780966187/OIP_lstdbk.jpg" },
       ];
       setProducts(defaultProducts);
       localStorage.setItem("farmer_products_v2", JSON.stringify(defaultProducts));
@@ -105,8 +105,8 @@ export function FarmerDashboard() {
       setProjects(JSON.parse(savedProjects));
     } else {
       const defaultProjects = [
-        { id: 1, name: "Ekspansi Hidroponik 2024", target: "Rp 500.000.000", targetNum: 500000000, current: "Rp 375.000.000", funded: "75%", investors: 12, status: "Sedang Berjalan", description: "Peningkatan kapasitas produksi hidroponik.", duration: "6 Bulan", return: "12%" },
-        { id: 2, name: "Irigasi Cerdas Lembang", target: "Rp 250.000.000", targetNum: 250000000, current: "Rp 100.000.000", funded: "40%", investors: 5, status: "Sedang Berjalan", description: "Pemasangan sensor irigasi IoT.", duration: "4 Bulan", return: "15%" },
+        { id: 1, name: "Ekspansi Hidroponik 2026", target: "Rp 500.000.000", targetNum: 500000000, current: "Rp 375.000.000", funded: "75%", investors: 12, status: "Sedang Berjalan", description: "Peningkatan kapasitas produksi hidroponik.", duration: "6 Bulan", return: "12%", image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781933749/file_00000000f5e47209bdd0a5363309fdfe_tt5zob.png" },
+        { id: 2, name: "Sistem Irigasi Cerdas", target: "Rp 250.000.000", targetNum: 250000000, current: "Rp 100.000.000", funded: "40%", investors: 5, status: "Sedang Berjalan", description: "Pemasangan sensor irigasi IoT.", duration: "4 Bulan", return: "15%", image: "https://res.cloudinary.com/dhp46iviu/image/upload/v1781933873/file_000000001bb07209955b647d95e5704e_eibjvb.png" },
       ];
       setProjects(defaultProjects);
       localStorage.setItem("farmer_projects_v2", JSON.stringify(defaultProjects));
@@ -118,8 +118,8 @@ export function FarmerDashboard() {
       setLands(JSON.parse(savedLands));
     } else {
       const defaultLands = [
-        { id: 1, name: "Kebun Lembang A", location: "Bandung Barat", size: "1.2", crop: "Tomat Cherry", status: "Masa Tanam", irrigation: "Drip", soil: "Subur", harvest: "2024-06-12" },
-        { id: 2, name: "Lahan Dieng B", location: "Wonosobo", size: "0.8", crop: "Kentang Granola", status: "Siap Panen", irrigation: "Rainfed", soil: "Vulkanik", harvest: "2024-05-20" },
+        { id: 1, name: "Kebun Lembang A", location: "Bandung Barat", size: "1.2", crop: "Tomat Cherry", status: "Masa Tanam", irrigation: "Drip", soil: "Subur", harvest: "2024-06-12", image: "https://res.cloudinary.com/dhp46iviu/image/upload/q_auto/f_auto/v1781933067/OIP_9_wlrvjf.webp" },
+        { id: 2, name: "Lahan Dieng B", location: "Wonosobo", size: "0.8", crop: "Kentang Granola", status: "Siap Panen", irrigation: "Rainfed", soil: "Vulkanik", harvest: "2024-05-20", image: "https://res.cloudinary.com/dhp46iviu/image/upload/q_auto/f_auto/v1781933116/kebon_is1xvs.jpg" },
       ];
       setLands(defaultLands);
       localStorage.setItem("farmer_lands_v3", JSON.stringify(defaultLands));
@@ -611,7 +611,7 @@ export function FarmerDashboard() {
                 <CardContent className="p-8 space-y-6">
                   <div className="space-y-1">
                     <h4 className="text-2xl font-black font-headline text-primary">{land.name}</h4>
-                    <p className="text-sm font-bold text-muted-foreground flex items-center gap-1.5"><MapPin className="h-3 w-3" /> {land.location}</p>
+                    <p className="text-sm font-bold text-muted-foreground flex items-center gap-1.5"><MapPin className="h-3 w-3 text-primary" /> {land.location}</p>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4 border-y border-primary/5 py-4">
