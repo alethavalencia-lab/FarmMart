@@ -5,6 +5,9 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { 
   Sprout, 
   BarChart3, 
@@ -24,7 +27,8 @@ import {
   CheckCircle2,
   Instagram,
   Youtube,
-  Phone
+  Phone,
+  Mail
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -167,9 +171,11 @@ export default function LandingPage() {
               </div>
               
               <div className="flex flex-wrap gap-5">
-                <Button onClick={handleScrollToRegistration} size="lg" className="rounded-full bg-primary hover:bg-primary/90 text-white px-10 h-16 shadow-2xl shadow-primary/40 text-lg font-bold transition-all active:scale-95">
-                  Belanja Sekarang
-                </Button>
+                <Link href="/auth">
+                  <Button size="lg" className="rounded-full bg-primary hover:bg-primary/90 text-white px-10 h-16 shadow-2xl shadow-primary/40 text-lg font-bold transition-all active:scale-95">
+                    Belanja Sekarang
+                  </Button>
+                </Link>
                 <Button onClick={handleScrollToRegistration} size="lg" variant="outline" className="rounded-full border-2 border-white text-white hover:bg-white/10 px-10 h-16 text-lg font-bold backdrop-blur-sm group transition-all active:scale-95">
                   <PlayCircle className="mr-3 h-6 w-6 group-hover:scale-110 transition-transform" />
                   Jelajahi Live Tani
@@ -521,6 +527,55 @@ export default function LandingPage() {
                  )}
               </div>
            </div>
+        </div>
+      </section>
+
+      {/* Contact Us Section */}
+      <section className="py-24 container mx-auto px-6">
+        <div className="bg-white rounded-[4rem] p-12 md:p-20 shadow-xl border border-primary/5 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -mr-32 -mt-32 blur-[80px]"></div>
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="space-y-6">
+              <Badge variant="outline" className="border-primary text-primary px-3 py-1 rounded-full">HUBUNGI KAMI</Badge>
+              <h2 className="text-4xl md:text-5xl font-black font-headline text-primary leading-tight">Punya Pertanyaan atau Butuh Bantuan?</h2>
+              <p className="text-muted-foreground text-lg leading-relaxed">
+                Tim kami siap membantu Anda memahami lebih lanjut tentang ekosistem Farm Mart. Kirimkan pesan dan kami akan segera menghubungi Anda.
+              </p>
+              <div className="space-y-4 pt-4">
+                <div className="flex items-center gap-4 text-primary font-bold">
+                   <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary"><Phone className="h-6 w-6" /></div>
+                   <span>+62 812-3456-7890</span>
+                </div>
+                <div className="flex items-center gap-4 text-primary font-bold">
+                   <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary"><Mail className="h-6 w-6" /></div>
+                   <span>support@farmmart.id</span>
+                </div>
+              </div>
+            </div>
+            <Card className="rounded-[3rem] border-none shadow-2xl bg-primary/5 p-10">
+              <form className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="name" className="font-bold text-primary ml-1">Nama Lengkap</Label>
+                  <Input id="name" placeholder="Nama Anda" className="h-14 rounded-2xl border-none bg-white shadow-sm font-bold" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="font-bold text-primary ml-1">Alamat Email</Label>
+                  <Input id="email" type="email" placeholder="email@contoh.com" className="h-14 rounded-2xl border-none bg-white shadow-sm font-bold" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="message" className="font-bold text-primary ml-1">Pesan</Label>
+                  <Textarea id="message" placeholder="Tulis pesan Anda di sini..." className="min-h-[150px] rounded-2xl border-none bg-white shadow-sm p-4 font-bold" />
+                </div>
+                <Button 
+                  type="button" 
+                  onClick={() => toast({ title: "Pesan Terkirim", description: "Terima kasih, tim kami akan segera menghubungi Anda." })}
+                  className="w-full h-16 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-lg shadow-xl shadow-primary/20 transition-all active:scale-95"
+                >
+                  Kirim Pesan
+                </Button>
+              </form>
+            </Card>
+          </div>
         </div>
       </section>
 
