@@ -1,8 +1,8 @@
-
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,8 @@ import { Label } from "@/components/ui/label";
 import { Sprout, ShoppingCart, BarChart3, Users, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export default function AuthPage() {
+function AuthContent() {
+  const searchParams = useSearchParams();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
@@ -135,6 +136,14 @@ export default function AuthPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function AuthPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AuthContent />
+    </Suspense>
   );
 }
 
