@@ -1,6 +1,6 @@
-
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,9 +11,45 @@ import { ShoppingBag, MessageCircle, Send, Users, Heart, Share2, Play } from "lu
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
+const initialComments = [
+  { user: "Andi Saputra", msg: "Tomatnya kelihatan segar banget pak!", color: "bg-blue-100" },
+  { user: "Siti Aminah", msg: "Bisa kirim ke Jakarta Barat gak?", color: "bg-pink-100" },
+  { user: "Budi Jaya", msg: "Udah checkout 5 kg ya pak maman!", color: "bg-green-100" },
+  { user: "Farm Mart Bot", msg: "Stok tinggal 15 kg lagi. Segera pesan!", color: "bg-primary/10", isBot: true },
+  { user: "Rudi Hartono", msg: "Wih live tani keren banget fiturnya.", color: "bg-orange-100" },
+];
+
 export default function LiveCommercePage() {
   const liveImg = PlaceHolderImages.find(img => img.id === 'live-stream');
   const pinnedProduct = PlaceHolderImages.find(img => img.id === 'prod-tomato');
+  
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState(initialComments);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [comments]);
+
+  const handleSendComment = () => {
+    if (!comment.trim()) return;
+    
+    const newComment = {
+      user: "You",
+      msg: comment,
+      color: "bg-primary/10",
+      isMe: true
+    };
+    
+    setComments([...comments, newComment]);
+    setComment("");
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") handleSendComment();
+  };
 
   return (
     <div className="min-h-screen bg-background overflow-hidden flex flex-col">
@@ -115,20 +151,17 @@ export default function LiveCommercePage() {
             </div>
           </div>
           
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {[
-              { user: "Andi Saputra", msg: "Tomatnya kelihatan segar banget pak!", color: "bg-blue-100" },
-              { user: "Siti Aminah", msg: "Bisa kirim ke Jakarta Barat gak?", color: "bg-pink-100" },
-              { user: "Budi Jaya", msg: "Udah checkout 5 kg ya pak maman!", color: "bg-green-100" },
-              { user: "Farm Mart Bot", msg: "Stok tinggal 15 kg lagi. Segera pesan!", color: "bg-primary/10", isBot: true },
-              { user: "Rudi Hartono", msg: "Wih live tani keren banget fiturnya.", color: "bg-orange-100" },
-            ].map((chat, i) => (
-              <div key={i} className="flex gap-3">
+          <div 
+            ref={scrollRef}
+            className="flex-1 overflow-y-auto p-4 space-y-4 scroll-smooth"
+          >
+            {comments.map((chat, i) => (
+              <div key={i} className="flex gap-3 animate-in fade-in slide-in-from-bottom-1">
                 <Avatar className="h-8 w-8">
                   <AvatarFallback className={chat.color}>{chat.user[0]}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="text-xs font-bold text-primary flex items-center gap-1">
+                  <div className={cn("text-xs font-bold flex items-center gap-1", chat.isBot ? "text-primary" : "text-primary")}>
                     {chat.user} {chat.isBot && <Badge className="scale-75 bg-primary/20 text-primary border-none">MOD</Badge>}
                   </div>
                   <p className="text-sm text-muted-foreground bg-gray-50 p-2 rounded-2xl rounded-tl-none">{chat.msg}</p>
@@ -139,8 +172,18 @@ export default function LiveCommercePage() {
 
           <div className="p-4 border-t space-y-3">
             <div className="flex gap-2">
-              <Input placeholder="Tulis komentar..." className="rounded-full border-primary/20 bg-gray-50 h-11" />
-              <Button size="icon" className="rounded-full bg-primary h-11 w-11 flex-shrink-0">
+              <Input 
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Tulis komentar..." 
+                className="rounded-full border-primary/20 bg-gray-50 h-11" 
+              />
+              <Button 
+                onClick={handleSendComment}
+                size="icon" 
+                className="rounded-full bg-primary h-11 w-11 flex-shrink-0"
+              >
                 <Send className="h-5 w-5" />
               </Button>
             </div>

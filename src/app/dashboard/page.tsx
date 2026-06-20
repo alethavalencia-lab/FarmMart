@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, Suspense, useMemo } from "react";
@@ -14,6 +13,8 @@ import { CustomerCart } from "@/components/dashboard/CustomerCart";
 import { CustomerOrders } from "@/components/dashboard/CustomerOrders";
 import { CustomerFavorites } from "@/components/dashboard/CustomerFavorites";
 import { CustomerCheckout } from "@/components/dashboard/CustomerCheckout";
+import { CustomerProfile } from "@/components/dashboard/CustomerProfile";
+import { CustomerPayment } from "@/components/dashboard/CustomerPayment";
 import { FarmerTransactions } from "@/components/dashboard/FarmerTransactions";
 import { FarmerAnalytics } from "@/components/dashboard/FarmerAnalytics";
 import { FarmerCommunity } from "@/components/dashboard/FarmerCommunity";
@@ -53,6 +54,7 @@ function DashboardContent() {
   const searchParams = useSearchParams();
   const role = searchParams.get("role") || "farmer";
   const viewParam = searchParams.get("view");
+  const searchQueryParam = searchParams.get("q");
   
   const [activeView, setActiveView] = useState(viewParam || (role === "customer" ? "marketplace" : "dashboard"));
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
@@ -213,8 +215,9 @@ function DashboardContent() {
         case "notifications": return <CustomerNotifications />;
         case "profile": 
         case "address":
+          return <CustomerProfile />;
         case "payment":
-          return <FarmerProfile />; // Re-using refined profile for consumer
+          return <CustomerPayment />;
         default: return <CustomerMarketplace 
             addToCart={addToCart} 
             toggleFavorite={toggleFavorite} 

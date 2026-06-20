@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,7 @@ const chatList = [
   { id: 4, name: "Kelompok Tani Lembang", lastMsg: "Terima kasih sudah berbelanja di kebun kami.", time: "2 hari lalu", unread: 0, avatar: "https://picsum.photos/seed/farmer4/100/100", status: "offline" },
 ];
 
-const mockMessages = [
+const initialMessages = [
   { id: 1, text: "Halo Pak, apakah cabai merahnya masih ada?", time: "10:00", isMe: true },
   { id: 2, text: "Selamat siang, stok cabai masih tersedia.", time: "10:30", isMe: false },
   { id: 3, text: "Bisa kirim hari ini kalau saya pesan sekarang?", time: "10:35", isMe: true },
@@ -24,6 +24,43 @@ const mockMessages = [
 export function CustomerChat() {
   const [selectedChat, setSelectedChat] = useState(chatList[0]);
   const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState(initialMessages);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const handleSendMessage = () => {
+    if (!message.trim()) return;
+
+    const newMsg = {
+      id: messages.length + 1,
+      text: message,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      isMe: true
+    };
+
+    setMessages([...messages, newMsg]);
+    setMessage("");
+
+    // Mock farmer response
+    setTimeout(() => {
+      const response = {
+        id: messages.length + 2,
+        text: "Baik, Kak. Ada lagi yang bisa kami bantu?",
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        isMe: false
+      };
+      setMessages(prev => [...prev, response]);
+    }, 1500);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") handleSendMessage();
+  };
 
   return (
     <div className="flex h-[calc(100vh-160px)] bg-white rounded-[3rem] shadow-xl overflow-hidden border border-primary/5 animate-in fade-in duration-500">
@@ -98,9 +135,12 @@ export function CustomerChat() {
         </header>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-fixed opacity-90">
-          {mockMessages.map((msg) => (
-            <div key={msg.id} className={cn("flex flex-col", msg.isMe ? "items-end" : "items-start")}>
+        <div 
+          ref={scrollRef}
+          className="flex-1 overflow-y-auto p-6 space-y-6 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-fixed opacity-90 scroll-smooth"
+        >
+          {messages.map((msg) => (
+            <div key={msg.id} className={cn("flex flex-col animate-in fade-in slide-in-from-bottom-2", msg.isMe ? "items-end" : "items-start")}>
               <div className={cn(
                 "max-w-[70%] p-4 rounded-3xl text-sm font-medium shadow-sm",
                 msg.isMe ? "bg-primary text-white rounded-tr-none" : "bg-gray-100 text-foreground rounded-tl-none"
@@ -120,13 +160,14 @@ export function CustomerChat() {
             <Input 
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder="Tulis pesan..." 
               className="border-none focus-visible:ring-0 bg-transparent flex-1" 
             />
             <Button 
               size="icon" 
               className="h-10 w-10 rounded-xl bg-primary hover:bg-secondary text-white shadow-lg transition-all active:scale-95"
-              onClick={() => setMessage("")}
+              onClick={handleSendMessage}
             >
               <Send className="h-4 w-4" />
             </Button>
